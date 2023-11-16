@@ -209,7 +209,7 @@ fun main() = application {
             ) {
                 val manager = DatabaseManager()
                 val db = manager.setupDatabase()
-                uploadDatabaseToCloud()
+                downloadDatabaseFromCloud()
 //
 //                transaction {
 //                    SchemaUtils.createMissingTablesAndColumns(TodoTable) // Create table if not exists
