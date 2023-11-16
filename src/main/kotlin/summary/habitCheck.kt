@@ -1,7 +1,6 @@
 
 package summary
 
-import DatabaseManager
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Shape
 //import androidx.compose.material3.md.sys.shape.corner.full.Circular
 import androidx.compose.ui.draw.drawBehind
-import getDatabasePath
 
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.selectAll
@@ -31,8 +29,7 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun HabitCheck(habit: String) {
-    val manager = DatabaseManager()
-val db = manager.setupDatabase()
+    Database.connect("jdbc:sqlite:chinook.db")
     val todoListFromDb: MutableList<TodoItem> = mutableListOf()
 
     transaction {

@@ -1,6 +1,5 @@
 package summary
 
-import DatabaseManager
 import TodoTable
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.*
@@ -12,7 +11,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import getDatabasePath
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -33,8 +31,7 @@ fun TaskProgress(
         .padding(20.dp)
         .fillMaxSize()
 ) {
-    val manager = DatabaseManager()
-val db = manager.setupDatabase()
+    Database.connect("jdbc:sqlite:chinook.db")
     val todoListFromDb: MutableList<TodoItem> = mutableListOf()
 
     transaction {
@@ -89,5 +86,7 @@ val db = manager.setupDatabase()
                 ),
             )
         }
+
+
     }
 }
