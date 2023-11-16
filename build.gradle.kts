@@ -22,6 +22,7 @@ dependencies {
     implementation("org.jetbrains.exposed", "exposed-dao", "0.44.0")
     implementation("org.jetbrains.exposed", "exposed-jdbc", "0.44.0")
     implementation("org.xerial:sqlite-jdbc:3.43.2.1")
+    implementation("com.google.cloud:google-cloud-storage:2.29.1")
     implementation ("org.jetbrains.exposed:exposed-jodatime:0.34.1") // Adjust version as necessary
     implementation ("joda-time:joda-time:2.10.10") // Adjust version as necessary
 }
