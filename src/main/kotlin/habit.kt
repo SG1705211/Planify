@@ -350,12 +350,11 @@ fun ToDoList() {
                                 it[duration] = newItem.duration.toInt()
                                 it[starttime] = newItem.start_time
                             }
-
                             // Add new item to the list
                             todoListFromDb.add(newItem.copy(id = 20))
                             println("1")
-                            uploadDatabaseToCloud()
                         }
+                        uploadDatabaseToCloud()
                     })
             }
         }
