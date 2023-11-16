@@ -66,6 +66,7 @@ fun BoxItem(color: Color, text: String) {
 
 @Composable
 fun MagicHome() {
+    downloadDatabaseFromCloud()
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -157,30 +158,30 @@ fun AppLayout() {
 }
 
 
-class DatabaseManager {
-    fun setupDatabase(): Database {
-        val dbName = "chinook.db"
-        val persistentDir = File(System.getProperty("user.home"), ".myApp")
-        val persistentDBFile = File(persistentDir, dbName)
-        // Check if the database file exists in a persistent location
-        if (!persistentDBFile.exists()) {
-            // Ensure the directory exists
-            persistentDir.mkdirs()
-            // Copy the database from the resources to the persistent location
-            val resourceStream = this::class.java.getResourceAsStream("/$dbName")
-            FileOutputStream(persistentDBFile).use { output ->
-                resourceStream.copyTo(output)
-            }
-        }
-
-        // Load SQLite JDBC driver (required for some configurations)
-        Class.forName("org.sqlite.JDBC")
-
-        // Connect to the SQLite database in the persistent location
-        val connectionUrl = "jdbc:sqlite:${persistentDBFile.absolutePath}"
-        return Database.connect(connectionUrl)
-    }
-}
+//class DatabaseManager {
+//    fun setupDatabase(): Database {
+//        val dbName = "chinook.db"
+//        val persistentDir = File(System.getProperty("user.home"), ".myApp")
+//        val persistentDBFile = File(persistentDir, dbName)
+//        // Check if the database file exists in a persistent location
+//        if (!persistentDBFile.exists()) {
+//            // Ensure the directory exists
+//            persistentDir.mkdirs()
+//            // Copy the database from the resources to the persistent location
+//            val resourceStream = this::class.java.getResourceAsStream("/$dbName")
+//            FileOutputStream(persistentDBFile).use { output ->
+//                resourceStream.copyTo(output)
+//            }
+//        }
+//
+//        // Load SQLite JDBC driver (required for some configurations)
+//        Class.forName("org.sqlite.JDBC")
+//
+//        // Connect to the SQLite database in the persistent location
+//        val connectionUrl = "jdbc:sqlite:${persistentDBFile.absolutePath}"
+//        return Database.connect(connectionUrl)
+//    }
+//}
 
 
 fun uploadDatabaseToCloud() {
@@ -207,8 +208,7 @@ fun main() = application {
             Box(
                 modifier = Modifier.background(MaterialTheme.colorScheme.background)
             ) {
-                val manager = DatabaseManager()
-                val db = manager.setupDatabase()
+                Database.connect("jdbc:sqlite:chinook.db")
                 downloadDatabaseFromCloud()
 //
 //                transaction {

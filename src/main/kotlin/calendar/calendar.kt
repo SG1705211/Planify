@@ -240,8 +240,7 @@ fun Calendar() {
 //        Event(6, "2023-11-04", "18:00", "20:00", "Reading", "Read a book", "", 3, false, "Personal"),
 //        Event(7, "2023-11-05", "12:00", "15:00", "Lunch Break", "Take a break and have lunch", "", 3, false, "Personal")
 //    )
-    val manager = DatabaseManager()
-val db = manager.setupDatabase()
+    Database.connect("jdbc:sqlite:chinook.db")
     val events = remember { mutableStateListOf<Event>()}
     transaction {
         events.clear()
