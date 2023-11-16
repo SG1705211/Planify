@@ -226,7 +226,7 @@ private fun validateDate(dateStr: String): Boolean {
 @Composable
 fun ToDoList() {
     val manager = DatabaseManager()
-val db = manager.setupDatabase()
+    val db = manager.setupDatabase()
     val (selectedSection, setSelectedSection) = remember { mutableStateOf("Work") }
     val todoListFromDb = remember { mutableStateListOf<TodoItem>()}
 
@@ -248,6 +248,7 @@ val db = manager.setupDatabase()
                     )
                 )
             }
+            uploadDatabaseToCloud()
         }
     }
     // New state variable to control dialog visibility
@@ -311,6 +312,7 @@ val db = manager.setupDatabase()
                                         TodoTable.update({ TodoTable.id eq todoItem.id }) {
                                             it[completed] = isChecked
                                         }
+                                        uploadDatabaseToCloud()
                                     }
                                 })
                             })
@@ -332,25 +334,25 @@ val db = manager.setupDatabase()
 
                     isDialogOpen = false
                 },
-                        onCreate = { newItem ->
-                    isDialogOpen = false  // Close the dialog
-                    transaction {
-                        // Insert new item into the database
-                        val newId = TodoTable.insert {
-                            it[primaryTask] = newItem.primaryTask
-                            it[secondaryTask] = newItem.secondaryTask
-                            it[priority] = newItem.priority
-                            it[completed] = newItem.completed
-                            it[section] = newItem.section
-                            it[datetime] = newItem.date_time
-                            it[duration] = newItem.duration.toInt()
-                            it[starttime] = newItem.start_time
+                    onCreate = { newItem ->
+                        isDialogOpen = false  // Close the dialog
+                        transaction {
+                            // Insert new item into the database
+                            val newId = TodoTable.insert {
+                                it[primaryTask] = newItem.primaryTask
+                                it[secondaryTask] = newItem.secondaryTask
+                                it[priority] = newItem.priority
+                                it[completed] = newItem.completed
+                                it[section] = newItem.section
+                                it[datetime] = newItem.date_time
+                                it[duration] = newItem.duration.toInt()
+                                it[starttime] = newItem.start_time
+                            }
+                            uploadDatabaseToCloud()
+                            // Add new item to the list
+                            todoListFromDb.add(newItem.copy(id = 20))
                         }
-                        print(newItem.date_time)
-                        // Add new item to the list
-                        todoListFromDb.add(newItem.copy(id = 20))
-                    }
-                })
+                    })
             }
         }
     }

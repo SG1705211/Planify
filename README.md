@@ -31,6 +31,16 @@ Amy Lai  (s29lai@uwaterloo.ca)
 - Keep memos in the Notes page
   - save rich text formatted notes
 
+## Summary Page Achievements
+### Weekly 
+- Habit "xxx" Developed: if a task has been completed for 21 consecutive days
+- Productive Week: a total of 50 hrs focused time
+- Work Maniac: 40 hrs of Work
+- Knowledge Sponge: 40 hrs of Study tasks
+- Jack of All Trades: 10 hrs of Hobby tasks completed
+- Life Hacker: 10 hrs of Life tasks
+
+### Monthly
 
 ## Project Documents
 Wiki page/Project proposal:https://git.uwaterloo.ca/s29lai/CS346-project/-/wikis/home

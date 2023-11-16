@@ -3,6 +3,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+
 import ui.theme.AppTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,59 +14,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import summary.*
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.width
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.produceState
-import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.singleWindowApplication
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import org.xml.sax.InputSource
-import androidx.compose.ui.window.*
 import java.awt.Dimension
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.material3.*
-import androidx.compose.*
-import androidx.compose.foundation.Canvas
-import androidx.compose.ui.draw.*
 
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-
-import androidx.compose.ui.graphics.vector.*
-import androidx.compose.ui.graphics.withSave
 import androidx.compose.ui.res.*
 
 //import androidx.compose.ui.input.key.Key.Companion.R
 
-import androidx.compose.ui.text.*
-import androidx.compose.ui.text.font.*
-import androidx.compose.ui.unit.sp
-import ui.theme.md_theme_light_background
 import note.*
 // Sample Composable functions for each section
 
-import note.*
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.deleteAll
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.*
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.SQLException
+import com.google.cloud.storage.BlobId
+import com.google.cloud.storage.BlobInfo
+import com.google.cloud.storage.StorageOptions
+import com.google.auth.oauth2.ServiceAccountCredentials
+import java.io.FileInputStream
+import java.nio.file.Files
+import java.nio.file.Paths
 
 
 import java.util.logging.Logger
@@ -212,6 +183,19 @@ class DatabaseManager {
 }
 
 
+fun uploadDatabaseToCloud() {
+    val storage = StorageOptions.newBuilder().setCredentials(ServiceAccountCredentials.fromStream(FileInputStream("key.json"))).build().service
+    val blobId = BlobId.of("cs346bucket", "chinook.db")
+    val blobInfo = BlobInfo.newBuilder(blobId).build()
+    storage.create(blobInfo, Files.readAllBytes(Paths.get("chinook.db")))
+}
+
+fun downloadDatabaseFromCloud() {
+    val storage = StorageOptions.newBuilder().setCredentials(ServiceAccountCredentials.fromStream(FileInputStream("key.json"))).build().service
+    val blob = storage.get(BlobId.of("cs346bucket", "chinook.db"))
+    val readChannel = blob.reader()
+    FileOutputStream("chinook.db").channel.transferFrom(readChannel, 0, Long.MAX_VALUE)
+}
 
 
 fun main() = application {
@@ -225,7 +209,8 @@ fun main() = application {
             ) {
                 val manager = DatabaseManager()
                 val db = manager.setupDatabase()
-
+                uploadDatabaseToCloud()
+//
 //                transaction {
 //                    SchemaUtils.createMissingTablesAndColumns(TodoTable) // Create table if not exists
 //
