@@ -49,8 +49,7 @@ fun homeCalendar() {
     var month = currentDate.monthValue
     var year = currentDate.year
     var date = currentDate.dayOfMonth
-    val manager = DatabaseManager()
-val db = manager.setupDatabase()
+    Database.connect("jdbc:sqlite:chinook.db")
     val events = remember { mutableStateListOf<Event>()}
 //    val events_reference = listOf(
 //        Event(1, "2023-11-03", "08:00", "09:00", "Practice", "Discuss ongoing projects", "", 2, false, "Work"),
