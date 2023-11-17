@@ -89,8 +89,7 @@ fun Summary() {
     val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
     val currentWeekStartDate = currentDate.minusDays(currentDate.dayOfWeek.value.toLong() - 1)
     val currentWeekTable =
-        todoListFromDb.filter { LocalDate.parse(it.datetime, formatter) in currentWeekStartDate..currentDate }
-
+        todoListFromDb.filter { LocalDate.parse(it.datetime, formatter) in currentWeekStartDate..currentWeekStartDate.plusDays(6) }
 
 // Current Month
     val currentMonthStartDate = currentDate.withDayOfMonth(1)
@@ -160,34 +159,43 @@ fun Summary() {
             ) {
 
                 when (selectedSection) {
-                    "Weekly" -> Text(
-                        text = "Week of " + getMonthName(currMonth.toInt() - 1) + " " + Date1 + " - " +
-                                getMonthName(currMonth2.toInt() - 1) + " " + Date2,
+                    "Weekly" -> {
+                        progress = (currentWeekTable.count{it.completed == true}.toDouble() / currentWeekTable.size).toFloat()
+                        Text(
+                            text = "Week of " + getMonthName(currMonth.toInt() - 1) + " " + Date1 + " - " +
+                                    getMonthName(currMonth2.toInt() - 1) + " " + Date2,
 
-                        fontFamily = FontFamily.Cursive,
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(16.dp),
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
+                            fontFamily = FontFamily.Cursive,
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(16.dp),
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
 
-                    "Monthly" -> Text(
-                        text = currMonth,
-                        fontFamily = FontFamily.Cursive,
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(16.dp),
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
+                    "Monthly" -> {
+                        progress = (currentMonthTable.count{it.completed == true}.toDouble() / currentMonthTable.size).toFloat()
+                        Text(
+                            text = Month.of(currMonth.toInt()).toString(),
+                            fontFamily = FontFamily.Cursive,
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(16.dp),
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
 
-                    "Annual" -> Text(
-                        text = currYear,
-                        fontFamily = FontFamily.Cursive,
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(16.dp),
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
+                    "Annual" -> {
+                        progress = (currentYearTable.count{it.completed == true}.toDouble() / currentYearTable.size).toFloat()
+                        Text(
+                            text = currYear,
+                            fontFamily = FontFamily.Cursive,
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(16.dp),
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
                 }
             }
         }
@@ -200,146 +208,220 @@ fun Summary() {
 
         item {
             when (selectedSection) {
-                "Weekly" -> LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                ) {
-                    item {
-                        var monDuration = currentWeekTable.filter{ LocalDate.parse(it.datetime, formatter).dayOfWeek.toString() == "MONDAY" && it.completed == true}.map { it.duration }.sum().toFloat()
-                        var tueDuration = currentWeekTable.filter{ LocalDate.parse(it.datetime, formatter).dayOfWeek.toString() == "TUESDAY"&& it.completed == true}.map { it.duration }.sum().toFloat()
-                        var wedDuration = currentWeekTable.filter{ LocalDate.parse(it.datetime, formatter).dayOfWeek.toString() == "WEDNESDAY"&& it.completed == true}.map { it.duration }.sum().toFloat()
-                        var thuDuration = currentWeekTable.filter{ LocalDate.parse(it.datetime, formatter).dayOfWeek.toString() == "THURSDAY"&& it.completed == true}.map { it.duration }.sum().toFloat()
-                        var friDuration = currentWeekTable.filter{ LocalDate.parse(it.datetime, formatter).dayOfWeek.toString() == "FRIDAY"&& it.completed == true}.map { it.duration }.sum().toFloat()
-                        var satDuration = currentWeekTable.filter{ LocalDate.parse(it.datetime, formatter).dayOfWeek.toString() == "SATURDAY"&& it.completed == true}.map { it.duration }.sum().toFloat()
-                        var sunDuration = currentWeekTable.filter{ LocalDate.parse(it.datetime, formatter).dayOfWeek.toString() == "SUNDAY"&& it.completed == true}.map { it.duration }.sum().toFloat()
-                        println(monDuration)
-                        Chart(
-                            data = mapOf(
-                                Pair("Mon", monDuration),
-                                Pair("Tue", tueDuration),
-                                Pair("Wed", wedDuration),
-                                Pair("Thu", thuDuration),
-                                Pair("Fri", friDuration),
-                                Pair("Sat", satDuration),
-                                Pair("Sun", sunDuration),
-//                                Pair("Mon", monDuration),
-//                                Pair("Tue", tueDuration),
-//                                Pair("Wed", wedDuration),
-//                                Pair("Thu", thuDuration),
-//                                Pair("Fri", friDuration),
-//                                Pair("Sat", satDuration),
-//                                Pair("Sun", sunDuration),
-                            ), barwidth = 30.dp, graphWidth = 530.dp,
-                            max_value = 0.3f
-//                            listOf(monDuration, tueDuration, wedDuration, thuDuration, friDuration, satDuration, sunDuration).max()
-                        )
-                    }
 
-                    item {
-                        Column {
-                            HabitSelection(habit) { newSection ->
-                                habit = newSection
+                "Weekly" -> {
+                    Text(
+                        text = "This Week's Focus Stats",
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(16.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                    ) {
+//                    currentWeekTable.forEach{
+//                        println(LocalDate.parse(it.datetime, formatter).dayOfWeek.toString())
+//                        println(it.completed)
+//                    }
+
+                        item {
+                            var monDuration = currentWeekTable.filter {
+                                LocalDate.parse(
+                                    it.datetime,
+                                    formatter
+                                ).dayOfWeek.toString() == "MONDAY" && it.completed == true
+                            }.map { it.duration }.sum().toFloat()
+                            var tueDuration = currentWeekTable.filter {
+                                LocalDate.parse(
+                                    it.datetime,
+                                    formatter
+                                ).dayOfWeek.toString() == "TUESDAY" && it.completed == true
+                            }.map { it.duration }.sum().toFloat()
+                            var wedDuration = currentWeekTable.filter {
+                                LocalDate.parse(
+                                    it.datetime,
+                                    formatter
+                                ).dayOfWeek.toString() == "WEDNESDAY" && it.completed == true
+                            }.map { it.duration }.sum().toFloat()
+                            var thuDuration = currentWeekTable.filter {
+                                LocalDate.parse(
+                                    it.datetime,
+                                    formatter
+                                ).dayOfWeek.toString() == "THURSDAY" && it.completed == true
+                            }.map { it.duration }.sum().toFloat()
+                            var friDuration = currentWeekTable.filter {
+                                LocalDate.parse(
+                                    it.datetime,
+                                    formatter
+                                ).dayOfWeek.toString() == "FRIDAY" && it.completed == true
+                            }.map { it.duration }.sum().toFloat()
+                            var satDuration = currentWeekTable.filter {
+                                LocalDate.parse(
+                                    it.datetime,
+                                    formatter
+                                ).dayOfWeek.toString() == "SATURDAY" && it.completed == true
+                            }.map { it.duration }.sum().toFloat()
+                            var sunDuration = currentWeekTable.filter {
+                                LocalDate.parse(
+                                    it.datetime,
+                                    formatter
+                                ).dayOfWeek.toString() == "SUNDAY" && it.completed == true
+                            }.map { it.duration }.sum().toFloat()
+                            Chart(
+                                data = mapOf(
+                                    Pair("Mon", monDuration),
+                                    Pair("Tue", tueDuration),
+                                    Pair("Wed", wedDuration),
+                                    Pair("Thu", thuDuration),
+                                    Pair("Fri", friDuration),
+                                    Pair("Sat", satDuration),
+                                    Pair("Sun", sunDuration)
+                                ), barwidth = 30.dp, graphWidth = 530.dp,
+                                max_value = listOf(
+                                    monDuration,
+                                    tueDuration,
+                                    wedDuration,
+                                    thuDuration,
+                                    friDuration,
+                                    satDuration,
+                                    sunDuration
+                                ).max()
+                            )
+                        }
+
+                        item {
+                            Column {
+                                HabitSelection(habit) { newSection ->
+                                    habit = newSection
+                                }
+                                HabitCheck(habit)
                             }
-                            HabitCheck(habit)
                         }
                     }
-//                }
+                }
 
-//                "Monthly" -> {
-//                    var maxvalue = 0.0f
-//                    val groupedByDateTime = currentMonthTable
-//                        .groupBy { it.datetime.substring(6, 8) }
-//                        .mapValues { (_, events) ->
-//                            events.filter { it.completed }
-//                                .sumOf { it.duration }
-//                                .toFloat()
-//                        }
-//                    groupedByDateTime.forEach { _, sumDuration ->
-//                        if (sumDuration > maxvalue) {
-//                            maxvalue = sumDuration
-//                        }
-//                    }
-//                    val resultMap = groupedByDateTime.map { (datetime, sumDuration) ->
-//                        Pair(datetime.toString(), sumDuration.toFloat())
-//                    }.toMap()
+                "Monthly" -> {
+                    var maxvalue = 0.0f
+                    val groupedByDateTime = currentMonthTable
+                        .groupBy { it.datetime.substring(6, 8) }
+                        .mapValues { (_, events) ->
+                            events.filter { it.completed }
+                                .sumOf { it.duration }
+                                .toFloat()
+                        }
+                    groupedByDateTime.forEach { _, sumDuration ->
+                        if (sumDuration > maxvalue) {
+                            maxvalue = sumDuration
+                        }
+                    }
 
-//                    Chart(
-//                        data = resultMap,
-//                        barwidth = 50.dp, graphWidth = 530.dp, max_value = maxvalue
-//                    )
-//                }
+                    val daysInMonth = currentMonthStartDate.lengthOfMonth()
+                    val resultMap = (1..daysInMonth).associate { day ->
+                        val dayString =
+                            day.toString().padStart(2, '0') // Ensure two-digit format (e.g., "01", "02", ..., "31")
+                        val sumDuration = groupedByDateTime[dayString]?.toFloat() ?: 0f
+                        dayString to sumDuration
+                    }
 
-//                "Annual" -> {
-//                    val janDuration = currentWeekTable.filter {
-//                        LocalDate.parse(it.datetime, formatter).month == Month.JANUARY && it.completed
-//                    }.sumOf { it.duration }.toFloat()
-//                    val febDuration = currentWeekTable.filter {
-//                        LocalDate.parse(it.datetime, formatter).month == Month.FEBRUARY && it.completed
-//                    }.sumOf { it.duration }.toFloat()
-//                    val marDuration = currentWeekTable.filter {
-//                        LocalDate.parse(it.datetime, formatter).month == Month.MARCH && it.completed
-//                    }.sumOf { it.duration }.toFloat()
-//                    val aprDuration = currentWeekTable.filter {
-//                        LocalDate.parse(it.datetime, formatter).month == Month.APRIL && it.completed
-//                    }.sumOf { it.duration }.toFloat()
-//                    val mayDuration = currentWeekTable.filter {
-//                        LocalDate.parse(it.datetime, formatter).month == Month.MAY && it.completed
-//                    }.sumOf { it.duration }.toFloat()
-//                    val junDuration = currentWeekTable.filter {
-//                        LocalDate.parse(it.datetime, formatter).month == Month.JUNE && it.completed
-//                    }.sumOf { it.duration }.toFloat()
-//                    val julDuration = currentWeekTable.filter {
-//                        LocalDate.parse(it.datetime, formatter).month == Month.JULY && it.completed
-//                    }.sumOf { it.duration }.toFloat()
-//                    val augDuration = currentWeekTable.filter {
-//                        LocalDate.parse(it.datetime, formatter).month == Month.AUGUST && it.completed
-//                    }.sumOf { it.duration }.toFloat()
-//                    val sepDuration = currentWeekTable.filter {
-//                        LocalDate.parse(it.datetime, formatter).month == Month.SEPTEMBER && it.completed
-//                    }.sumOf { it.duration }.toFloat()
-//                    val octDuration = currentWeekTable.filter {
-//                        LocalDate.parse(it.datetime, formatter).month == Month.OCTOBER && it.completed
-//                    }.sumOf { it.duration }.toFloat()
-//                    val novDuration = currentWeekTable.filter {
-//                        LocalDate.parse(it.datetime, formatter).month == Month.NOVEMBER && it.completed
-//                    }.sumOf { it.duration }.toFloat()
-//                    val decDuration = currentWeekTable.filter {
-//                        LocalDate.parse(it.datetime, formatter).month == Month.DECEMBER && it.completed
-//                    }.sumOf { it.duration }.toFloat()
-//
-//                    Chart(
-//
-//                        data = mapOf(
-//
-//                            Pair("Jan", janDuration),
-//                            Pair("Feb", febDuration),
-//                            Pair("Mar", marDuration),
-//                            Pair("Apr", aprDuration),
-//                            Pair("May", mayDuration),
-//                            Pair("Jun", junDuration),
-//                            Pair("Jul", julDuration),
-//                            Pair("Aug", augDuration),
-//                            Pair("Sep", sepDuration),
-//                            Pair("Oct", octDuration),
-//                            Pair("Nov", novDuration),
-//                            Pair("Dec", decDuration),
-//
-//                            ), barwidth = 30.dp, graphWidth = 900.dp,
-//                        max_value = listOf(
-//                            janDuration,
-//                            febDuration,
-//                            marDuration,
-//                            aprDuration,
-//                            mayDuration,
-//                            junDuration,
-//                            julDuration,
-//                            augDuration,
-//                            sepDuration,
-//                            octDuration,
-//                            novDuration,
-//                            decDuration
-//                        ).max()
-//                    )
+                    Text(
+                        text = "This Month's Focus Stats",
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(16.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    LazyRow {
+                        item {
+                            Chart(
+                                data = resultMap,
+                                barwidth = 25.dp, graphWidth = 1700.dp, max_value = maxvalue
+                            )
+                        }
+                    }
+
+                }
+
+                "Annual" -> {
+                    val janDuration = currentYearTable.filter {
+                        LocalDate.parse(it.datetime, formatter).month == Month.JANUARY && it.completed
+                    }.sumOf { it.duration }.toFloat()
+                    val febDuration = currentYearTable.filter {
+                        LocalDate.parse(it.datetime, formatter).month == Month.FEBRUARY && it.completed
+                    }.sumOf { it.duration }.toFloat()
+                    val marDuration = currentYearTable.filter {
+                        LocalDate.parse(it.datetime, formatter).month == Month.MARCH && it.completed
+                    }.sumOf { it.duration }.toFloat()
+                    val aprDuration = currentYearTable.filter {
+                        LocalDate.parse(it.datetime, formatter).month == Month.APRIL && it.completed
+                    }.sumOf { it.duration }.toFloat()
+                    val mayDuration = currentYearTable.filter {
+                        LocalDate.parse(it.datetime, formatter).month == Month.MAY && it.completed
+                    }.sumOf { it.duration }.toFloat()
+                    val junDuration = currentYearTable.filter {
+                        LocalDate.parse(it.datetime, formatter).month == Month.JUNE && it.completed
+                    }.sumOf { it.duration }.toFloat()
+                    val julDuration = currentYearTable.filter {
+                        LocalDate.parse(it.datetime, formatter).month == Month.JULY && it.completed
+                    }.sumOf { it.duration }.toFloat()
+                    val augDuration = currentYearTable.filter {
+                        LocalDate.parse(it.datetime, formatter).month == Month.AUGUST && it.completed
+                    }.sumOf { it.duration }.toFloat()
+                    val sepDuration = currentYearTable.filter {
+                        LocalDate.parse(it.datetime, formatter).month == Month.SEPTEMBER && it.completed
+                    }.sumOf { it.duration }.toFloat()
+                    val octDuration = currentYearTable.filter {
+                        LocalDate.parse(it.datetime, formatter).month == Month.OCTOBER && it.completed
+                    }.sumOf { it.duration }.toFloat()
+                    val novDuration = currentYearTable.filter {
+                        LocalDate.parse(it.datetime, formatter).month == Month.NOVEMBER && it.completed
+                    }.sumOf { it.duration }.toFloat()
+                    val decDuration = currentYearTable.filter {
+                        LocalDate.parse(it.datetime, formatter).month == Month.DECEMBER && it.completed
+                    }.sumOf { it.duration }.toFloat()
+
+                    Text(
+                        text = "This Year's Focus Stats",
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(16.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Chart(
+
+                        data = mapOf(
+
+                            Pair("Jan", janDuration),
+                            Pair("Feb", febDuration),
+                            Pair("Mar", marDuration),
+                            Pair("Apr", aprDuration),
+                            Pair("May", mayDuration),
+                            Pair("Jun", junDuration),
+                            Pair("Jul", julDuration),
+                            Pair("Aug", augDuration),
+                            Pair("Sep", sepDuration),
+                            Pair("Oct", octDuration),
+                            Pair("Nov", novDuration),
+                            Pair("Dec", decDuration),
+
+                            ), barwidth = 30.dp, graphWidth = 900.dp,
+                        max_value = listOf(
+                            janDuration,
+                            febDuration,
+                            marDuration,
+                            aprDuration,
+                            mayDuration,
+                            junDuration,
+                            julDuration,
+                            augDuration,
+                            sepDuration,
+                            octDuration,
+                            novDuration,
+                            decDuration
+                        ).max()
+                    )
+
 
                 }
             }
@@ -348,8 +430,8 @@ fun Summary() {
             when (selectedSection) {
 
                 "Weekly" -> Achievement(currentWeekTable, 1)
-//                "Monthly" -> Achievement(currentMonthTable, 4)
-//                "Annual" -> Achievement(currentYearTable, 48)
+                "Monthly" -> Achievement(currentMonthTable, 4)
+                "Annual" -> Achievement(currentYearTable, 48)
             }
         }
     }

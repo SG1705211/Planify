@@ -26,6 +26,7 @@ fun Achievement(
 ) {
     val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
 
+    var focusDuration = eventsInRange.filter{ it.completed == true}.map { it.duration }.sum().toFloat()
     var workWeekDuration = eventsInRange.filter{ it.section == "Work" && it.completed == true}.map { it.duration }.sum().toFloat()
     var studyWeekDuration = eventsInRange.filter{ it.section == "Study" && it.completed == true}.map { it.duration }.sum().toFloat()
     var hobbyWeekDuration = eventsInRange.filter{ it.section == "Hobby" && it.completed == true}.map { it.duration }.sum().toFloat()
@@ -33,13 +34,19 @@ fun Achievement(
 //    val todaysEvents = eventsInRange.filter{it.datetime == currentDate.toString() && it.completecnt >= 21}
     var habitsCompletedWeekly: MutableList<String> = mutableListOf()
 
+    if (focusDuration >= 50 * factor) {
+        habitsCompletedWeekly.add("Productive Week")
+    }
     if (workWeekDuration >= 40 * factor) {
         habitsCompletedWeekly.add("Work Maniac")
-    } else if (studyWeekDuration >= 40 * factor) {
+    }
+    if (studyWeekDuration >= 40 * factor) {
         habitsCompletedWeekly.add("Knowledge Sponge")
-    } else if (hobbyWeekDuration >= 10 * factor) {
+    }
+    if (hobbyWeekDuration >= 10 * factor) {
         habitsCompletedWeekly.add("Jack of All Trades")
-    } else if (lifeWeekDuration >= 10 * factor) {
+    }
+    if (lifeWeekDuration >= 10 * factor) {
         habitsCompletedWeekly.add("Life Hacker")
     }
 
@@ -50,8 +57,9 @@ fun Achievement(
     Column {
         Text(
             text = "Achievements",
-            fontSize = 32.sp,
+            fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(16.dp)
         )
         habitsCompletedWeekly.forEach { habit ->
@@ -61,14 +69,14 @@ fun Achievement(
                     .clip(RoundedCornerShape(8.dp))
                     .height(40.dp)
                     .width(200.dp)
-                    .background(MaterialTheme.colorScheme.tertiary),
+                    .background(MaterialTheme.colorScheme.primary),
                 contentAlignment = Alignment.Center,
                 content = {
                     Text(
                         text = habit,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.onTertiary
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             )
