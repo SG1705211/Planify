@@ -247,7 +247,7 @@ fun ToDoList() {
                     )
                 )
             }
-            uploadDatabaseToCloud()
+            //uploadDatabaseToCloud()
         }
     }
     // New state variable to control dialog visibility
@@ -311,8 +311,8 @@ fun ToDoList() {
                                         TodoTable.update({ TodoTable.id eq todoItem.id }) {
                                             it[completed] = isChecked
                                         }
-                                        uploadDatabaseToCloud()
                                     }
+                                    uploadDatabaseToCloud()
                                 })
                             })
                         Divider()
@@ -347,10 +347,10 @@ fun ToDoList() {
                                 it[duration] = newItem.duration.toInt()
                                 it[starttime] = newItem.start_time
                             }
-                            uploadDatabaseToCloud()
                             // Add new item to the list
                             todoListFromDb.add(newItem.copy(id = 20))
                         }
+                        uploadDatabaseToCloud()
                     })
             }
         }

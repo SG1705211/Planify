@@ -40,7 +40,12 @@ data class Event(
     @Composable
     fun displayEvent() {
         Box(
-            modifier = Modifier.fillMaxWidth().padding(8.dp), contentAlignment = Alignment.TopStart
+            modifier = Modifier.fillMaxWidth()
+                .padding(8.dp)
+                .border(1.dp, Color.Gray,
+                    shape = RoundedCornerShape(4.dp)), contentAlignment = Alignment.TopStart
+
+
         ) {
             Text(
                 text = title, fontWeight = FontWeight.Bold, modifier = Modifier.padding(8.dp)
@@ -61,18 +66,8 @@ fun MonthlyCalendar(month: Int, year: Int, events: List<Event>) {
     val dayNames = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
     // Month names list
     val monthNames = listOf(
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
     )
     val monthName = monthNames[month - 1]  // Arrays are 0-indexed, so subtract 1 from the month number
 
@@ -86,17 +81,18 @@ fun MonthlyCalendar(month: Int, year: Int, events: List<Event>) {
         )
 
         Spacer(modifier = Modifier.height(8.dp))
+
         // Day Names Row
         Row(
-            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             dayNames.forEach { dayName ->
                 Box(
-                    modifier = Modifier.weight(1f), contentAlignment = Alignment.Center
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = dayName, fontWeight = FontWeight.Bold
-                    )
+                    Text(text = dayName, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -106,45 +102,47 @@ fun MonthlyCalendar(month: Int, year: Int, events: List<Event>) {
         ) {
             // Calendar Dates
             var currentDate = 1
+            val today = LocalDate.now()
 
             for (i in 0..5) {
-                Divider(modifier = Modifier.padding(horizontal = 2.dp))
+
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     for (j in 0..6) {
+                        // Define the condition for the current date
+                        val isToday = today.monthValue == month && today.dayOfMonth == currentDate && today.year == year
+
                         Box(
-                            contentAlignment = Alignment.TopCenter, modifier = Modifier.weight(1f).aspectRatio(1f)
+                            contentAlignment = Alignment.TopCenter,
+                            modifier = Modifier
+                                .weight(1f)
+                                .aspectRatio(1f)
+                                .background(
+                                    if (isToday) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
+                                    shape = RoundedCornerShape(4.dp)
+                                )
+                                .border(1.dp, Color.Gray, shape = RoundedCornerShape(4.dp))
                         ) {
-                            val today = LocalDate.now()
                             if ((i == 0 && j >= firstDayOfMonth) || (i > 0 && currentDate <= daysInMonth)) {
-                                if (today.monthValue == month && today.dayOfMonth == currentDate && today.year == year) {
-                                    Box(
-                                        modifier = Modifier.background(
-                                            MaterialTheme.colorScheme.secondaryContainer,
-                                            shape = RoundedCornerShape(100)
-                                        ), contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            text = currentDate.toString(),
-                                            color = Color.Black,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 16.sp
-                                        )
-                                    }
-                                }
-                                Text(text = currentDate.toString())
+                                Text(
+                                    text = currentDate.toString(),
+                                    color = if (isToday) Color.Black else Color.Unspecified,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 16.sp
+                                )
 
                                 // Check for events on this date
                                 val currentDateString = LocalDate.of(year, month, currentDate).toString()
                                 val eventsOnThisDate = events.filter { it.date == currentDateString }
 
-                                // display events
+
+                                // Display events
                                 Column(
                                     modifier = Modifier.verticalScroll(rememberScrollState())
-
                                 ) {
+                                    Spacer(modifier = Modifier.height(10.dp))
                                     eventsOnThisDate.forEach { event ->
                                         event.displayEvent()
                                     }
@@ -226,20 +224,6 @@ fun Calendar() {
     var year by remember { mutableStateOf(currentDate.year) }
     var date by remember { mutableStateOf(currentDate.dayOfMonth) }
     var mode by remember { mutableStateOf(0) }
-//    val events = listOf(
-//        Event(1, "2023-11-03", "08:00", "09:00", "Practice", "Discuss ongoing projects", "", 2, false, "Work"),
-//        Event(1, "2023-11-02", "09:00", "11:00", "Discussion", "Discuss ongoing projects", "", 2, false, "Work"),
-//        Event(1, "2023-11-02", "10:00", "11:00", "Studying", "Discuss ongoing projects", "", 2, false, "Work"),
-//        Event(1, "2023-11-02", "11:00", "12:00", "Doing Assignments", "Discuss ongoing projects", "", 2, false, "Work"),
-//        Event(1, "2023-11-02", "12:00", "13:00", "Reviewing", "Discuss ongoing projects", "", 2, false, "Work"),
-//        Event(1, "2023-11-03", "10:00", "11:00", "Team Meeting", "Discuss ongoing projects", "", 2, false, "Work"),
-//        Event(2, "2023-11-03", "15:00", "16:00", "Client Call", "Catch up call with client", "", 1, false, "Work"),
-//        Event(3, "2023-11-03", "09:00", "10:00", "Workout", "Morning exercise", "", 3, false, "Personal"),
-//        Event(4, "2023-11-04", "20:00", "21:00", "Dinner", "Dinner with family", "", 3, false, "Personal"),
-//        Event(5, "2023-11-05", "14:00", "20:00", "Project Review", "Review project milestones", "", 2, false, "Work"),
-//        Event(6, "2023-11-04", "18:00", "20:00", "Reading", "Read a book", "", 3, false, "Personal"),
-//        Event(7, "2023-11-05", "12:00", "15:00", "Lunch Break", "Take a break and have lunch", "", 3, false, "Personal")
-//    )
     Database.connect("jdbc:sqlite:chinook.db")
     val events = remember { mutableStateListOf<Event>()}
     transaction {
@@ -279,14 +263,14 @@ fun Calendar() {
             FilledTonalButton(
                 onClick = {
                     mode = 1
-                }, modifier = Modifier.size(105.dp, 32.dp) // Adjust the width and height as needed
+                }, modifier = Modifier.size(105.dp, 32.dp)
             ) {
                 Text("Daily")
             }
             FilledTonalButton(
                 onClick = {
                     mode = 0
-                }, modifier = Modifier.size(105.dp, 32.dp) // Adjust the width and height as needed
+                }, modifier = Modifier.size(105.dp, 32.dp)
             ) {
                 Text("Monthly")
             }
@@ -321,7 +305,7 @@ fun Calendar() {
                         }
                     }
 
-                }, modifier = Modifier.size(70.dp, 30.dp) // Adjust the width and height as needed
+                }, modifier = Modifier.size(70.dp, 30.dp)
             ) {
                 Text("<")
             }
@@ -346,7 +330,7 @@ fun Calendar() {
                             }
                         }
                     }
-                }, modifier = Modifier.size(70.dp, 30.dp) // Adjust the width and height as needed
+                }, modifier = Modifier.size(70.dp, 30.dp)
             ) {
                 Text(">")
             }
