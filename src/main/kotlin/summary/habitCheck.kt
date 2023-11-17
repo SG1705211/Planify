@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Shape
 //import androidx.compose.material3.md.sys.shape.corner.full.Circular
 import androidx.compose.ui.draw.drawBehind
+
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -48,16 +49,39 @@ fun HabitCheck(habit: String) {
         }
     }
 
-    var workTodo = todoListFromDb.filter { todoItem -> todoItem.section == "Work" }
-    var studyTodo = todoListFromDb.filter { todoItem -> todoItem.section == "Study" }
-    var hobbyTodo = todoListFromDb.filter { todoItem -> todoItem.section == "Hobby" }
-    var lifeTodo = todoListFromDb.filter { todoItem -> todoItem.section == "Life" }
+    val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+    val currentWeekStartDate = currentDate.minusDays(currentDate.dayOfWeek.value.toLong() - 1)
+    val currentWeekTable =
+        todoListFromDb.filter { LocalDate.parse(it.datetime, formatter) in currentWeekStartDate..currentWeekStartDate.plusDays(6) }
 
-    var workCompleted = todoListFromDb.filter { todoItem -> todoItem.section == "Work" && todoItem.completed == true }
-    var studyCompleted = todoListFromDb.filter { todoItem -> todoItem.section == "Study" && todoItem.completed == true}
-    var hobbyCompleted = todoListFromDb.filter { todoItem -> todoItem.section == "Hobby" && todoItem.completed == true}
-    var lifeCompleted = todoListFromDb.filter { todoItem -> todoItem.section == "Life" && todoItem.completed == true}
+    var workTodo = currentWeekTable.filter { todoItem -> todoItem.section == "Work" }
+    var studyTodo = currentWeekTable.filter { todoItem -> todoItem.section == "Study" }
+    var hobbyTodo = currentWeekTable.filter { todoItem -> todoItem.section == "Hobby" }
+    var lifeTodo = currentWeekTable.filter { todoItem -> todoItem.section == "Life" }
 
+    var workCompleted = currentWeekTable.filter { todoItem -> todoItem.section == "Work" && todoItem.completed == true }
+    var studyCompleted = currentWeekTable.filter { todoItem -> todoItem.section == "Study" && todoItem.completed == true}
+    var hobbyCompleted = currentWeekTable.filter { todoItem -> todoItem.section == "Hobby" && todoItem.completed == true}
+    var lifeCompleted = currentWeekTable.filter { todoItem -> todoItem.section == "Life" && todoItem.completed == true}
+
+//    println("todos")
+//    todoListFromDb.forEach{
+//        println(it.primaryTask)
+//        println(it.datetime)
+//        println(it.completed)
+//    }
+//    println("currweek")
+//    currentWeekTable.forEach{
+//        println(it.primaryTask)
+//    }
+//    println("worktodo")
+//    workTodo.forEach{
+//        println(it.primaryTask)
+//    }
+//    println("workcompleted")
+//    workCompleted.forEach{
+//        println(it.primaryTask)
+//    }
 //    var workProgress = (todoListFromDb.count{it.section == "Work" && it.completed == true}.toDouble() / todoListFromDb.count{it.section == "Work"}.toDouble()).toFloat()
 //    var studyProgress = (todoListFromDb.count{it.section == "Study" && it.completed == true}.toDouble() / todoListFromDb.count{it.section == "Study"}.toDouble()).toFloat()
 //    var hobbyProgress = (todoListFromDb.count{it.section == "Hobby" && it.completed == true}.toDouble() / todoListFromDb.count{it.section == "Hobby"}.toDouble()).toFloat()
@@ -141,7 +165,7 @@ fun HabitCheck(habit: String) {
 //        println(LocalDate.parse(workTodo[3].datetime, formatter).dayOfWeek.toString())
 //        println(workTodo[3].completed)
         listOf("MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY").forEachIndexed {index, day ->
-            allcomplete[index] = (todoListFromDb.count{ LocalDate.parse(it.datetime, formatter).dayOfWeek.toString() == day}) == (todoListFromDb.count{it.completed == true && LocalDate.parse(it.datetime, formatter).dayOfWeek.toString() == day})
+            allcomplete[index] = (currentWeekTable.count{ LocalDate.parse(it.datetime, formatter).dayOfWeek.toString() == day}) == (currentWeekTable.count{it.completed == true && LocalDate.parse(it.datetime, formatter).dayOfWeek.toString() == day})
             workcomplete[index] = (workTodo.count{ LocalDate.parse(it.datetime, formatter).dayOfWeek.toString() == day}) == (workCompleted.count{LocalDate.parse(it.datetime, formatter).dayOfWeek.toString() == day})
             studycomplete[index] = (studyTodo.count{ LocalDate.parse(it.datetime, formatter).dayOfWeek.toString() == day}) == (studyCompleted.count{LocalDate.parse(it.datetime, formatter).dayOfWeek.toString() == day})
             hobbycomplete[index] = (hobbyTodo.count{ LocalDate.parse(it.datetime, formatter).dayOfWeek.toString() == day}) == (hobbyCompleted.count{LocalDate.parse(it.datetime, formatter).dayOfWeek.toString() == day})
