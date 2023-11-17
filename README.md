@@ -6,13 +6,14 @@
 Develop a single, multi-purpose planner application to track daily activities.
 
 ## Team Members
+Shaojun Chen (s736chen@uwaterloo.ca)
+
 Shutang Gong (s35gong@uwaterloo.ca)
 
-Shaojun Chen (s736chen@uwaterloo.ca)
+Amy Lai  (s29lai@uwaterloo.ca)
 
 Sherlock Yang (j586yang@uwaterloo.ca)
 
-Amy Lai  (s29lai@uwaterloo.ca)
 
 ## Quick-Start Instructions
 - View the progress of your day in the Home page
@@ -32,15 +33,45 @@ Amy Lai  (s29lai@uwaterloo.ca)
   - save rich text formatted notes
 
 ## Summary Page Achievements
-### Weekly 
-- Habit "xxx" Developed: if a task has been completed for 21 consecutive days
+### Weekly
 - Productive Week: a total of 50 hrs focused time
 - Work Maniac: 40 hrs of Work
 - Knowledge Sponge: 40 hrs of Study tasks
 - Jack of All Trades: 10 hrs of Hobby tasks completed
 - Life Hacker: 10 hrs of Life tasks
-
 ### Monthly
+- Productive Week: a total of 200 hrs focused time
+- Work Maniac: 160 hrs of Work
+- Knowledge Sponge: 160 hrs of Study tasks
+- Jack of All Trades: 40 hrs of Hobby tasks completed
+- Life Hacker: 40 hrs of Life tasks
+### Annual
+- Productive Week: a total of 600 hrs focused time
+- Work Maniac: 480 hrs of Work
+- Knowledge Sponge: 480 hrs of Study tasks
+- Jack of All Trades: 120 hrs of Hobby tasks completed
+- Life Hacker: 120 hrs of Life tasks
+
+## Notes Hotkeys
+Left: Ctrl+L
+
+Center: Ctrl+E
+
+Right: Ctrl+R
+
+Bold: Ctrl+B
+
+Italic: Ctrl+I
+
+Underline: Ctrl+U
+
+Line Through: Ctrl+T
+
+Head: Ctrl+H
+
+Highlight Red: Ctrl+R
+
+Highlight Yellow: Ctrl+Y
 
 ## Project Documents
 Wiki page/Project proposal:https://git.uwaterloo.ca/s29lai/CS346-project/-/wikis/home
@@ -50,3 +81,5 @@ Meeting minutes: https://git.uwaterloo.ca/s29lai/CS346-project/-/tree/main/meeti
 release v0.1: https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/releases/v0.1-release-notes.md?ref_type=heads
 
 release v0.2: https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/releases/v0.2-release-notes.md?ref_type=heads
+
+release v0.3:

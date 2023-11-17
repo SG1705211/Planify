@@ -247,7 +247,6 @@ fun ToDoList() {
                     )
                 )
             }
-            println("2")
             //uploadDatabaseToCloud()
         }
     }
@@ -312,8 +311,6 @@ fun ToDoList() {
                                         TodoTable.update({ TodoTable.id eq todoItem.id }) {
                                             it[completed] = isChecked
                                         }
-
-                                        println("4")
                                     }
                                     uploadDatabaseToCloud()
                                 })
@@ -352,7 +349,6 @@ fun ToDoList() {
                             }
                             // Add new item to the list
                             todoListFromDb.add(newItem.copy(id = 20))
-                            println("1")
                         }
                         uploadDatabaseToCloud()
                     })
