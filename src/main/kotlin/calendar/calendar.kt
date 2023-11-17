@@ -224,7 +224,8 @@ fun Calendar() {
     var year by remember { mutableStateOf(currentDate.year) }
     var date by remember { mutableStateOf(currentDate.dayOfMonth) }
     var mode by remember { mutableStateOf(0) }
-    Database.connect("jdbc:sqlite:chinook.db")
+    val manager = DatabaseManager()
+                val db = manager.setupDatabase()
     val events = remember { mutableStateListOf<Event>()}
     transaction {
         events.clear()

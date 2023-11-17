@@ -29,7 +29,8 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun HabitCheck(habit: String) {
-    Database.connect("jdbc:sqlite:chinook.db")
+    val manager = DatabaseManager()
+                val db = manager.setupDatabase()
     val todoListFromDb: MutableList<TodoItem> = mutableListOf()
 
     transaction {

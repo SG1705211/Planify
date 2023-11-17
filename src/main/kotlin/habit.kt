@@ -225,7 +225,8 @@ private fun validateDate(dateStr: String): Boolean {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ToDoList() {
-    Database.connect("jdbc:sqlite:chinook.db")
+    val manager = DatabaseManager()
+                val db = manager.setupDatabase()
     val (selectedSection, setSelectedSection) = remember { mutableStateOf("Work") }
     val todoListFromDb = remember { mutableStateListOf<TodoItem>()}
 

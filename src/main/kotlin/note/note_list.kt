@@ -74,7 +74,8 @@ data class FileItem(
 
 @Composable
 fun CreateFileDialog(onCreate: (FileItem) -> Unit) {
-    Database.connect("jdbc:sqlite:chinook.db")
+    val manager = DatabaseManager()
+                val db = manager.setupDatabase()
     var id by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var content by remember { mutableStateOf("") }
@@ -118,7 +119,8 @@ fun CreateFileDialog(onCreate: (FileItem) -> Unit) {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun NoteList(state: RichTextState) {
-    Database.connect("jdbc:sqlite:chinook.db")
+    val manager = DatabaseManager()
+                val db = manager.setupDatabase()
     transaction {
         SchemaUtils.create(FilesTable)
     }

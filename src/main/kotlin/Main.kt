@@ -159,44 +159,63 @@ fun AppLayout() {
 }
 
 
-//class DatabaseManager {
-//    fun setupDatabase(): Database {
-//        val dbName = "chinook.db"
-//        val persistentDir = File(System.getProperty("user.home"), ".myApp")
-//        val persistentDBFile = File(persistentDir, dbName)
-//        // Check if the database file exists in a persistent location
-//        if (!persistentDBFile.exists()) {
-//            // Ensure the directory exists
-//            persistentDir.mkdirs()
-//            // Copy the database from the resources to the persistent location
-//            val resourceStream = this::class.java.getResourceAsStream("/$dbName")
-//            FileOutputStream(persistentDBFile).use { output ->
-//                resourceStream.copyTo(output)
-//            }
-//        }
-//
-//        // Load SQLite JDBC driver (required for some configurations)
-//        Class.forName("org.sqlite.JDBC")
-//
-//        // Connect to the SQLite database in the persistent location
-//        val connectionUrl = "jdbc:sqlite:${persistentDBFile.absolutePath}"
-//        return Database.connect(connectionUrl)
-//    }
-//}
+class DatabaseManager {
+    fun setupDatabase(): Database {
+        val dbName = "chinook.db"
+        val persistentDir = File(System.getProperty("user.home"), ".myApp")
+        val persistentDBFile = File(persistentDir, dbName)
+        // Check if the database file exists in a persistent location
+        if (!persistentDBFile.exists()) {
+            // Ensure the directory exists
+            persistentDir.mkdirs()
+            // Copy the database from the resources to the persistent location
+            val resourceStream = this::class.java.getResourceAsStream("/$dbName")
+            FileOutputStream(persistentDBFile).use { output ->
+                resourceStream.copyTo(output)
+            }
+        }
+
+        // Load SQLite JDBC driver (required for some configurations)
+        Class.forName("org.sqlite.JDBC")
+
+        // Connect to the SQLite database in the persistent location
+        val connectionUrl = "jdbc:sqlite:${persistentDBFile.absolutePath}"
+        return Database.connect(connectionUrl)
+    }
+}
 
 
 fun uploadDatabaseToCloud() {
-    val storage = StorageOptions.newBuilder().setCredentials(ServiceAccountCredentials.fromStream(FileInputStream("key.json"))).build().service
+    val storage = StorageOptions.newBuilder()
+        .setCredentials(ServiceAccountCredentials.fromStream(FileInputStream("/Users/seangong/IdeaProjects/CS346-project/src/main/resources/key.json")))
+        .build().service
+
+    // Define the directory and file path for the database
+    val persistentDir = File(System.getProperty("user.home"), ".myApp")
+    val persistentDBFile = File(persistentDir, "chinook.db")
+
     val blobId = BlobId.of("cs346bucket", "chinook.db")
     val blobInfo = BlobInfo.newBuilder(blobId).build()
-    storage.create(blobInfo, Files.readAllBytes(Paths.get("chinook.db")))
-}
 
+    // Use the correct file path to read the database
+    storage.create(blobInfo, Files.readAllBytes(persistentDBFile.toPath()))
+}
 fun downloadDatabaseFromCloud() {
-    val storage = StorageOptions.newBuilder().setCredentials(ServiceAccountCredentials.fromStream(FileInputStream("key.json"))).build().service
+    val storage = StorageOptions.newBuilder()
+        .setCredentials(ServiceAccountCredentials.fromStream(FileInputStream("/Users/seangong/IdeaProjects/CS346-project/src/main/resources/key.json")))
+        .build().service
     val blob = storage.get(BlobId.of("cs346bucket", "chinook.db"))
     val readChannel = blob.reader()
-    FileOutputStream("chinook.db").channel.transferFrom(readChannel, 0, Long.MAX_VALUE)
+
+    // Define the directory and file path for the database
+    val persistentDir = File(System.getProperty("user.home"), ".myApp")
+    val persistentDBFile = File(persistentDir, "chinook.db")
+
+    // Ensure the directory exists
+    persistentDir.mkdirs()
+
+    // Use FileOutputStream to write to the correct location
+    FileOutputStream(persistentDBFile).channel.transferFrom(readChannel, 0, Long.MAX_VALUE)
 }
 
 
@@ -209,7 +228,8 @@ fun main() = application {
             Box(
                 modifier = Modifier.background(MaterialTheme.colorScheme.background)
             ) {
-                Database.connect("jdbc:sqlite:chinook.db")
+                val manager = DatabaseManager()
+                val db = manager.setupDatabase()
                 downloadDatabaseFromCloud()
 //
 //                transaction {

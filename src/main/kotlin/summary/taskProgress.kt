@@ -31,7 +31,8 @@ fun TaskProgress(
         .padding(20.dp)
         .fillMaxSize()
 ) {
-    Database.connect("jdbc:sqlite:chinook.db")
+    val manager = DatabaseManager()
+                val db = manager.setupDatabase()
     val todoListFromDb: MutableList<TodoItem> = mutableListOf()
 
     transaction {
