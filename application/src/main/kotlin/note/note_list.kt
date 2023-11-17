@@ -1,5 +1,6 @@
 package note
 
+import DatabaseManager
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -22,6 +23,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
+import uploadDatabaseToCloud
 
 
 object Table__File : Table() {
@@ -101,6 +103,8 @@ fun CreateFileDialog(folder: String, onCreate: (FileItem) -> Unit, onClose: () -
 @Composable
 fun CreateFolderDialog(parentFolder: String, onCreate: (FolderItem) -> Unit, onClose: () -> Unit) {
     //Database.connect("jdbc:sqlite:chinook.db")
+    val manager = DatabaseManager()
+    val db = manager.setupDatabase()
     var name by remember { mutableStateOf("") }
 
     AlertDialog(
@@ -141,18 +145,18 @@ fun CreateFolderDialog(parentFolder: String, onCreate: (FolderItem) -> Unit, onC
 }
 
 
-
 @OptIn(ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
-    Database.connect("jdbc:sqlite:chinook.db")
+    val manager = DatabaseManager()
+    val db = manager.setupDatabase()
     transaction {
         SchemaUtils.create(Table__File)
         SchemaUtils.create(Folders__Table)
     }
-    val idList = remember { mutableStateListOf<String>()}
-    val folderList = remember { mutableStateListOf<String>()}
-    val folderPath = remember { mutableStateListOf<String>("")}
+    val idList = remember { mutableStateListOf<String>() }
+    val folderList = remember { mutableStateListOf<String>() }
+    val folderPath = remember { mutableStateListOf<String>("") }
     var isDialogOpen by remember { mutableStateOf(false) }
     var isFolderDialogOpen by remember { mutableStateOf(false) }
     var isSaveDialogOpen by remember { mutableStateOf(false) }
@@ -196,7 +200,7 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
                     isDialogOpen = true
                 },
                 containerColor = MaterialTheme.colorScheme.tertiary,
-                elevation =  FloatingActionButtonDefaults.elevation(
+                elevation = FloatingActionButtonDefaults.elevation(
                     defaultElevation = 10.dp
                 )
             ) {
@@ -212,7 +216,7 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
                     isFolderDialogOpen = true
                 },
                 containerColor = MaterialTheme.colorScheme.tertiary,
-                elevation =  FloatingActionButtonDefaults.elevation(
+                elevation = FloatingActionButtonDefaults.elevation(
                     defaultElevation = 10.dp
                 )
             ) {
@@ -227,15 +231,17 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
                     if (selectedNoteIndex.value != -1) {
                         isSaveDialogOpen = true
                         transaction {
-                            Table__File.update({(Table__File.name eq idList[selectedNoteIndex.value]) and
-                                    (Table__File.folderName eq currentFolder)}) {
+                            Table__File.update({
+                                (Table__File.name eq idList[selectedNoteIndex.value]) and
+                                        (Table__File.folderName eq currentFolder)
+                            }) {
                                 it[content] = state.toHtml()
                             }
                         }
                     }
                 },
                 containerColor = MaterialTheme.colorScheme.tertiary,
-                elevation =  FloatingActionButtonDefaults.elevation(
+                elevation = FloatingActionButtonDefaults.elevation(
                     defaultElevation = 10.dp
                 )
             ) {
@@ -257,7 +263,7 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
                     setCurrentFolder(folderPath.last())
                 },
                 containerColor = MaterialTheme.colorScheme.tertiary,
-                elevation =  FloatingActionButtonDefaults.elevation(
+                elevation = FloatingActionButtonDefaults.elevation(
                     defaultElevation = 10.dp
                 )
             ) {
@@ -307,13 +313,12 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
                     isFile = false
                 },
                 containerColor = MaterialTheme.colorScheme.tertiary,
-                elevation =  FloatingActionButtonDefaults.elevation(
+                elevation = FloatingActionButtonDefaults.elevation(
                     defaultElevation = 10.dp
                 )
             ) {
                 Text("DEL")
             }
-
 
 
             // 6. show current folder
@@ -325,7 +330,7 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
 
                 },
                 containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                elevation =  FloatingActionButtonDefaults.elevation(
+                elevation = FloatingActionButtonDefaults.elevation(
                     defaultElevation = 10.dp
                 )
             ) {
@@ -345,10 +350,11 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
         LazyColumn(modifier = Modifier.padding(top = 150.dp)) {
             // list files
             items(idList.size) {
-                val backgroundColor = if (it == selectedNoteIndex.value) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onPrimary
+                val backgroundColor =
+                    if (it == selectedNoteIndex.value) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onPrimary
                 val fontWeight = if (it == selectedNoteIndex.value) FontWeight.Bold else FontWeight.Normal
 
-                ElevatedCard (
+                ElevatedCard(
                     // shadow
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 3.dp
@@ -358,7 +364,7 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
                     ),
                     shape = RoundedCornerShape(8.dp),
                 ) {
-                    Row (modifier = Modifier
+                    Row(modifier = Modifier
                         .clickable {
                             selectedNoteIndex.value = it
                             selectedFolderIndex.value = -1
@@ -377,7 +383,7 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
                             Icons.Filled.Edit, // icon image
                             contentDescription = "A Pen",
                             modifier = Modifier
-                                .clickable {  }
+                                .clickable { }
                                 .align(Alignment.CenterVertically)
                                 .padding(horizontal = 10.dp)
                         )
@@ -396,11 +402,12 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
             item { Divider(modifier = Modifier.padding(vertical = 10.dp), thickness = 2.dp) }
 
             // list folder
-            items(folderList.size) {num ->
-                val backgroundColor = if (num == selectedFolderIndex.value) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onPrimary
+            items(folderList.size) { num ->
+                val backgroundColor =
+                    if (num == selectedFolderIndex.value) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onPrimary
                 val fontWeight = if (num == selectedFolderIndex.value) FontWeight.Bold else FontWeight.Normal
 
-                ElevatedCard (
+                ElevatedCard(
                     // shadow
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 3.dp
@@ -413,13 +420,14 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
                     var isHovered by remember { mutableStateOf(false) }
                     val TransparentLightGray = Color(0xFFCCCCCC).copy(alpha = 0.3f)
                     val bc = if (isHovered) TransparentLightGray else Color.Transparent
-                    Row (
+                    Row(
                         modifier = Modifier
                             .combinedClickable(
                                 onClick = {
                                     selectedFolderIndex.value = num
                                     selectedNoteIndex.value = -1
-                                    isFile = false },
+                                    isFile = false
+                                },
                                 onDoubleClick = {
                                     isFile = false
                                     selectedFolderIndex.value = -1
@@ -436,7 +444,7 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
                             Icons.Filled.Menu, // icon image
                             contentDescription = "A Pen",
                             modifier = Modifier
-                                .clickable {  }
+                                .clickable { }
                                 .align(Alignment.CenterVertically)
                                 .padding(horizontal = 10.dp)
                         )
