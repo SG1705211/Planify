@@ -4,9 +4,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -16,18 +18,27 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mohamedrejeb.richeditor.model.RichTextState
+import androidx.compose.ui.platform.LocalFocusManager
+
+//import androidx.compose.ui.input.key.shortcuts
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.awt.ComposeWindow
+import java.awt.FileDialog
+import java.awt.Frame
+import java.io.File
 
 @Composable
 fun functionButton(
     onClick: () -> Unit,
     text: String,
+    hotkey: Key? = null,
     isSelected: Boolean = false,
 ) {
     Button(
         onClick = onClick,
-//        elevation = CardDefaults.cardElevation(
-//            defaultElevation = 3.dp
-//        ),
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isSelected) {
                 MaterialTheme.colorScheme.tertiary
@@ -101,7 +112,8 @@ fun controlBar(
                 )
             },
             isSelected = state.currentSpanStyle.fontWeight == FontWeight.Bold,
-            text = "Bold"
+            text = "Bold",
+            hotkey = Key.B
         )
 
         functionButton(
@@ -149,7 +161,7 @@ fun controlBar(
                 )
             },
             isSelected = state.currentSpanStyle.fontSize == 28.sp,
-            text = "Title"
+            text = "Head"
         )
 
         functionButton(
@@ -194,10 +206,48 @@ fun controlBar(
 
         functionButton(
             onClick = {
-                val html = "<p><b>Compose Rich Editor</b></p>"
-                state.setHtml(html)
+//                val html = "<p><b>Compose Rich Editor</b></p>"
+//                state.setHtml(html)
+                // Open file dialog to choose a file
+                val window = ComposeWindow()
+                val fileDialog = FileDialog(window, "Select a File", FileDialog.LOAD)
+                fileDialog.isVisible = true
+
+                val file = fileDialog.file?.let { fileName ->
+                    File(fileDialog.directory, fileName)
+                }
+
+                // Read the contents of the file
+                file?.let {
+                    val content = it.readText()
+                    if (file.extension.equals("html", ignoreCase = true)) {
+                        state.setHtml(content)
+                    }
+                    // Use the content in your state
+                     // or handle based on fileType
+                }
             },
             text = "load",
+        )
+
+        functionButton(
+            onClick = {
+                // Open file save dialog to choose where to save the file
+                val window = ComposeWindow()
+                val fileDialog = FileDialog(window, "Save File", FileDialog.SAVE)
+                fileDialog.file = "export.html" // Default file name
+                fileDialog.isVisible = true
+
+                val file = fileDialog.file?.let { fileName ->
+                    File(fileDialog.directory, fileName)
+                }
+
+                // Write the HTML content to the file
+                file?.let {
+                    it.writeText(state.toHtml())
+                }
+            },
+            text = "Export HTML"
         )
     }
 }

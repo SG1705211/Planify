@@ -23,6 +23,7 @@ data class TodoItem(
     val id: Int, val primaryTask: String, val secondaryTask: String, val priority: Int,
     var completed: Boolean, val section: String, val datetime: String, val duration: Int
 )
+
 @Composable
 fun TaskProgress(
     progress: Float,
@@ -57,7 +58,7 @@ fun TaskProgress(
         CircularProgressIndicator(
             backgroundColor = MaterialTheme.colorScheme.onSecondary,
             color = MaterialTheme.colorScheme.primary,
-            progress = progress_cur,
+            progress = progress,
             modifier = Modifier.size(200.dp),
             strokeWidth = 12.dp
         )
@@ -75,7 +76,7 @@ fun TaskProgress(
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
-            var tem_str = round((progress_cur * 100).toDouble()).toString() + "%"
+            var tem_str = round((progress * 100).toDouble()).toString() + "%"
             Text(
                 text = "${tem_str}",
                 color = MaterialTheme.colorScheme.primary,

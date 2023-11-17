@@ -97,12 +97,14 @@ object TodoTable : Table() {
     val datetime = varchar("datetime", 255)
     val section = varchar("section", 255)
     val duration = integer("duration")
+    val starttime = varchar("starttime", 255)
     override val primaryKey = PrimaryKey(id, name = "PK_User_ID")
 }
 
 data class TodoItem(
     val id: Int, val primaryTask: String, val secondaryTask: String, val priority: Int,
-    var completed: Boolean, val section: String, val date_time: String
+    var completed: Boolean, val section: String, val date_time: String, val start_time: String,
+    val duration: String
 )
 
 @Composable
@@ -112,8 +114,10 @@ fun CreateTodoDialog(onCreate: (TodoItem) -> Unit,onClose: () -> Unit) {
     var priority by remember { mutableStateOf(1) }
     var section by remember { mutableStateOf("") }
     var dueDate by remember { mutableStateOf("") }
+    var start_time by remember { mutableStateOf("") }
     var isDateValid by remember { mutableStateOf(true) }
     var areFieldsValid by remember { mutableStateOf(true) }
+    var duration_in by remember { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = { /* dismiss dialog */ },
@@ -144,6 +148,16 @@ fun CreateTodoDialog(onCreate: (TodoItem) -> Unit,onClose: () -> Unit) {
                     label = { Text("Section") }
                 )
                 TextField(
+                    value = start_time,
+                    onValueChange = { start_time = it },
+                    label = { Text("Start Time (HH:MM)") }
+                )
+                TextField(
+                    value = duration_in,
+                    onValueChange = { duration_in = it },
+                    label = { Text("Duration (in Hours)") }
+                )
+                TextField(
                     value = dueDate,
                     onValueChange = { dueDate = it },
                     label = { Text("Due Date (yyyy-MM-dd)") }
@@ -172,7 +186,9 @@ fun CreateTodoDialog(onCreate: (TodoItem) -> Unit,onClose: () -> Unit) {
                                 priority = priority,
                                 completed = false,
                                 section = section,
-                                date_time = dueDate
+                                date_time = dueDate,
+                                duration = duration_in,
+                                start_time = start_time
                             )
                         )
                     }
@@ -212,96 +228,7 @@ fun ToDoList() {
     Database.connect("jdbc:sqlite:chinook.db")
     val (selectedSection, setSelectedSection) = remember { mutableStateOf("Work") }
     val todoListFromDb = remember { mutableStateListOf<TodoItem>()}
-//        transaction {
-//            SchemaUtils.createMissingTablesAndColumns(TodoTable) // Create table if not exists
-//
-//            // Delete all existing records (Optional, if you want to start fresh)
-//            TodoTable.deleteAll()
-//
-//            // Work section
-//            TodoTable.insert {
-//                it[primaryTask] = "Write report"
-//                it[secondaryTask] = "Due next week"
-//                it[priority] = 1
-//                it[completed] = false
-//                it[section] = "Work"
-//                it[duration] = 3
-//                it[datetime] = "20231030"
-//            }
-//
-//            TodoTable.insert {
-//                it[primaryTask] = "Email client"
-//                it[secondaryTask] = "Urgent"
-//                it[priority] = 2
-//                it[completed] = false
-//                it[section] = "Work"
-//                it[duration] = 3
-//                it[datetime] = "20231029"
-//            }
-//
-//            // Study section
-//            TodoTable.insert {
-//                it[primaryTask] = "Study for exam"
-//                it[secondaryTask] = "Chapter 1-5"
-//                it[priority] = 1
-//                it[completed] = false
-//                it[section] = "Study"
-//                it[duration] = 3
-//                it[datetime] = "20231030"
-//            }
-//
-//            TodoTable.insert {
-//                it[primaryTask] = "Complete assignment"
-//                it[secondaryTask] = "Submit online"
-//                it[priority] = 2
-//                it[completed] = false
-//                it[section] = "Study"
-//                it[duration] = 3
-//                it[datetime] = "20231030"
-//            }
-//
-//            // Hobby section
-//            TodoTable.insert {
-//                it[primaryTask] = "Learn guitar"
-//                it[secondaryTask] = "Practice chords"
-//                it[priority] = 3
-//                it[completed] = false
-//                it[section] = "Hobby"
-//                it[duration] = 3
-//                it[datetime] = "20231030"
-//            }
-//
-//            TodoTable.insert {
-//                it[primaryTask] = "Go fishing"
-//                it[secondaryTask] = "This weekend"
-//                it[priority] = 4
-//                it[completed] = false
-//                it[section] = "Hobby"
-//                it[duration] = 3
-//                it[datetime] = "20231030"
-//            }
-//
-//            // Life section
-//            TodoTable.insert {
-//                it[primaryTask] = "Buy groceries"
-//                it[secondaryTask] = "Fruits, Vegetables"
-//                it[priority] = 3
-//                it[completed] = false
-//                it[section] = "Life"
-//                it[duration] = 3
-//                it[datetime] = "20231030"
-//            }
-//
-//            TodoTable.insert {
-//                it[primaryTask] = "Call mom"
-//                it[secondaryTask] = "Weekend catchup"
-//                it[priority] = 4
-//                it[completed] = false
-//                it[section] = "Life"
-//                it[duration] = 1
-//                it[datetime] = "20231028"
-//            }
-//        }
+
     // Moved database fetching to LaunchedEffect to minimize recomposition
     LaunchedEffect(selectedSection) {
         transaction {
@@ -315,10 +242,12 @@ fun ToDoList() {
                         it[TodoTable.priority],
                         it[TodoTable.completed],
                         it[TodoTable.section],
-                        it[TodoTable.datetime]
+                        it[TodoTable.datetime],
+                        "null", "2"
                     )
                 )
             }
+            //uploadDatabaseToCloud()
         }
     }
     // New state variable to control dialog visibility
@@ -383,6 +312,7 @@ fun ToDoList() {
                                             it[completed] = isChecked
                                         }
                                     }
+                                    uploadDatabaseToCloud()
                                 })
                             })
                         Divider()
@@ -403,24 +333,25 @@ fun ToDoList() {
 
                     isDialogOpen = false
                 },
-                        onCreate = { newItem ->
-                    isDialogOpen = false  // Close the dialog
-                    transaction {
-                        // Insert new item into the database
-                        val newId = TodoTable.insert {
-                            it[primaryTask] = newItem.primaryTask
-                            it[secondaryTask] = newItem.secondaryTask
-                            it[priority] = newItem.priority
-                            it[completed] = newItem.completed
-                            it[section] = newItem.section
-                            it[datetime] = newItem.date_time
-                            it[duration] = 2
+                    onCreate = { newItem ->
+                        isDialogOpen = false  // Close the dialog
+                        transaction {
+                            // Insert new item into the database
+                            val newId = TodoTable.insert {
+                                it[primaryTask] = newItem.primaryTask
+                                it[secondaryTask] = newItem.secondaryTask
+                                it[priority] = newItem.priority
+                                it[completed] = newItem.completed
+                                it[section] = newItem.section
+                                it[datetime] = newItem.date_time
+                                it[duration] = newItem.duration.toInt()
+                                it[starttime] = newItem.start_time
+                            }
+                            // Add new item to the list
+                            todoListFromDb.add(newItem.copy(id = 20))
                         }
-                        print(newItem.date_time)
-                        // Add new item to the list
-                        todoListFromDb.add(newItem.copy(id = 20))
-                    }
-                })
+                        uploadDatabaseToCloud()
+                    })
             }
         }
     }
