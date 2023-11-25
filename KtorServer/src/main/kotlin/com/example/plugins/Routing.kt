@@ -40,7 +40,8 @@ object TodoTable : Table() {
 
 
 fun Application.configureRouting() {
-    Database.connect("jdbc:sqlite:chinook.db", "org.sqlite.JDBC")
+//    Database.connect("jdbc:sqlite:chinook.db", "org.sqlite.JDBC")
+    Database.connect("jdbc:sqlite:/app/chinook.db", "org.sqlite.JDBC")
     routing {
         get("/") {
             call.respondText("a")
