@@ -46,7 +46,8 @@ data class TodoItemjson(
     val datetime: String,
     val section: String,
     val duration: Int,
-    val starttime: String
+    val starttime: String,
+    val recur: String
 )
 
 suspend fun fetchTodo_check(): List<TodoItemjson> {
@@ -83,22 +84,6 @@ fun HabitCheck(habit: String) {
             }
         }
     }
-//    transaction {
-//        TodoTable.selectAll().forEach {
-//            todoListFromDb.add(
-//                TodoItem(
-//                    it[TodoTable.id],
-//                    it[TodoTable.primaryTask],
-//                    it[TodoTable.secondaryTask],
-//                    it[TodoTable.priority],
-//                    it[TodoTable.completed],
-//                    it[TodoTable.section],
-//                    it[TodoTable.datetime],
-//                    it[TodoTable.duration]
-//                )
-//            )
-//        }
-//    }
 
     val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
     val currentWeekStartDate = currentDate.minusDays(currentDate.dayOfWeek.value.toLong() - 1)
@@ -114,29 +99,6 @@ fun HabitCheck(habit: String) {
     var studyCompleted = currentWeekTable.filter { todoItem -> todoItem.section == "Study" && todoItem.completed == true}
     var hobbyCompleted = currentWeekTable.filter { todoItem -> todoItem.section == "Hobby" && todoItem.completed == true}
     var lifeCompleted = currentWeekTable.filter { todoItem -> todoItem.section == "Life" && todoItem.completed == true}
-
-//    println("todos")
-//    todoListFromDb.forEach{
-//        println(it.primaryTask)
-//        println(it.datetime)
-//        println(it.completed)
-//    }
-//    println("currweek")
-//    currentWeekTable.forEach{
-//        println(it.primaryTask)
-//    }
-//    println("worktodo")
-//    workTodo.forEach{
-//        println(it.primaryTask)
-//    }
-//    println("workcompleted")
-//    workCompleted.forEach{
-//        println(it.primaryTask)
-//    }
-//    var workProgress = (todoListFromDb.count{it.section == "Work" && it.completed == true}.toDouble() / todoListFromDb.count{it.section == "Work"}.toDouble()).toFloat()
-//    var studyProgress = (todoListFromDb.count{it.section == "Study" && it.completed == true}.toDouble() / todoListFromDb.count{it.section == "Study"}.toDouble()).toFloat()
-//    var hobbyProgress = (todoListFromDb.count{it.section == "Hobby" && it.completed == true}.toDouble() / todoListFromDb.count{it.section == "Hobby"}.toDouble()).toFloat()
-//    var lifeProgress = (todoListFromDb.count{it.section == "Life" && it.completed == true}.toDouble() / todoListFromDb.count{it.section == "Life"}.toDouble()).toFloat()
 
     Box(
         modifier = Modifier

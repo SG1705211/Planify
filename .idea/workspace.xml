@@ -5,7 +5,302 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0a454a04-b442-49c2-86d3-2f6e70b7925b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/7.5.1/executionHistory/executionHistory.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.6.2/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.6.2/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.6.2/dependencies-accessors/dependencies-accessors.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.6.2/dependencies-accessors/dependencies-accessors.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.6.2/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.6.2/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.6.2/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.6.2/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.6.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.6.2/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.6.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.6.2/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.6.2/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.6.2/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Instruction.md" beforeDir="false" afterPath="$PROJECT_DIR$/Instruction.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KtorServer/chinook.db" beforeDir="false" afterPath="$PROJECT_DIR$/KtorServer/chinook.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KtorServer/src/main/kotlin/com/example/Application.kt" beforeDir="false" afterPath="$PROJECT_DIR$/KtorServer/src/main/kotlin/com/example/Application.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KtorServer/src/main/kotlin/com/example/plugins/Routing.kt" beforeDir="false" afterPath="$PROJECT_DIR$/KtorServer/src/main/kotlin/com/example/plugins/Routing.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/KtorServer/src/main/resources/chinook.db" beforeDir="false" afterPath="$PROJECT_DIR$/KtorServer/src/main/resources/chinook.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$Calendar$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$Calendar$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$Calendar$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$Calendar$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$Calendar$2$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$Calendar$2$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$Calendar$2$1$2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$Calendar$2$1$2$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$Calendar$3$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$Calendar$3$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$Calendar$3$1$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$Calendar$3$1$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$DailyCalendar$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$DailyCalendar$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$DailyCalendar$1$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$DailyCalendar$1$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$DailyCalendar$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$DailyCalendar$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$MonthlyCalendar$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt$MonthlyCalendar$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/CalendarKt.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$CalendarKt$lambda-1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$CalendarKt$lambda-1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$CalendarKt$lambda-2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$CalendarKt$lambda-2$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$CalendarKt$lambda-3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$CalendarKt$lambda-3$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$CalendarKt$lambda-4$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$CalendarKt$lambda-4$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$CalendarKt$lambda-5$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$CalendarKt$lambda-5$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$CalendarKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$CalendarKt.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-10$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-10$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-11$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-11$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-12$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-12$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-13$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-13$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-14$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-14$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-15$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-15$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-2$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-3$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-4$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-4$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-5$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-5$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-6$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-6$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-7$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-7$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-8$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-8$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-9$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt$lambda-9$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$HabitKt.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-2$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-3$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-4$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-4$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-5$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-5$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-6$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-6$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-7$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-7$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-8$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-8$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-9$1$window$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-9$1$window$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-9$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt$lambda-9$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/ComposableSingletons$MainKt.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/DatabaseManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/DatabaseManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/Event$$serializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/Event$$serializer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/Event$Companion.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/Event$Companion.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/Event.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/Event.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$2$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$2$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$3$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$3$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$4$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$4$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$4$1$2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$4$1$2$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$4$1$3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$4$1$3$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$4$1$4$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$4$1$4$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$4$1$5$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$4$1$5$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$4$1$6$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$4$1$6$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$4$1$7$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$4$1$7$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$CreateTodoDialog$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$2$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$2$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$2$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$2$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$2$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$1$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$1$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$1$1$2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$1$1$2$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$1$1$3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$1$1$3$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$1$1$4$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$1$1$4$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1$1$1$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1$1$1$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1$1$1$3$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1$1$1$3$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1$1$1$3$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1$1$1$3$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1$1$1$3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1$1$1$3$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1$1$1$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1$1$1$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1$1$1$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1$1$1$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$2$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$2$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$3$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$3$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$3$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$3$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$3$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$4$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$ToDoList$3$2$4$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$create$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$create$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$fetchTodos$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$fetchTodos$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$fetchTodosa$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$fetchTodosa$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$updateTodoItem$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt$updateTodoItem$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/HabitKt.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/MainKt$AppLayout$2$1$1$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/MainKt$AppLayout$2$1$2$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/MainKt$AppLayout$2$1$3$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/MainKt$AppLayout$2$1$4$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/MainKt$AppLayout$2$1$5$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/MainKt$MagicHome$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/MainKt$MagicHome$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/MainKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/MainKt.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/TodoItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/TodoItem.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/TodoItemjson$$serializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/TodoItemjson$$serializer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/TodoItemjson$Companion.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/TodoItemjson$Companion.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/TodoItemjson.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/TodoItemjson.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/TodoTable.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/TodoTable.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-10$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-10$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-11$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-11$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-12$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-12$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-13$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-13$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-14$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-14$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-15$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-15$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-16$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-16$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-17$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-17$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-18$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-18$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-19$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-19$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-2$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-3$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-4$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-4$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-5$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-5$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-6$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-6$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-7$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-7$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-8$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-8$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-9$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt$lambda-9$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/ComposableSingletons$Note_listKt.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/FileItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/FileItem.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/FolderItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/FolderItem.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Folders__Table.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Folders__Table.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFileDialog$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFileDialog$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFileDialog$2$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFileDialog$2$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFileDialog$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFileDialog$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFileDialog$3$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFileDialog$3$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFileDialog$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFileDialog$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFileDialog$4$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFileDialog$4$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFileDialog$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFileDialog$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFolderDialog$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFolderDialog$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFolderDialog$2$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFolderDialog$2$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFolderDialog$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFolderDialog$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFolderDialog$3$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFolderDialog$3$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFolderDialog$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFolderDialog$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFolderDialog$4$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFolderDialog$4$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFolderDialog$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$CreateFolderDialog$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$3$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$4$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$4$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$2$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$3$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$3$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$3$1$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$3$1$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$3$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$4$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$4$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$5$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$5$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$5$1$1$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$5$1$1$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$5$1$1$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$5$1$1$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$5$1$1$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$5$1$1$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$5$1$1$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$5$1$1$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$5$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$5$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$5$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$5$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$1$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$10$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$10$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$10$2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$10$2$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$10.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$1$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$1$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$1$1$2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$1$1$2$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$2$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$2$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$2$1$2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$2$1$2$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$2$1$3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$2$1$3$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$2$1$4$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$2$1$4$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$2$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$3$1$1$newId$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$3$1$1$newId$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$3$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$3$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$3$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$4$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$4$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$5$1$1$newId$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$5$1$1$newId$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$5$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$5$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$5$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$5$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$6$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$6$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$8$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$8$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt$NoteList$5$9.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Note_listKt.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Table__File.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/note/Table__File.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$2$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$2$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$4$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$4$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$4$1$2$1$1$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$4$1$2$1$1$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$4$1$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$4$1$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$4$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$4$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$4$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$4$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$4$3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$4$3$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$4$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$4$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt$Summary$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/classes/kotlin/main/summary/SummaryKt.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/inputs/source-to-output.tab" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/inputs/source-to-output.tab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.values" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.values" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.values.at" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.values.at" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.values.s" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/inputs/source-to-output.tab.values.s" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.keystream" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.keystream" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.keystream.len" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.keystream.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.len" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.values.at" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab.values.at" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab_i" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-attributes.tab_i" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.keystream" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.keystream" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.keystream.len" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.keystream.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.len" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.values.at" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab.values.at" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab_i" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/class-fq-name-to-source.tab_i" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.keystream" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.keystream" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.keystream.len" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.keystream.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.len" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.values.at" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.values.at" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab_i" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab_i" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.values.at" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/package-parts.tab.values.at" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.keystream" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.keystream" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.keystream.len" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.keystream.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.len" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.values" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.values" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.values.at" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.values.at" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.values.s" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab.values.s" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab_i" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/proto.tab_i" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.values.at" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.values.at" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.keystream" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.keystream" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.keystream.len" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.keystream.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.len" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.values.at" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab.values.at" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab_i" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/subtypes.tab_i" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.keystream" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.keystream" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.keystream.len" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.keystream.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.len" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.values.at" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab.values.at" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab_i" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/supertypes.tab_i" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/counters.tab" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/counters.tab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/file-to-id.tab" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/file-to-id.tab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.values.at" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/file-to-id.tab.values.at" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/id-to-file.tab" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/id-to-file.tab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.keystream" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.keystream" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.keystream.len" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.keystream.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.len" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.values.at" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/id-to-file.tab.values.at" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/id-to-file.tab_i" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/id-to-file.tab_i" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/lookups.tab" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/lookups.tab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/lookups.tab.keystream" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/lookups.tab.keystream" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/lookups.tab.keystream.len" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/lookups.tab.keystream.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/lookups.tab.len" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/lookups.tab.len" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/lookups.tab.values" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/lookups.tab.values" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/lookups.tab.values.at" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/lookups.tab.values.at" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/lookups.tab.values.s" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/lookups.tab.values.s" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/lookups.tab_i" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/caches-jvm/lookups/lookups.tab_i" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/last-build.bin" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/cacheable/last-build.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/classpath-snapshot/shrunk-classpath-snapshot.bin" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/classpath-snapshot/shrunk-classpath-snapshot.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/local-state/build-history.bin" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/kotlin/compileKotlin/local-state/build-history.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/libs/application.jar" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/libs/application.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/build/resources/main/chinook.db" beforeDir="false" afterPath="$PROJECT_DIR$/application/build/resources/main/chinook.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/chinook.db" beforeDir="false" afterPath="$PROJECT_DIR$/application/chinook.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/application/src/main/kotlin/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/src/main/kotlin/calendar/calendar.kt" beforeDir="false" afterPath="$PROJECT_DIR$/application/src/main/kotlin/calendar/calendar.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/src/main/kotlin/calendar/calendarWidget.kt" beforeDir="false" afterPath="$PROJECT_DIR$/application/src/main/kotlin/calendar/calendarWidget.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/src/main/kotlin/habit.kt" beforeDir="false" afterPath="$PROJECT_DIR$/application/src/main/kotlin/habit.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/src/main/kotlin/summary/habitCheck.kt" beforeDir="false" afterPath="$PROJECT_DIR$/application/src/main/kotlin/summary/habitCheck.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/src/main/kotlin/summary/summary.kt" beforeDir="false" afterPath="$PROJECT_DIR$/application/src/main/kotlin/summary/summary.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application/src/main/resources/chinook.db" beforeDir="false" afterPath="$PROJECT_DIR$/application/src/main/resources/chinook.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +336,13 @@
       </state>
     </system>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dockerfile" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -58,32 +360,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;SeanBranch&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/seangong/IdeaProjects/CS346-project/meeting-minutes&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "SeanBranch",
+    "last_opened_file_path": "/Users/seangong/IdeaProjects/CS346-project/KtorServer/src/main/resources",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.7468355",
+    "settings.editor.selected.configurable": "preferences.sourceCode.Java",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/KtorServer/src/main/resources" />
+      <recent name="$PROJECT_DIR$/KtorServer" />
       <recent name="$PROJECT_DIR$/meeting-minutes" />
       <recent name="$PROJECT_DIR$/releases" />
-      <recent name="$PROJECT_DIR$/KtorServer" />
       <recent name="$PROJECT_DIR$/application/src/main/kotlin" />
-      <recent name="$PROJECT_DIR$/application/src/main/resources" />
     </key>
   </component>
   <component name="RunManager" selected="Gradle.CS346-project [application:run]">
@@ -109,18 +411,40 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="CS346-project [packageDistributionForCurrentOS]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="CS346-project:KtorServer [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
+        <option name="scriptParameters" value="" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
           <list>
-            <option value="packageDistributionForCurrentOS" />
+            <option value=":KtorServer:build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="CS346-project:KtorServer [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":KtorServer:jar" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -199,17 +523,19 @@
     </configuration>
     <list>
       <item itemvalue="Gradle.CS346-project [application:run]" />
+      <item itemvalue="Gradle.CS346-project:KtorServer [build]" />
+      <item itemvalue="Gradle.CS346-project:KtorServer [jar]" />
       <item itemvalue="Gradle.CS346-project:application [packageDistributionForCurrentOS]" />
       <item itemvalue="Gradle.Server:" />
       <item itemvalue="Gradle.CS346-project:KtorServer [run]" />
-      <item itemvalue="Gradle.CS346-project [packageDistributionForCurrentOS]" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.Server:" />
-        <item itemvalue="Gradle.CS346-project:application [packageDistributionForCurrentOS]" />
+        <item itemvalue="Gradle.CS346-project:KtorServer [build]" />
+        <item itemvalue="Gradle.CS346-project:KtorServer [jar]" />
         <item itemvalue="Gradle.CS346-project:KtorServer [run]" />
-        <item itemvalue="Gradle.CS346-project [packageDistributionForCurrentOS]" />
+        <item itemvalue="Gradle.CS346-project:application [packageDistributionForCurrentOS]" />
       </list>
     </recent_temporary>
   </component>
@@ -229,6 +555,8 @@
       <workItem from="1700632605698" duration="717000" />
       <workItem from="1700635138880" duration="432000" />
       <workItem from="1700862116983" duration="21502000" />
+      <workItem from="1700946553656" duration="7486000" />
+      <workItem from="1701029326418" duration="13787000" />
     </task>
     <servers />
   </component>
@@ -237,5 +565,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

@@ -28,6 +28,8 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.text.DateFormatSymbols
 import java.time.Month
+import kotlin.math.max
+import kotlin.math.min
 
 val currentDate = LocalDate.now()
 val currentDateTime = LocalDateTime.now()
@@ -182,7 +184,12 @@ fun Summary() {
 
                 when (selectedSection) {
                     "Weekly" -> {
-                        progress = (currentWeekTable.count{it.completed == true}.toDouble() / currentWeekTable.size).toFloat()
+                        if (currentWeekTable.isEmpty()) {
+                            progress = 0f
+                        }
+                        else {
+                            progress = (currentWeekTable.count{it.completed == true}.toDouble() / currentWeekTable.size).toFloat()
+                        }
                         Text(
                             text = "Week of " + getMonthName(currMonth.toInt() - 1) + " " + Date1 + " - " +
                                     getMonthName(currMonth2.toInt() - 1) + " " + Date2,
@@ -196,7 +203,12 @@ fun Summary() {
                     }
 
                     "Monthly" -> {
-                        progress = (currentMonthTable.count{it.completed == true}.toDouble() / currentMonthTable.size).toFloat()
+                        if (currentMonthTable.isEmpty()) {
+                            progress = 0f
+                        }
+                        else{
+                            progress = (currentMonthTable.count{it.completed == true}.toDouble() / currentMonthTable.size).toFloat()
+                        }
                         Text(
                             text = Month.of(currMonth.toInt()).toString(),
                             fontFamily = FontFamily.Cursive,
@@ -208,7 +220,12 @@ fun Summary() {
                     }
 
                     "Annual" -> {
-                        progress = (currentYearTable.count{it.completed == true}.toDouble() / currentYearTable.size).toFloat()
+                        if (currentYearTable.isEmpty()) {
+                            progress = 0f
+                        }
+                        else {
+                            progress = (currentYearTable.count{it.completed == true}.toDouble() / currentYearTable.size).toFloat()
+                        }
                         Text(
                             text = currYear,
                             fontFamily = FontFamily.Cursive,
@@ -301,7 +318,7 @@ fun Summary() {
                                     Pair("Sat", satDuration),
                                     Pair("Sun", sunDuration)
                                 ), barwidth = 30.dp, graphWidth = 530.dp,
-                                max_value = listOf(
+                                max_value = max(0.1f, listOf(
                                     monDuration,
                                     tueDuration,
                                     wedDuration,
@@ -309,7 +326,7 @@ fun Summary() {
                                     friDuration,
                                     satDuration,
                                     sunDuration
-                                ).max()
+                                ).max())
                             )
                         }
 
@@ -428,7 +445,7 @@ fun Summary() {
                             Pair("Dec", decDuration),
 
                             ), barwidth = 30.dp, graphWidth = 900.dp,
-                        max_value = listOf(
+                        max_value = max(0.1f, listOf(
                             janDuration,
                             febDuration,
                             marDuration,
@@ -441,7 +458,7 @@ fun Summary() {
                             octDuration,
                             novDuration,
                             decDuration
-                        ).max()
+                        ).max())
                     )
 
 

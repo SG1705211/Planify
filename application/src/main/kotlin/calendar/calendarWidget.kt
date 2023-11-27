@@ -88,7 +88,8 @@ fun homeCalendar() {
                         date =formatDate(jsonItem.datetime),
                         startTime = jsonItem.starttime,
                         endTime = addHoursToTimeString(jsonItem.starttime, jsonItem.duration),
-                        title = jsonItem.primaryTask
+                        title = jsonItem.primaryTask,
+                        recur = jsonItem.recur
                     )
                 )
             }

@@ -18,10 +18,12 @@ import androidx.compose.ui.unit.dp
 import summary.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.materialIcon
 import java.awt.Dimension
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.material3.*
+import androidx.compose.runtime.getValue
 
 import androidx.compose.ui.res.*
 
@@ -36,6 +38,11 @@ import com.google.cloud.storage.BlobId
 import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.StorageOptions
 import com.google.auth.oauth2.ServiceAccountCredentials
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.deleteAll
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.transactions.transaction
+import java.awt.Button
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -47,10 +54,8 @@ val logger = Logger.getLogger("DatabaseLogger")
 
 fun getDatabasePath(): String {
     val dbFileName = "chinook.db"
-
     // Check if a typical development directory/file exists
     val isDevelopment = File(".gradle").exists()
-
     return if (isDevelopment) {
         "jdbc:sqlite:$dbFileName"
     } else {
@@ -58,6 +63,7 @@ fun getDatabasePath(): String {
         "jdbc:sqlite:$appDir/$dbFileName"
     }
 }
+
 @Composable
 fun BoxItem(color: Color, text: String) {
     Box(modifier = Modifier.size(200.dp, 200.dp).background(color)) {
@@ -89,10 +95,26 @@ fun MagicHome() {
 fun Notes() {
     NotesEditor()
 }
-
+@Composable
+fun color_button(boo: Boolean):ButtonColors {
+    val tonalButtonColors = ButtonDefaults.buttonColors(
+        containerColor = if (boo) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondaryContainer,
+        contentColor = if (boo) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+    )
+    return tonalButtonColors
+}
 @Composable
 fun AppLayout() {
     val (selectedSection, setSelectedSection) = remember { mutableStateOf("Section 1") }
+    val listOfBooleans = remember {
+        listOf(
+            mutableStateOf(true),  // First item is true
+            mutableStateOf(false), // Second item is false
+            mutableStateOf(false), // Third item is false
+            mutableStateOf(false), // Fourth item is false
+            mutableStateOf(false)  // Fifth item is false
+        )
+    }
     Row() {
         Column(
             verticalArrangement = Arrangement.SpaceBetween, // Controls vertical arrangement
@@ -105,7 +127,14 @@ fun AppLayout() {
                 .padding(14.dp)
                 .size(width = 150.dp, height = 1000.dp)
             Button(
-                onClick = { setSelectedSection("garbage") }, modifier = commonButtonModifier
+                onClick = {
+                    setSelectedSection("garbage")
+                    listOfBooleans[0].value = true
+                    listOfBooleans[1].value = false
+                    listOfBooleans[2].value = false
+                    listOfBooleans[3].value = false
+                    listOfBooleans[4].value = false
+                }, modifier = commonButtonModifier, colors = color_button(listOfBooleans[0].value)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -120,24 +149,52 @@ fun AppLayout() {
                 }
             }
             FilledTonalButton(
-                onClick = { setSelectedSection("Calendar") }, modifier = commonButtonModifier
+                onClick = {
+                    setSelectedSection("Calendar")
+                    listOfBooleans[0].value = false
+                    listOfBooleans[1].value = true
+                    listOfBooleans[2].value = false
+                    listOfBooleans[3].value = false
+                    listOfBooleans[4].value = false
+                }, modifier = commonButtonModifier, colors = color_button(listOfBooleans[1].value)
             ) {
                 Text(
                     text = "Calendar"
                 )
             }
             FilledTonalButton(
-                onClick = { setSelectedSection("Summary") }, modifier = commonButtonModifier
+                onClick = {
+                    setSelectedSection("Summary")
+                    listOfBooleans[0].value = false
+                    listOfBooleans[1].value = false
+                    listOfBooleans[2].value = true
+                    listOfBooleans[3].value = false
+                    listOfBooleans[4].value = false
+                }, modifier = commonButtonModifier, colors = color_button(listOfBooleans[2].value)
             ) {
                 Text("Summary")
             }
             FilledTonalButton(
-                onClick = { setSelectedSection("To-Do-List") }, modifier = commonButtonModifier
+                onClick = {
+                    setSelectedSection("To-Do-List")
+                    listOfBooleans[0].value = false
+                    listOfBooleans[1].value = false
+                    listOfBooleans[2].value = false
+                    listOfBooleans[3].value = true
+                    listOfBooleans[4].value = false
+                }, modifier = commonButtonModifier, colors = color_button(listOfBooleans[3].value)
             ) {
                 Text("To-Do-List")
             }
             FilledTonalButton(
-                onClick = { setSelectedSection("Notes") }, modifier = commonButtonModifier
+                onClick = {
+                    setSelectedSection("Notes")
+                    listOfBooleans[0].value = false
+                    listOfBooleans[1].value = false
+                    listOfBooleans[2].value = false
+                    listOfBooleans[3].value = false
+                    listOfBooleans[4].value = true
+                }, modifier = commonButtonModifier, colors = color_button(listOfBooleans[4].value)
             ) {
                 Text("Notes")
             }
@@ -200,6 +257,7 @@ fun uploadDatabaseToCloud() {
     // Use the correct file path to read the database
     storage.create(blobInfo, Files.readAllBytes(persistentDBFile.toPath()))
 }
+
 fun downloadDatabaseFromCloud() {
     val storage = StorageOptions.newBuilder()
         .setCredentials(ServiceAccountCredentials.fromStream(FileInputStream("/Users/seangong/IdeaProjects/CS346-project/application/src/main/resources/key.json")))
@@ -228,15 +286,12 @@ fun main() = application {
             Box(
                 modifier = Modifier.background(MaterialTheme.colorScheme.background)
             ) {
-//                val manager = DatabaseManager()
-//                val db = manager.setupDatabase()
-//
+                //
+//                Database.connect("jdbc:sqlite:chinook.db")
 //                transaction {
 //                    SchemaUtils.createMissingTablesAndColumns(TodoTable) // Create table if not exists
-//
 //                    // Delete all existing records (Optional, if you want to start fresh)
 //                    TodoTable.deleteAll()
-//
 //                    // Work section
 //                    TodoTable.insert {
 //                        it[primaryTask] = "Write report"
@@ -247,6 +302,7 @@ fun main() = application {
 //                        it[section] = "Work"
 //                        it[duration] = 3
 //                        it[datetime] = "20231030"
+//                        it[recur] = "None"
 //                    }
 //
 //                    TodoTable.insert {
@@ -258,6 +314,7 @@ fun main() = application {
 //                        it[section] = "Work"
 //                        it[duration] = 3
 //                        it[datetime] = "20231029"
+//                        it[recur] = "None"
 //                    }
 //
 //                    // Study section
@@ -270,6 +327,7 @@ fun main() = application {
 //                        it[section] = "Study"
 //                        it[duration] = 3
 //                        it[datetime] = "20231030"
+//                        it[recur] = "None"
 //                    }
 //
 //                    TodoTable.insert {
@@ -281,6 +339,7 @@ fun main() = application {
 //                        it[section] = "Study"
 //                        it[duration] = 3
 //                        it[datetime] = "20231030"
+//                        it[recur] = "None"
 //                    }
 //
 //                    // Hobby section
@@ -293,6 +352,7 @@ fun main() = application {
 //                        it[section] = "Hobby"
 //                        it[duration] = 3
 //                        it[datetime] = "20231030"
+//                        it[recur] = "None"
 //                    }
 //
 //                    TodoTable.insert {
@@ -304,6 +364,7 @@ fun main() = application {
 //                        it[section] = "Hobby"
 //                        it[duration] = 3
 //                        it[datetime] = "20231030"
+//                        it[recur] = "None"
 //                    }
 //
 //                    // Life section
@@ -316,6 +377,7 @@ fun main() = application {
 //                        it[section] = "Life"
 //                        it[duration] = 3
 //                        it[datetime] = "20231030"
+//                        it[recur] = "None"
 //                    }
 //
 //                    TodoTable.insert {
@@ -327,6 +389,7 @@ fun main() = application {
 //                        it[section] = "Life"
 //                        it[duration] = 1
 //                        it[datetime] = "20231028"
+//                        it[recur] = "None"
 //                    }
 //                }
                 AppLayout()

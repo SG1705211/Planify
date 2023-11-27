@@ -7,32 +7,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import java.time.LocalDate;
-import androidx.compose.material.Button
 import androidx.compose.runtime.*
 import java.time.format.DateTimeFormatter
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
-import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
-import java.time.LocalTime
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.Divider
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
 
 @Serializable
 
 data class Event(
     val id: Int,
-    val date: String,
+    var date: String,
     var startTime: String,
     var endTime: String,
     var title: String,
@@ -40,7 +32,8 @@ data class Event(
     val secondaryTask: String,
     val priority: Int,
     var completed: Boolean,
-    val section: String
+    val section: String,
+    val recur: String
 ) {
     @Composable
     fun displayEvent() {
@@ -61,7 +54,7 @@ data class Event(
 
 
 @Composable
-fun MonthlyCalendar(month: Int, year: Int, events: List<Event>) {
+fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
     // Get the day of the week for the first day of the month
     val scrollState = rememberScrollState()
     val firstDayOfMonth = LocalDate.of(year, month, 1).dayOfWeek.value % 7
@@ -140,8 +133,13 @@ fun MonthlyCalendar(month: Int, year: Int, events: List<Event>) {
 
                                 // Check for events on this date
                                 val currentDateString = LocalDate.of(year, month, currentDate).toString()
-                                val eventsOnThisDate = events.filter { it.date == currentDateString }
-
+                                var eventsOnThisDate = events_list.filter { it.date == currentDateString }
+                                val potentialrecur = events_list.filter { it.recur == "Daily" }
+                                for (each in potentialrecur) {
+                                    val eachRecur = MutableList(1) { each }
+                                    eachRecur[0].date = currentDateString
+                                    eventsOnThisDate = eventsOnThisDate + eachRecur
+                                }
 
                                 // Display events
                                 Column(
@@ -231,14 +229,14 @@ fun Calendar() {
     var mode by remember { mutableStateOf(0) }
     val manager = DatabaseManager()
                 val db = manager.setupDatabase()
-    val events = remember { mutableStateListOf<Event>()}
+    val events_list = remember { mutableStateListOf<Event>()}
     runBlocking {
         var result: List<TodoItemjson>
-        events.clear()
+        events_list.clear()
         launch {
             result = fetchTodos()
             result.forEach { jsonItem ->
-                events.add(
+                events_list.add(
                     Event(
                         id = jsonItem.id,
                         primaryTask = jsonItem.primaryTask,
@@ -249,41 +247,22 @@ fun Calendar() {
                         date =formatDate(jsonItem.datetime),
                         startTime = jsonItem.starttime,
                         endTime = addHoursToTimeString(jsonItem.starttime, jsonItem.duration),
-                        title = jsonItem.primaryTask
+                        title = jsonItem.primaryTask,
+                        recur = jsonItem.recur
                     )
                 )
             }
         }
     }
-//    transaction {
-//        events.clear()
-//        TodoTable.selectAll().forEach {
-//            events.add(
-//                Event(
-//                    it[TodoTable.id],
-//                    formatDate(it[TodoTable.datetime]),
-//                    it[TodoTable.starttime],
-//                    addHoursToTimeString(it[TodoTable.starttime], it[TodoTable.duration]),
-//                    it[TodoTable.primaryTask],
-//                    it[TodoTable.primaryTask],
-//                    it[TodoTable.secondaryTask],
-//                    it[TodoTable.priority],
-//                    false,
-//                    it[TodoTable.section]
-//                )
-//            )
-//        }
-//    }
     val maxDateInMonth = LocalDate.of(year, month, 1).lengthOfMonth()
     if (date > maxDateInMonth) {
         date = maxDateInMonth
     }
-
     val selectedDate = LocalDate.of(year, month, date)
     if (mode == 0) {
-        MonthlyCalendar(month, year, events)
+        MonthlyCalendar(month, year, events_list)
     } else {
-        DailyCalendar(date, month, year, events)
+        DailyCalendar(date, month, year, events_list)
     }
     Box(
         modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter
@@ -325,7 +304,7 @@ fun Calendar() {
                             if (month > 1) {
                                 month--
                                 date = LocalDate.of(year, month, 1)
-                                    .lengthOfMonth()  // Set date to the last day of the previous month
+                                    .lengthOfMonth()
                             } else {
                                 month = 12
                                 year--
