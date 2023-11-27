@@ -22,7 +22,8 @@ data class TodoItem(
     val datetime: String,
     val section: String,
     val duration: Int,
-    val starttime: String
+    val starttime: String,
+    val recur: String
 )
 
 object TodoTable : Table() {
@@ -35,13 +36,15 @@ object TodoTable : Table() {
     val section = varchar("section", 255)
     val duration = integer("duration")
     val starttime = varchar("starttime", 255)
+    val recur = varchar("recur", 255)
     override val primaryKey = PrimaryKey(id, name = "PK_User_ID")
 }
 
 
 fun Application.configureRouting() {
-//    Database.connect("jdbc:sqlite:chinook.db", "org.sqlite.JDBC")
-    Database.connect("jdbc:sqlite:/app/chinook.db", "org.sqlite.JDBC")
+    Database.connect("jdbc:sqlite:chinook.db", "org.sqlite.JDBC")
+//    Database.connect("jdbc:sqlite:/app/chinook.db", "org.sqlite.JDBC")
+
     routing {
         get("/") {
             call.respondText("a")
@@ -59,7 +62,8 @@ fun Application.configureRouting() {
                             datetime = row[TodoTable.datetime],
                             section = row[TodoTable.section],
                             duration = row[TodoTable.duration],
-                            starttime = row[TodoTable.starttime]
+                            starttime = row[TodoTable.starttime],
+                            recur = row[TodoTable.recur]
                         )
                     }
                 }
@@ -98,6 +102,7 @@ fun Application.configureRouting() {
                     it[section] = newTodo.section
                     it[duration] = newTodo.duration
                     it[starttime] = newTodo.starttime
+                    it[recur] = newTodo.recur
                 }.resultedValues?.singleOrNull()?.toTodoItem()
             }
             if (todo != null) {
@@ -118,6 +123,7 @@ fun Application.configureRouting() {
             val todo = transaction {
                 TodoTable.update({ TodoTable.id eq todoId }) {
                     it[completed] = newTodo.completed
+                    it[recur] = newTodo.recur
                 }
             }
             if (todo != null) {
@@ -139,5 +145,6 @@ fun ResultRow.toTodoItem() = TodoItem(
     datetime = this[TodoTable.datetime],
     section = this[TodoTable.section],
     duration = this[TodoTable.duration],
-    starttime = this[TodoTable.starttime]
+    starttime = this[TodoTable.starttime],
+    recur = this[TodoTable.recur]
 )

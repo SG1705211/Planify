@@ -16,7 +16,7 @@ fun main() {
 }
 
 fun Application.module() {
-    //Database.connect("jdbc:sqlite:chinook.db", "org.sqlite.JDBC")
+
     configureSecurity()
     configureMonitoring()
     configureSerialization()
