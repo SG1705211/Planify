@@ -105,7 +105,6 @@ fun CreateTodoDialog(onCreate: (TodoItem) -> Unit, onClose: () -> Unit) {
     var isDateValid by remember { mutableStateOf(true) }
     var areFieldsValid by remember { mutableStateOf(true) }
     var duration_in by remember { mutableStateOf("") }
-
     var recurOption by remember { mutableStateOf(RecurOption.None) }
     AlertDialog(onDismissRequest = { /* dismiss dialog */ }, title = {
         Text(text = "Create New Todo Item")
@@ -161,7 +160,7 @@ fun CreateTodoDialog(onCreate: (TodoItem) -> Unit, onClose: () -> Unit) {
                 }
                 onCreate(
                     TodoItem(
-                        id = 0, // Assuming your DB auto-increments IDs
+                        id = 0,
                         primaryTask = primaryTask,
                         secondaryTask = secondaryTask,
                         priority = priority,
@@ -178,17 +177,15 @@ fun CreateTodoDialog(onCreate: (TodoItem) -> Unit, onClose: () -> Unit) {
             Text("Create")
         }
     },
-        // Add this part to introduce a close button
         dismissButton = {
             Button(onClick = {
-                onClose() // Closes the dialog when clicked
+                onClose()
             }) {
                 Text("Close")
             }
         })
 }
 
-// Validates the given date string using a specific format
 private fun validateDate(dateStr: String): Boolean {
     return try {
         val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
@@ -317,7 +314,7 @@ fun ToDoList() {
             }
         }
         Box(
-            modifier = Modifier.fillMaxWidth().weight(0.9f)  // 90% of parent's height
+            modifier = Modifier.fillMaxWidth().weight(0.9f)
         ) {
             val triggerRecomposition = remember { mutableStateOf(false) }
             val sortedTodoList = todoListFromDb.sortedWith(compareBy<TodoItem> { it.completed }.thenBy { it.priority })
@@ -344,8 +341,8 @@ fun ToDoList() {
                 }
             }
             Box(
-                modifier = Modifier.fillMaxSize(), // This will make the Box take up the entire available space
-                contentAlignment = Alignment.BottomEnd // This will align its children to the bottom right corner
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomEnd
             ) {
                 ExtendedFloatingActionButton(modifier = Modifier.padding(bottom = 16.dp, end = 16.dp),
                     onClick = { isDialogOpen = true }) {
@@ -356,7 +353,7 @@ fun ToDoList() {
                 CreateTodoDialog(onClose = {
                     isDialogOpen = false
                 }, onCreate = { newItem ->
-                    isDialogOpen = false  // Close the dialog
+                    isDialogOpen = false
                     runBlocking {
                         launch {
                             create(newItem)

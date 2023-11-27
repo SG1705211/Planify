@@ -73,7 +73,6 @@ fun BoxItem(color: Color, text: String) {
 
 @Composable
 fun MagicHome() {
-    downloadDatabaseFromCloud()
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -82,10 +81,7 @@ fun MagicHome() {
         items(4) { index ->
             when (index) {
                 0 -> HomeSummary()
-
                 1 -> homeCalendar()
-//                2 -> BoxItem(Color.Blue, "Todo section")
-//                3 -> BoxItem(Color.Green, "Notes section")
             }
         }
     }
@@ -108,11 +104,11 @@ fun AppLayout() {
     val (selectedSection, setSelectedSection) = remember { mutableStateOf("Section 1") }
     val listOfBooleans = remember {
         listOf(
-            mutableStateOf(true),  // First item is true
-            mutableStateOf(false), // Second item is false
-            mutableStateOf(false), // Third item is false
-            mutableStateOf(false), // Fourth item is false
-            mutableStateOf(false)  // Fifth item is false
+            mutableStateOf(true),
+            mutableStateOf(false),
+            mutableStateOf(false),
+            mutableStateOf(false),
+            mutableStateOf(false)
         )
     }
     Row() {
@@ -234,7 +230,6 @@ class DatabaseManager {
 
         // Load SQLite JDBC driver (required for some configurations)
         Class.forName("org.sqlite.JDBC")
-
         // Connect to the SQLite database in the persistent location
         val connectionUrl = "jdbc:sqlite:${persistentDBFile.absolutePath}"
         return Database.connect(connectionUrl)
@@ -242,39 +237,7 @@ class DatabaseManager {
 }
 
 
-fun uploadDatabaseToCloud() {
-    val storage = StorageOptions.newBuilder()
-        .setCredentials(ServiceAccountCredentials.fromStream(FileInputStream("/Users/seangong/IdeaProjects/CS346-project/application/src/main/resources/key.json")))
-        .build().service
 
-    // Define the directory and file path for the database
-    val persistentDir = File(System.getProperty("user.home"), ".myApp")
-    val persistentDBFile = File(persistentDir, "chinook.db")
-
-    val blobId = BlobId.of("cs346bucket", "chinook.db")
-    val blobInfo = BlobInfo.newBuilder(blobId).build()
-
-    // Use the correct file path to read the database
-    storage.create(blobInfo, Files.readAllBytes(persistentDBFile.toPath()))
-}
-
-fun downloadDatabaseFromCloud() {
-    val storage = StorageOptions.newBuilder()
-        .setCredentials(ServiceAccountCredentials.fromStream(FileInputStream("/Users/seangong/IdeaProjects/CS346-project/application/src/main/resources/key.json")))
-        .build().service
-    val blob = storage.get(BlobId.of("cs346bucket", "chinook.db"))
-    val readChannel = blob.reader()
-
-    // Define the directory and file path for the database
-    val persistentDir = File(System.getProperty("user.home"), ".myApp")
-    val persistentDBFile = File(persistentDir, "chinook.db")
-
-    // Ensure the directory exists
-    persistentDir.mkdirs()
-
-    // Use FileOutputStream to write to the correct location
-    FileOutputStream(persistentDBFile).channel.transferFrom(readChannel, 0, Long.MAX_VALUE)
-}
 
 
 fun main() = application {
