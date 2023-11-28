@@ -65,7 +65,7 @@ fun getSundayOfCurrentWeek(date: LocalDate): Pair<String, String> {
 
 @Composable
 fun Summary() {
-    Class.forName("org.sqlite.JDBC")
+
     val todoListFromDb: MutableList<TodoItem> = mutableListOf()
     runBlocking {
         var result: List<TodoItemjson>
@@ -82,7 +82,9 @@ fun Summary() {
                         completed = jsonItem.completed,
                         section = jsonItem.section,
                         datetime = jsonItem.datetime,
-                        duration = jsonItem.duration
+                        duration = jsonItem.duration,
+                        pid = jsonItem.pid,
+                        recur = jsonItem.recur
                     )
                 )
             }
@@ -93,24 +95,69 @@ fun Summary() {
     var completed = todoListFromDb.filter { it.completed == true }
     val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
     val currentWeekStartDate = currentDate.minusDays(currentDate.dayOfWeek.value.toLong() - 1)
-    val currentWeekTable =
-        todoListFromDb.filter { LocalDate.parse(it.datetime, formatter) in currentWeekStartDate..currentWeekStartDate.plusDays(6) }
+    var currentWeekTable =
+        todoListFromDb.filter { LocalDate.parse(it.datetime, formatter) in currentWeekStartDate..currentWeekStartDate.plusDays(6)
+                && it.recur != "Daily" && it.recur != "Monthly"}
 
-// Current Month
+    var current_iterator = currentWeekStartDate
+    while (!current_iterator.isAfter(currentWeekStartDate.plusDays(6))) {
+        val potentialrecur = todoListFromDb.filter { it.recur == "Daily" }
+        for (each in potentialrecur) {
+            if (todoListFromDb.find { it.datetime == current_iterator.format(formatter) && it.pid == each.id } != null) {
+                continue
+            }
+            val newTodoItem = each.copy(datetime = current_iterator.format(formatter))
+            currentWeekTable += newTodoItem
+        }
+        current_iterator = current_iterator.plusDays(1)
+    }
+
+
+
     val currentMonthStartDate = currentDate.withDayOfMonth(1)
     val lastDayOfMonth = currentDate.lengthOfMonth()
     val currentMonthEndDate = currentMonthStartDate.plusDays(lastDayOfMonth.toLong() - 1)
-    val currentMonthTable = todoListFromDb.filter {
+    var currentMonthTable = todoListFromDb.filter {
         LocalDate.parse(it.datetime, formatter) in currentMonthStartDate..currentMonthEndDate
+                && it.recur != "Daily" && it.recur != "Monthly"
     }
+
+    current_iterator = currentMonthStartDate
+    while (!current_iterator.isAfter(currentMonthEndDate)) {
+        val potentialrecur = todoListFromDb.filter { it.recur == "Daily" }
+        for (each in potentialrecur) {
+            if (todoListFromDb.find { it.datetime == current_iterator.format(formatter) && it.pid == each.id } != null) {
+                continue
+            }
+            val newTodoItem = each.copy(datetime = current_iterator.format(formatter))
+            currentMonthTable += newTodoItem
+        }
+        current_iterator = current_iterator.plusDays(1)
+    }
+
+
+
 
 // Current Year
     val currentYearStartDate = currentDate.withDayOfYear(1)
     val currentYearEndDate = currentYearStartDate.plusYears(1).minusDays(1)
-    val currentYearTable = todoListFromDb.filter {
+    var currentYearTable = todoListFromDb.filter {
         LocalDate.parse(it.datetime, formatter) in currentYearStartDate..currentYearEndDate
+                && it.recur != "Daily" && it.recur != "Monthly"
     }
 
+    current_iterator = currentYearStartDate
+    while (!current_iterator.isAfter(currentYearEndDate)) {
+        val potentialrecur = todoListFromDb.filter { it.recur == "Daily" }
+        for (each in potentialrecur) {
+            if (todoListFromDb.find { it.datetime == current_iterator.format(formatter) && it.pid == each.id } != null) {
+                continue
+            }
+            val newTodoItem = each.copy(datetime = current_iterator.format(formatter))
+            currentMonthTable += newTodoItem
+        }
+        current_iterator = current_iterator.plusDays(1)
+    }
     var currentDate by remember { mutableStateOf(LocalDate.now()) }
     var Date1 by remember { mutableStateOf(getMondayOfCurrentWeek(currentDate).second) }
     var Date2 by remember { mutableStateOf(getSundayOfCurrentWeek(currentDate).second) }
@@ -251,7 +298,7 @@ fun Summary() {
                                 LocalDate.parse(
                                     it.datetime,
                                     formatter
-                                ).dayOfWeek.toString() == "MONDAY" && it.completed == true
+                                ).dayOfWeek.toString() == "MONDAY" && it.completed
                             }.map { it.duration }.sum().toFloat()
                             var tueDuration = currentWeekTable.filter {
                                 LocalDate.parse(

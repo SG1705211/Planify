@@ -2,24 +2,19 @@
 package summary
 
 import DatabaseManager
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 //import androidx.compose.ui.draw.EmptyBuildDrawCacheParams.size
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.graphics.Shape
 //import androidx.compose.material3.md.sys.shape.corner.full.Circular
 import androidx.compose.ui.draw.drawBehind
-import fetchTodos
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
@@ -29,10 +24,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
-import java.awt.Color.red
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -47,7 +38,11 @@ data class TodoItemjson(
     val section: String,
     val duration: Int,
     val starttime: String,
-    val recur: String
+    val recur: String,
+    var pid: Int,
+    val deleted: Int,
+    val misc1: Int,
+    val misc2: Int
 )
 
 suspend fun fetchTodo_check(): List<TodoItemjson> {
@@ -78,7 +73,9 @@ fun HabitCheck(habit: String) {
                         completed = jsonItem.completed,
                         section = jsonItem.section,
                         datetime = jsonItem.datetime,
-                        duration = jsonItem.duration
+                        duration = jsonItem.duration,
+                        pid = jsonItem.pid,
+                        recur = jsonItem.recur
                     )
                 )
             }
@@ -87,9 +84,24 @@ fun HabitCheck(habit: String) {
 
     val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
     val currentWeekStartDate = currentDate.minusDays(currentDate.dayOfWeek.value.toLong() - 1)
-    val currentWeekTable =
-        todoListFromDb.filter { LocalDate.parse(it.datetime, formatter) in currentWeekStartDate..currentWeekStartDate.plusDays(6) }
-
+    var currentWeekTable =
+        todoListFromDb.filter { LocalDate.parse(it.datetime, formatter) in currentWeekStartDate..currentWeekStartDate.plusDays(6)
+                && it.recur != "Daily" && it.recur != "Monthly"}
+    // add recurring event
+    var current_iterator = currentWeekStartDate
+    while (!current_iterator.isAfter(currentWeekStartDate.plusDays(6))) {
+        val potentialrecur = todoListFromDb.filter { it.recur == "Daily" }
+        for (each in potentialrecur) {
+            if (todoListFromDb.find { it.datetime == current_iterator.format(formatter) && it.pid == each.id } != null) {
+                continue
+            }
+            val newTodoItem = each.copy(datetime = current_iterator.format(formatter))
+            currentWeekTable += newTodoItem
+            println(currentWeekTable)
+        }
+        current_iterator = current_iterator.plusDays(1)
+    }
+    // *********
     var workTodo = currentWeekTable.filter { todoItem -> todoItem.section == "Work" }
     var studyTodo = currentWeekTable.filter { todoItem -> todoItem.section == "Study" }
     var hobbyTodo = currentWeekTable.filter { todoItem -> todoItem.section == "Hobby" }

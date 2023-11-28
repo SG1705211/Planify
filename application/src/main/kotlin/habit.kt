@@ -35,6 +35,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import androidx.compose.foundation.clickable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 
@@ -68,7 +69,7 @@ data class TodoItem(
     val start_time: String,
     val duration: String,
     var recur: String,
-    val pid: Int,
+    var pid: Int,
     val deleted: Int,
     val misc1: Int,
     val misc2: Int
@@ -150,13 +151,15 @@ fun CreateTodoDialog(onCreate: (TodoItem) -> Unit, onClose: () -> Unit) {
                 Text("Recur")
                 // Radio button for 'Daily'
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(selected = recurOption == RecurOption.Daily,
+                    RadioButton(
+                        selected = recurOption == RecurOption.Daily,
                         onClick = { recurOption = RecurOption.Daily })
                     Text("Daily")
                 }
                 // Radio button for 'Monthly'
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(selected = recurOption == RecurOption.Monthly,
+                    RadioButton(
+                        selected = recurOption == RecurOption.Monthly,
                         onClick = { recurOption = RecurOption.Monthly })
                     Text("Monthly")
                 }
@@ -302,7 +305,7 @@ fun ToDoList() {
     )
     val current_month = monthNames[month - 1]
     val (selectedSection, setSelectedSection) = remember { mutableStateOf("Work") }
-    val todoListFromDb = remember { mutableStateListOf<TodoItem>() }
+    var todoListFromDb = remember { mutableStateListOf<TodoItem>() }
     LaunchedEffect(selectedSection, selectedDate) {
         var result: List<TodoItemjson>
         todoListFromDb.clear()
@@ -311,8 +314,7 @@ fun ToDoList() {
             launch {
                 result = fetchTodos()
                 result.forEach { jsonItem ->
-                    if (jsonItem.section == selectedSection && jsonItem.datetime == selectedDate.format(formatter)
-                        && jsonItem.recur != "Daily" && jsonItem.recur != "Monthly") {
+                    if (jsonItem.section == selectedSection && jsonItem.datetime == selectedDate.format(formatter) && jsonItem.recur != "Daily" && jsonItem.recur != "Monthly") {
                         todoListFromDb.add(
                             TodoItem(
                                 id = jsonItem.id,
@@ -334,9 +336,34 @@ fun ToDoList() {
                     }
                 }
                 result.forEach { jsonItem ->
-                    if (jsonItem.section == selectedSection  && jsonItem.recur == "Daily"
+                    if (jsonItem.section == selectedSection && jsonItem.recur == "Daily") {
+                        val duplicate_item = todoListFromDb.find { it.pid == jsonItem.id }
+                        if (duplicate_item == null) {
+                            todoListFromDb.add(
+                                TodoItem(
+                                    id = jsonItem.id,
+                                    primaryTask = jsonItem.primaryTask,
+                                    secondaryTask = jsonItem.secondaryTask,
+                                    priority = jsonItem.priority,
+                                    completed = jsonItem.completed,
+                                    section = jsonItem.section,
+                                    date_time = jsonItem.datetime,
+                                    start_time = jsonItem.starttime,
+                                    duration = jsonItem.duration.toString(),
+                                    recur = jsonItem.recur,
+                                    pid = jsonItem.pid,
+                                    deleted = jsonItem.deleted,
+                                    misc1 = 0,
+                                    misc2 = 0
+                                )
+                            )
+                        }
+                    } else if (jsonItem.recur == "Monthly" && jsonItem.section == selectedSection && LocalDate.parse(
+                            jsonItem.datetime,
+                            formatter
+                        ).dayOfWeek == selectedDate.dayOfWeek
                     ) {
-                        val duplicate_item = todoListFromDb.find { it.pid == jsonItem.pid }
+                        val duplicate_item = todoListFromDb.find { it.pid == jsonItem.id }
                         if (duplicate_item == null) {
                             todoListFromDb.add(
                                 TodoItem(
@@ -358,6 +385,7 @@ fun ToDoList() {
                             )
                         }
                     }
+                    
                 }
             }
         }
@@ -473,7 +501,6 @@ fun ToDoList() {
         Box(
             modifier = Modifier.fillMaxWidth().weight(0.8f)
         ) {
-            val triggerRecomposition = remember { mutableStateOf(false) }
             val sortedTodoList = todoListFromDb.sortedWith(compareBy<TodoItem> { it.completed }.thenBy { it.priority })
             LazyColumn() {
                 todoListFromDb.forEachIndexed { index, todoItem ->
@@ -513,13 +540,19 @@ fun ToDoList() {
                                                 updateTodoItem(todoItem.id, copy_todo)
                                             }
                                         }
-                                    }
-                                    else {
-                                        println("hi")
+                                        if (!isChecked) {
+                                            runBlocking {
+                                                launch {
+                                                    deleteTodo(copy_todo.id)
+                                                }
+                                            }
+                                        }
+                                    } else {
                                         var copy_of_copy = todoListFromDb[index].copy()
                                         copy_of_copy.date_time = selectedDate.format(formatter)
                                         copy_of_copy.recur = "None"
                                         copy_of_copy.completed = true
+                                        copy_of_copy.pid = todoItem.id
                                         runBlocking {
                                             launch {
                                                 create(copy_of_copy)
@@ -532,8 +565,10 @@ fun ToDoList() {
                                                 result = fetchTodos()
                                                 todoListFromDb.clear()
                                                 result.forEach { jsonItem ->
-                                                    if (jsonItem.section == selectedSection && jsonItem.datetime == selectedDate.format(formatter)
-                                                        && jsonItem.recur != "Daily" && jsonItem.recur != "Monthly") {
+                                                    if (jsonItem.section == selectedSection && jsonItem.datetime == selectedDate.format(
+                                                            formatter
+                                                        ) && jsonItem.recur != "Daily" && jsonItem.recur != "Monthly"
+                                                    ) {
                                                         todoListFromDb.add(
                                                             TodoItem(
                                                                 id = jsonItem.id,
@@ -555,9 +590,35 @@ fun ToDoList() {
                                                     }
                                                 }
                                                 result.forEach { jsonItem ->
-                                                    if (jsonItem.section == selectedSection  && jsonItem.recur == "Daily"
+                                                    if (jsonItem.section == selectedSection && jsonItem.recur == "Daily") {
+                                                        val duplicate_item =
+                                                            todoListFromDb.find { it.pid == jsonItem.id }
+                                                        if (duplicate_item == null) {
+                                                            todoListFromDb.add(
+                                                                TodoItem(
+                                                                    id = jsonItem.id,
+                                                                    primaryTask = jsonItem.primaryTask,
+                                                                    secondaryTask = jsonItem.secondaryTask,
+                                                                    priority = jsonItem.priority,
+                                                                    completed = jsonItem.completed,
+                                                                    section = jsonItem.section,
+                                                                    date_time = jsonItem.datetime,
+                                                                    start_time = jsonItem.starttime,
+                                                                    duration = jsonItem.duration.toString(),
+                                                                    recur = jsonItem.recur,
+                                                                    pid = jsonItem.pid,
+                                                                    deleted = jsonItem.deleted,
+                                                                    misc1 = 0,
+                                                                    misc2 = 0
+                                                                )
+                                                            )
+                                                        }
+                                                    } else if (jsonItem.recur == "Monthly" && jsonItem.section == selectedSection && LocalDate.parse(
+                                                            jsonItem.datetime, formatter
+                                                        ).dayOfWeek == selectedDate.dayOfWeek
                                                     ) {
-                                                        val duplicate_item = todoListFromDb.find { it.pid == jsonItem.pid }
+                                                        val duplicate_item =
+                                                            todoListFromDb.find { it.pid == jsonItem.id }
                                                         if (duplicate_item == null) {
                                                             todoListFromDb.add(
                                                                 TodoItem(
@@ -579,6 +640,7 @@ fun ToDoList() {
                                                             )
                                                         }
                                                     }
+                                                    
                                                 }
                                             }
                                         }
@@ -594,8 +656,7 @@ fun ToDoList() {
             Box(
                 modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd
             ) {
-                ExtendedFloatingActionButton(
-                    modifier = Modifier.padding(bottom = 16.dp, end = 16.dp),
+                ExtendedFloatingActionButton(modifier = Modifier.padding(bottom = 16.dp, end = 16.dp),
                     onClick = { isDialogOpen = true }) {
                     Text(text = "Create New")
                 }
@@ -612,8 +673,10 @@ fun ToDoList() {
                             todoListFromDb.clear()
                             var result: List<TodoItemjson> = fetchTodos()
                             result.forEach { jsonItem ->
-                                if (jsonItem.section == selectedSection && jsonItem.datetime == selectedDate.format(formatter)
-                                    && jsonItem.recur != "Daily" && jsonItem.recur != "Monthly") {
+                                if (jsonItem.section == selectedSection && jsonItem.datetime == selectedDate.format(
+                                        formatter
+                                    ) && jsonItem.recur != "Daily" && jsonItem.recur != "Monthly"
+                                ) {
                                     todoListFromDb.add(
                                         TodoItem(
                                             id = jsonItem.id,
@@ -635,9 +698,36 @@ fun ToDoList() {
                                 }
                             }
                             result.forEach { jsonItem ->
-                                if (jsonItem.section == selectedSection  && jsonItem.recur == "Daily"
+
+                                if (jsonItem.section == selectedSection && jsonItem.recur == "Daily") {
+
+                                    val duplicate_item = todoListFromDb.find { it.pid == jsonItem.id }
+                                    if (duplicate_item == null) {
+                                        todoListFromDb.add(
+                                            TodoItem(
+                                                id = jsonItem.id,
+                                                primaryTask = jsonItem.primaryTask,
+                                                secondaryTask = jsonItem.secondaryTask,
+                                                priority = jsonItem.priority,
+                                                completed = jsonItem.completed,
+                                                section = jsonItem.section,
+                                                date_time = jsonItem.datetime,
+                                                start_time = jsonItem.starttime,
+                                                duration = jsonItem.duration.toString(),
+                                                recur = jsonItem.recur,
+                                                pid = jsonItem.pid,
+                                                deleted = jsonItem.deleted,
+                                                misc1 = 0,
+                                                misc2 = 0
+                                            )
+                                        )
+                                    }
+                                } else if (jsonItem.recur == "Monthly" && jsonItem.section == selectedSection && LocalDate.parse(
+                                        jsonItem.datetime,
+                                        formatter
+                                    ).dayOfWeek == selectedDate.dayOfWeek
                                 ) {
-                                    val duplicate_item = todoListFromDb.find { it.pid == jsonItem.pid }
+                                    val duplicate_item = todoListFromDb.find { it.pid == jsonItem.id }
                                     if (duplicate_item == null) {
                                         todoListFromDb.add(
                                             TodoItem(
@@ -659,6 +749,7 @@ fun ToDoList() {
                                         )
                                     }
                                 }
+                                
                             }
                         }
                     }

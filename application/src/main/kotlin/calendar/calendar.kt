@@ -33,15 +33,15 @@ data class Event(
     val priority: Int,
     var completed: Boolean,
     val section: String,
-    val recur: String
+    val recur: String,
+    val pid: Int
 ) {
     @Composable
     fun displayEvent() {
         Box(
-            modifier = Modifier.fillMaxWidth()
-                .padding(8.dp)
-                .border(1.dp, Color.Gray,
-                    shape = RoundedCornerShape(4.dp)), contentAlignment = Alignment.TopStart
+            modifier = Modifier.fillMaxWidth().padding(8.dp).border(
+                1.dp, Color.Gray, shape = RoundedCornerShape(4.dp)
+            ), contentAlignment = Alignment.TopStart
 
 
         ) {
@@ -63,8 +63,18 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
     val dayNames = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
     // Month names list
     val monthNames = listOf(
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
     )
     val monthName = monthNames[month - 1]  // Arrays are 0-indexed, so subtract 1 from the month number
     // Use a vertical Column to hold the month and year, day names, and the calendar dates
@@ -79,13 +89,11 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
         Spacer(modifier = Modifier.height(8.dp))
         // Day Names Row
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
             dayNames.forEach { dayName ->
                 Box(
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.Center
+                    modifier = Modifier.weight(1f), contentAlignment = Alignment.Center
                 ) {
                     Text(text = dayName, fontWeight = FontWeight.Bold)
                 }
@@ -100,8 +108,7 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
             val today = LocalDate.now()
             for (i in 0..5) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     for (j in 0..6) {
                         // Define the condition for the current date
@@ -109,14 +116,10 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
 
                         Box(
                             contentAlignment = Alignment.TopCenter,
-                            modifier = Modifier
-                                .weight(1f)
-                                .aspectRatio(1f)
-                                .background(
-                                    if (isToday) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
-                                    shape = RoundedCornerShape(4.dp)
-                                )
-                                .border(1.dp, Color.Gray, shape = RoundedCornerShape(4.dp))
+                            modifier = Modifier.weight(1f).aspectRatio(1f).background(
+                                if (isToday) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
+                                shape = RoundedCornerShape(4.dp)
+                            ).border(1.dp, Color.Gray, shape = RoundedCornerShape(4.dp))
                         ) {
                             if ((i == 0 && j >= firstDayOfMonth) || (i > 0 && currentDate <= daysInMonth)) {
                                 Text(
@@ -131,9 +134,28 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
                                 var eventsOnThisDate = events_list.filter { it.date == currentDateString }
                                 val potentialrecur = events_list.filter { it.recur == "Daily" }
                                 for (each in potentialrecur) {
+                                    if (events_list.find { it.date == currentDateString && it.pid == each.id } != null) {
+                                        continue
+                                    }
+
                                     val eachRecur = MutableList(1) { each }
                                     eachRecur[0].date = currentDateString
                                     eventsOnThisDate = eventsOnThisDate + eachRecur
+                                }
+                                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                                val potentialrecur_monthly = events_list.filter { it.recur == "Monthly" }
+                                for (each in potentialrecur_monthly) {
+                                    if (LocalDate.parse(each.date, formatter).dayOfWeek == LocalDate.of(
+                                            year, month, currentDate
+                                        ).dayOfWeek
+                                    ) {
+                                        if (events_list.find { it.date == currentDateString && it.pid == each.id } != null){
+                                            continue
+                                        }
+                                        val eachRecur = MutableList(1) { each }
+                                        eachRecur[0].date = currentDateString
+                                        eventsOnThisDate = eventsOnThisDate + eachRecur
+                                    }
                                 }
 
                                 // Display events
@@ -157,13 +179,39 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
 }
 
 
-
 @Composable
-fun DailyCalendar(date: Int, month: Int, year: Int, events: List<Event>) {
+fun DailyCalendar(date: Int, month: Int, year: Int, events_list: List<Event>) {
     var selectedDate = LocalDate.of(year, month, date)
-
+    var currentDateString = selectedDate.toString()
     val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
-    val eventsOnThisDay = events.filter { it.date == selectedDate.toString() }
+    var eventsOnThisDay = events_list.filter { it.date == selectedDate.toString() }
+
+    val potentialrecur = events_list.filter { it.recur == "Daily" }
+    for (each in potentialrecur) {
+        if (events_list.find { it.date == currentDateString && it.pid == each.id } != null) {
+            continue
+        }
+
+        val eachRecur = MutableList(1) { each }
+        eachRecur[0].date = currentDateString
+        eventsOnThisDay += eachRecur[0]
+    }
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val potentialrecur_monthly = events_list.filter { it.recur == "Monthly" }
+    for (each in potentialrecur_monthly) {
+        if (LocalDate.parse(each.date, formatter).dayOfWeek == selectedDate.dayOfWeek
+        ) {
+            if (events_list.find { it.date == currentDateString && it.pid == each.id } != null){
+                continue
+            }
+            val eachRecur = MutableList(1) { each }
+            eachRecur[0].date = currentDateString
+            eventsOnThisDay = eventsOnThisDay + eachRecur
+        }
+    }
+
+
+
     LazyColumn(
         modifier = Modifier.padding(16.dp)
     ) {
@@ -222,7 +270,7 @@ fun Calendar() {
     var year by remember { mutableStateOf(currentDate.year) }
     var date by remember { mutableStateOf(currentDate.dayOfMonth) }
     var mode by remember { mutableStateOf(0) }
-    val events_list = remember { mutableStateListOf<Event>()}
+    val events_list = remember { mutableStateListOf<Event>() }
     runBlocking {
         var result: List<TodoItemjson>
         events_list.clear()
@@ -237,11 +285,12 @@ fun Calendar() {
                         priority = jsonItem.priority,
                         completed = jsonItem.completed,
                         section = jsonItem.section,
-                        date =formatDate(jsonItem.datetime),
+                        date = formatDate(jsonItem.datetime),
                         startTime = jsonItem.starttime,
                         endTime = addHoursToTimeString(jsonItem.starttime, jsonItem.duration),
                         title = jsonItem.primaryTask,
-                        recur = jsonItem.recur
+                        recur = jsonItem.recur,
+                        pid = jsonItem.pid
                     )
                 )
             }
@@ -296,8 +345,7 @@ fun Calendar() {
                         } else {
                             if (month > 1) {
                                 month--
-                                date = LocalDate.of(year, month, 1)
-                                    .lengthOfMonth()
+                                date = LocalDate.of(year, month, 1).lengthOfMonth()
                             } else {
                                 month = 12
                                 year--

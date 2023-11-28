@@ -250,7 +250,6 @@ fun main() = application {
                 modifier = Modifier.background(MaterialTheme.colorScheme.background)
             ) {
                 //
-
                 AppLayout()
             }
         }

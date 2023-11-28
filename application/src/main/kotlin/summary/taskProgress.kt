@@ -24,7 +24,8 @@ import kotlin.random.Random
 
 data class TodoItem(
     val id: Int, val primaryTask: String, val secondaryTask: String, val priority: Int,
-    var completed: Boolean, val section: String, val datetime: String, val duration: Int
+    var completed: Boolean, val section: String, var datetime: String, val duration: Int,
+    val pid: Int, val recur: String
 )
 
 @Composable
@@ -34,32 +35,6 @@ fun TaskProgress(
         .padding(20.dp)
         .fillMaxSize()
 ) {
-    val manager = DatabaseManager()
-                val db = manager.setupDatabase()
-    val todoListFromDb: MutableList<TodoItem> = mutableListOf()
-
-    runBlocking {
-        var result: List<TodoItemjson>
-        todoListFromDb.clear()
-        launch {
-            result = fetchTodo_check()
-            result.forEach { jsonItem ->
-                todoListFromDb.add(
-                    TodoItem(
-                        id = jsonItem.id,
-                        primaryTask = jsonItem.primaryTask,
-                        secondaryTask = jsonItem.secondaryTask,
-                        priority = jsonItem.priority,
-                        completed = jsonItem.completed,
-                        section = jsonItem.section,
-                        datetime = jsonItem.datetime,
-                        duration = jsonItem.duration
-                    )
-                )
-            }
-        }
-    }
-    var progress_cur = (todoListFromDb.count{it.completed == true}.toDouble() / todoListFromDb.size).toFloat()
     Box(
         modifier = modifier.size(200.dp),
         contentAlignment = Alignment.Center
