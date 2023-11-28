@@ -64,52 +64,6 @@ fun Chart(
                     contentAlignment = Alignment.BottomCenter
                 ) {
 
-//                Column(
-//                    modifier = Modifier.fillMaxHeight(),
-//                    verticalArrangement = Arrangement.Bottom
-//                ) {
-//                    Spacer(modifier = Modifier.fillMaxHeight())
-//                }
-//
-//                Column(
-//                    modifier = Modifier.fillMaxHeight(),
-//                    verticalArrangement = Arrangement.Bottom
-//                ) {
-//                    Text(text = String.format("%.2f", max_value.toFloat() / 5 * 4))
-//                    Spacer(modifier = Modifier.fillMaxHeight(0.8f))
-//                }
-//
-//                Column(
-//                    modifier = Modifier.fillMaxHeight(),
-//                    verticalArrangement = Arrangement.Bottom
-//                ) {
-//                    Text(text = String.format("%.2f", max_value.toFloat() / 5 * 3))
-//                    Spacer(modifier = Modifier.fillMaxHeight(0.6f))
-//                }
-//
-//                Column(
-//                    modifier = Modifier.fillMaxHeight(),
-//                    verticalArrangement = Arrangement.Bottom
-//                ) {
-//                    Text(text = String.format("%.2f", max_value.toFloat() / 5 * 2))
-//                    Spacer(modifier = Modifier.fillMaxHeight(0.4f))
-//                }
-//
-//                Column(
-//                    modifier = Modifier.fillMaxHeight(),
-//                    verticalArrangement = Arrangement.Bottom
-//                ) {
-//                    Text(text = String.format("%.2f", max_value.toFloat() / 5))
-//                    Spacer(modifier = Modifier.fillMaxHeight(0.2f))
-//                }
-//
-//                Column(
-//                    modifier = Modifier.fillMaxHeight(),
-//                    verticalArrangement = Arrangement.Bottom
-//                ) {
-//                    Text(text = String.format("%.2f", 0.0f))
-//                    Spacer(modifier = Modifier.fillMaxHeight(0.0f))
-//                }
                 }
 
 

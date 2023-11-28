@@ -88,28 +88,9 @@ fun Summary() {
             }
         }
     }
-//    transaction {
-//        TodoTable.selectAll().forEach {
-//            todoListFromDb.add(
-//                TodoItem(
-//                    it[TodoTable.id],
-//                    it[TodoTable.primaryTask],
-//                    it[TodoTable.secondaryTask],
-//                    it[TodoTable.priority],
-//                    it[TodoTable.completed],
-//                    it[TodoTable.section],
-//                    it[TodoTable.datetime],
-//                    it[TodoTable.duration]
-//                )
-//            )
-//        }
-//    }
-
     val (monday_month, monday_day) = getMondayOfCurrentWeek(currentDate)
     val (sunday_month, sunday_day) = getSundayOfCurrentWeek(currentDate)
-
     var completed = todoListFromDb.filter { it.completed == true }
-
     val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
     val currentWeekStartDate = currentDate.minusDays(currentDate.dayOfWeek.value.toLong() - 1)
     val currentWeekTable =
@@ -475,6 +456,3 @@ fun Summary() {
         }
     }
 }
-
-//barchart
-//https://github.com/developerchunk/BarGraph-JetpackCompose/tree/main/app/src/main/java/com/example/customchar

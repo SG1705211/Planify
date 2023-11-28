@@ -59,7 +59,6 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
     val scrollState = rememberScrollState()
     val firstDayOfMonth = LocalDate.of(year, month, 1).dayOfWeek.value % 7
     val daysInMonth = LocalDate.of(year, month, 1).lengthOfMonth()
-
     // List of day names
     val dayNames = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
     // Month names list
@@ -68,7 +67,6 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
         "July", "August", "September", "October", "November", "December"
     )
     val monthName = monthNames[month - 1]  // Arrays are 0-indexed, so subtract 1 from the month number
-
     // Use a vertical Column to hold the month and year, day names, and the calendar dates
     Column {
         // Month and Year
@@ -79,7 +77,6 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-
         // Day Names Row
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -101,9 +98,7 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
             // Calendar Dates
             var currentDate = 1
             val today = LocalDate.now()
-
             for (i in 0..5) {
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -227,8 +222,6 @@ fun Calendar() {
     var year by remember { mutableStateOf(currentDate.year) }
     var date by remember { mutableStateOf(currentDate.dayOfMonth) }
     var mode by remember { mutableStateOf(0) }
-    val manager = DatabaseManager()
-                val db = manager.setupDatabase()
     val events_list = remember { mutableStateListOf<Event>()}
     runBlocking {
         var result: List<TodoItemjson>
@@ -342,7 +335,6 @@ fun Calendar() {
             ) {
                 Text(">")
             }
-
         }
     }
 }
