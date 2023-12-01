@@ -45,29 +45,6 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 
-import java.util.logging.Logger
-
-val logger = Logger.getLogger("DatabaseLogger")
-
-
-fun getDatabasePath(): String {
-    val dbFileName = "chinook.db"
-    // Check if a typical development directory/file exists
-    val isDevelopment = File(".gradle").exists()
-    return if (isDevelopment) {
-        "jdbc:sqlite:$dbFileName"
-    } else {
-        val appDir = System.getProperty("user.dir")
-        "jdbc:sqlite:$appDir/$dbFileName"
-    }
-}
-
-@Composable
-fun BoxItem(color: Color, text: String) {
-    Box(modifier = Modifier.size(200.dp, 200.dp).background(color)) {
-        Text(text)
-    }
-}
 
 @Composable
 fun MagicHome() {

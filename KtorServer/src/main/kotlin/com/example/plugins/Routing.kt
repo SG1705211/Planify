@@ -92,8 +92,8 @@ data class FolderItem(
 )
 
 fun Application.configureRouting() {
-    Database.connect("jdbc:sqlite:chinook.db", "org.sqlite.JDBC")
-//    Database.connect("jdbc:sqlite:/app/chinook.db", "org.sqlite.JDBC")
+//    Database.connect("jdbc:sqlite:chinook.db", "org.sqlite.JDBC")
+     Database.connect("jdbc:sqlite:/app/chinook.db", "org.sqlite.JDBC")
 //                Database.connect("jdbc:sqlite:chinook.db")
 //                transaction {
 //                    SchemaUtils.createMissingTablesAndColumns(TodoTable) // Create table if not exists
