@@ -312,11 +312,6 @@ fun Application.configureRouting() {
                     it[marked] = false
                 }
             }
-            if (todo != null) {
-                call.respond(HttpStatusCode.Created, todo)
-            } else {
-                call.respond(HttpStatusCode.InternalServerError, "Failed to create todo item")
-            }
         }
 
         post("/Folder") {
@@ -357,11 +352,6 @@ fun Application.configureRouting() {
                     it[content] = content_tem
                 }
             }
-            if (updateCount > 0) {
-                call.respond(HttpStatusCode.OK, "Content updated successfully")
-            } else {
-                call.respond(HttpStatusCode.NotFound, "File not found")
-            }
         }
 
 
@@ -378,7 +368,7 @@ fun Application.configureRouting() {
 
 
         delete("/notes/{id}") {
-            val todoId = call.parameters["id"]?.toString()
+            val todoId = call.parameters["id"]
             if (todoId == null) {
                 call.respond(HttpStatusCode.BadRequest, "Invalid ID")
                 return@delete
@@ -390,17 +380,17 @@ fun Application.configureRouting() {
             }
         }
 
+
+
         delete("/folder/{id}") {
-            val todoId = call.parameters["id"]?.toString()
+            val todoId = call.parameters["id"]
             if (todoId == null) {
                 call.respond(HttpStatusCode.BadRequest, "Invalid ID")
                 return@delete
             }
-            if ((Folders__Table.selectAll().count().toInt() != 0)) {
                 val isDeleted = transaction {
                     Folders__Table.deleteWhere { Folders__Table.name eq todoId }
                     Table__File.deleteWhere { folderName eq todoId }
-                }
             }
 
         }

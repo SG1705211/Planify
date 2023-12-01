@@ -50,7 +50,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.transactions.transaction
 
 
 object Table__File : Table() {
@@ -374,17 +373,21 @@ fun NoteList(state: RichTextState): Result {
                     var result_notes: List<FileItemJson>
                     var result_folder: List<FolderItemJson>
                     runBlocking {
-                        result_notes = fetchnotes()
-                        result_folder = fetchFolder()
-                        if (( result_notes.count() != 0 ) and (selectedNoteIndex.value != -1)) {
-                            deleteNotes(idList[selectedNoteIndex.value])
-                            idList.remove(idList[selectedNoteIndex.value])
-                        }
-                        if ((result_folder.count() != 0) and (selectedFolderIndex.value != -1)) {
-                            deleteFolder(folderList[selectedFolderIndex.value])
-                            deleteNotes(folderList[selectedFolderIndex.value])
-                            folderList.remove(folderList[selectedFolderIndex.value])
-                        }
+//                        result_notes = fetchnotes()
+//                        result_folder = fetchFolder()
+//                        if (( result_notes.count() != 0 ) and (selectedNoteIndex.value != -1)) {
+//                            deleteNotes(idList[selectedNoteIndex.value])
+//                            println(idList[selectedNoteIndex.value])
+//                            idList.remove(idList[selectedNoteIndex.value])
+//                        }
+//                        if ((result_folder.count() != 0) and (selectedFolderIndex.value != -1)) {
+//                            deleteFolder(folderList[selectedFolderIndex.value])
+//                            deleteNotes(folderList[selectedFolderIndex.value])
+//                            println("Running Delete")
+//                            println(folderList[selectedFolderIndex.value])
+//                            println(selectedFolderIndex.value)
+//                            folderList.remove(folderList[selectedFolderIndex.value])
+//                        }
                     }
                     selectedNoteIndex.value = -1
                     selectedFolderIndex.value = -1
