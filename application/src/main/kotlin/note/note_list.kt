@@ -22,6 +22,9 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.isMetaPressed
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 
 
 object Table__File : Table() {
@@ -140,22 +143,27 @@ fun CreateFolderDialog(parentFolder: String, onCreate: (FolderItem) -> Unit, onC
     )
 }
 
-
+data class Result(val firstValue: Boolean, val secondValue: List<String>, val thirdValue: String, val fourthValue: String)
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
+fun NoteList(state: RichTextState): Result {
     Database.connect("jdbc:sqlite:chinook.db")
+
+    // highlight database access ============================================
     transaction {
         SchemaUtils.create(Table__File)
         SchemaUtils.create(Folders__Table)
     }
+    // highlight database access ============================================
+
     val idList = remember { mutableStateListOf<String>()}
     val folderList = remember { mutableStateListOf<String>()}
     val folderPath = remember { mutableStateListOf<String>("")}
     var isDialogOpen by remember { mutableStateOf(false) }
     var isFolderDialogOpen by remember { mutableStateOf(false) }
     var isSaveDialogOpen by remember { mutableStateOf(false) }
+    var isDupDialogOpen by remember { mutableStateOf(false) }
     var isDelDialogOpen by remember { mutableStateOf(false) }
     var canIdelete by remember { mutableStateOf(false) }
     val selectedNoteIndex = remember { mutableStateOf<Int>(-1) }
@@ -163,10 +171,12 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
     val numItemInFolder = remember { mutableStateOf<Int?>(0) }
     var isFile by remember { mutableStateOf(false) }
     val (currentFolder, setCurrentFolder) = remember { mutableStateOf("") }
+    val (selectedFile, setSelectedFile) = remember { mutableStateOf("") }
 
     print(folderPath.size)
 
     idList.clear()
+    // highlight database access ============================================
     transaction {
         Table__File.selectAll().forEach {
             if (it[Table__File.folderName] == currentFolder) {
@@ -174,7 +184,9 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
             }
         }
     }
+    // highlight database access ============================================
 
+    // highlight database access ============================================
     folderList.clear()
     transaction {
         print(Folders__Table.selectAll().count())
@@ -184,6 +196,8 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
             }
         }
     }
+    // highlight database access ============================================
+
 
     Box(Modifier.fillMaxSize()) {
         FlowRow(modifier = Modifier.align(Alignment.TopCenter)) {
@@ -192,7 +206,11 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
                 modifier = Modifier
                     .padding(5.dp),
                 onClick = {
-                    isFile = true
+                    isFile = if (selectedNoteIndex.value != -1) {
+                        true
+                    } else {
+                        false
+                    }
                     isDialogOpen = true
                 },
                 containerColor = MaterialTheme.colorScheme.tertiary,
@@ -226,12 +244,16 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
                 onClick = {
                     if (selectedNoteIndex.value != -1) {
                         isSaveDialogOpen = true
+
+                        // highlight database access ============================================
                         transaction {
                             Table__File.update({(Table__File.name eq idList[selectedNoteIndex.value]) and
                                     (Table__File.folderName eq currentFolder)}) {
                                 it[content] = state.toHtml()
                             }
                         }
+                        // highlight database access ============================================
+
                     }
                 },
                 containerColor = MaterialTheme.colorScheme.tertiary,
@@ -269,20 +291,14 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
                 modifier = Modifier
                     .padding(5.dp),
                 onClick = {
+                    // highlight database access ============================================
                     transaction {
                         // delete a file
                         if ((Table__File.selectAll().count().toInt() != 0) and (selectedNoteIndex.value != -1)) {
                             Table__File.deleteWhere {
                                 Table__File.name eq idList[selectedNoteIndex.value]
                             }
-                            idList.clear()
-                            transaction {
-                                Table__File.selectAll().forEach {
-                                    if (it[Table__File.folderName] == currentFolder) {
-                                        idList.add(it[Table__File.name])
-                                    }
-                                }
-                            }
+                            idList.remove(idList[selectedNoteIndex.value])
                         }
 
                         // delete a folder
@@ -294,16 +310,12 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
                                 Table__File.folderName eq folderList[selectedFolderIndex.value]
                             }
 
-                            folderList.clear()
-                            transaction {
-                                Folders__Table.selectAll().forEach {
-                                    if (it[Folders__Table.parentFolder] == currentFolder) {
-                                        folderList.add(it[Folders__Table.name])
-                                    }
-                                }
-                            }
+                            folderList.remove(folderList[selectedFolderIndex.value])
                         }
                     }
+                    // highlight database access ============================================
+                    selectedNoteIndex.value = -1
+                    selectedFolderIndex.value = -1
                     isFile = false
                 },
                 containerColor = MaterialTheme.colorScheme.tertiary,
@@ -361,13 +373,17 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
                     Row (modifier = Modifier
                         .clickable {
                             selectedNoteIndex.value = it
+                            setSelectedFile(idList[it])
                             selectedFolderIndex.value = -1
                             isFile = true
+
+                            // highlight database access ============================================
                             transaction {
                                 Table__File.select { Table__File.name eq idList[it] }.forEach {
                                     state.setHtml(it[Table__File.content])
                                 }
                             }
+                            // highlight database access ============================================
 
                         }
                         .fillMaxWidth()
@@ -458,15 +474,25 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
                 folder = currentFolder,
                 onCreate = { newItem ->
                     isDialogOpen = false
-                    transaction {
-                        val newId = Table__File.insert {
-                            it[name] = newItem.name
-                            it[content] = newItem.content
-                            it[folderName] = newItem.folder
-                            it[folderID] = 0
-                            it[marked] = false
+                    print("newItem.name in idList:")
+                    print(newItem.name in idList)
+
+                    if (newItem.name in idList) {
+                        isDupDialogOpen = true
+                    } else {
+                        // highlight database access ============================================
+                        transaction {
+                            val newId = Table__File.insert {
+                                it[name] = newItem.name
+                                it[content] = newItem.content
+                                it[folderName] = newItem.folder
+                                it[folderID] = 0
+                                it[marked] = false
+                            }
+                            print(Table__File.selectAll().count())
                         }
-                        print(Table__File.selectAll().count())
+                        // highlight database access ============================================
+
                     }
                 },
                 onClose = { isDialogOpen = false }
@@ -478,17 +504,26 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
                 parentFolder = currentFolder,
                 onCreate = { newItem ->
                     isFolderDialogOpen = false
-                    transaction {
-                        val newId = Folders__Table.insert {
-                            it[name] = newItem.name
-                            it[parentFolder] = newItem.parentFolderName
-                            it[parentID] = 0
-                            it[marked] = false
+
+                    if (newItem.name in folderList) {
+                        isDupDialogOpen = true
+                    } else {
+                        // highlight database access ============================================
+                        transaction {
+                            val newId = Folders__Table.insert {
+                                it[name] = newItem.name
+                                it[parentFolder] = newItem.parentFolderName
+                                it[parentID] = 0
+                                it[marked] = false
+                            }
+                            print(Folders__Table.selectAll().count())
                         }
-                        print(Folders__Table.selectAll().count())
+                        // highlight database access ============================================
+
                     }
+
                 },
-                onClose = { isDialogOpen = false }
+                onClose = { isFolderDialogOpen = false }
             )
         }
 
@@ -501,6 +536,21 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
                 },
                 confirmButton = {
                     Button(onClick = { isSaveDialogOpen = false }) {
+                        Text("Confirm")
+                    }
+                }
+            )
+        }
+
+        if (isDupDialogOpen) {
+            var result = false
+            AlertDialog(
+                onDismissRequest = { /* dismiss dialog */ },
+                title = {
+                    Text(text = "Duplicated Name")
+                },
+                confirmButton = {
+                    Button(onClick = { isDupDialogOpen = false }) {
                         Text("Confirm")
                     }
                 }
@@ -533,5 +583,6 @@ fun NoteList(state: RichTextState): Pair<Boolean, List<String>> {
         }
 
     }
-    return Pair(isFile, folderPath)
+    return Result(isFile, folderPath, selectedFile, currentFolder)
 }
+

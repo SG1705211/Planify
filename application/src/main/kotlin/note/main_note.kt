@@ -31,6 +31,8 @@ fun NotesEditor() {
     var state = rememberRichTextState()
     var isFile by remember { mutableStateOf(false) }
     var folderPath = remember { mutableStateListOf<String>("")}
+    var selectedFile by remember { mutableStateOf("/") }
+    var currentFolder by remember { mutableStateOf("/") }
 
     state.setConfig(
         linkColor = Color.Blue,
@@ -55,8 +57,10 @@ fun NotesEditor() {
                 modifier = Modifier.fillMaxSize()
             ) {
                 Box(modifier = Modifier.fillMaxWidth().weight(0.95f)) {
-                    val (bo, li) = NoteList(state)
+                    val (bo, li, fi, fo) = NoteList(state)
                     isFile = bo
+                    selectedFile = fi
+                    currentFolder = fo
                     folderPath.clear()
                     li.forEach {
                         folderPath.add(it)
@@ -84,7 +88,7 @@ fun NotesEditor() {
             // other modifiers, content, etc.
         ) {
             if (isFile) {
-                EditorInterface(state)
+                EditorInterface(state, selectedFile, currentFolder)
             }
         }
     }

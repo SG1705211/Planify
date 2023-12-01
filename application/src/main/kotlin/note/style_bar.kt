@@ -54,6 +54,7 @@ fun functionButton(
         shape = RoundedCornerShape(3.dp),
         modifier = Modifier
             .focusProperties { canFocus = false }
+
     ) {
         Text(text)
     }
@@ -63,6 +64,7 @@ fun functionButton(
 @Composable
 fun controlBar(
     state: RichTextState,
+    fileName: String
 ) {
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(5.dp)
@@ -161,7 +163,7 @@ fun controlBar(
                 )
             },
             isSelected = state.currentSpanStyle.fontSize == 28.sp,
-            text = "Head"
+            text = "Title"
         )
 
         functionButton(
@@ -217,14 +219,13 @@ fun controlBar(
                     File(fileDialog.directory, fileName)
                 }
 
-                // Read the contents of the file
+                // Read the file
                 file?.let {
                     val content = it.readText()
                     if (file.extension.equals("html", ignoreCase = true)) {
                         state.setHtml(content)
                     }
-                    // Use the content in your state
-                     // or handle based on fileType
+
                 }
             },
             text = "load",
@@ -235,7 +236,7 @@ fun controlBar(
                 // Open file save dialog to choose where to save the file
                 val window = ComposeWindow()
                 val fileDialog = FileDialog(window, "Save File", FileDialog.SAVE)
-                fileDialog.file = "export.html" // Default file name
+                fileDialog.file = "$fileName.html" // Default file name
                 fileDialog.isVisible = true
 
                 val file = fileDialog.file?.let { fileName ->
