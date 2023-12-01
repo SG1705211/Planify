@@ -9,15 +9,11 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -35,7 +31,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import androidx.compose.foundation.clickable
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 
@@ -242,6 +237,7 @@ suspend fun fetchTodos(): List<TodoItemjson> {
     val response: HttpResponse = client.get("http://localhost:8080/todos")
     val jsonString = response.bodyAsText()
     client.close()
+    println(jsonString)
     return Json.decodeFromString(jsonString)
 }
 
@@ -313,6 +309,7 @@ fun ToDoList() {
         runBlocking {
             launch {
                 result = fetchTodos()
+
                 result.forEach { jsonItem ->
                     if (jsonItem.section == selectedSection && jsonItem.datetime == selectedDate.format(formatter) && jsonItem.recur != "Daily" && jsonItem.recur != "Monthly") {
                         todoListFromDb.add(

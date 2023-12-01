@@ -46,4 +46,5 @@ dependencies {
     implementation ("io.ktor:ktor-client-core:2.3.6")
     implementation ("io.ktor:ktor-client-cio:2.3.6")
     implementation("com.google.cloud:google-cloud-storage:2.29.1")
+    testImplementation("io.ktor:ktor-server-test-host-jvm:2.3.6")
 }

@@ -10,8 +10,16 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.*
 import kotlinx.serialization.Serializable
+import com.mohamedrejeb.richeditor.model.RichTextState
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
+
+
+
+
+
+@Serializable
+data class FileNamePara(val name: String, val folderName: String, val content: String)
 @Serializable
 data class TodoItem(
     val id: Int,
@@ -48,6 +56,43 @@ object TodoTable : Table() {
     override val primaryKey = PrimaryKey(id, name = "PK_User_ID")
 }
 
+
+object Table__File : Table() {
+    val id = integer("id").autoIncrement()
+    var name = varchar("name", 255)
+    var content = text("content")
+    val folderName = varchar("folderName", 255)
+    val folderID = integer("folderID")
+    val marked = bool("isStared")
+    override val primaryKey = PrimaryKey(id, name = "PK_User_ID")
+}
+
+object Folders__Table : Table() {
+    val id = integer("id").autoIncrement()
+    val name = varchar("name", 255)
+    val parentID = integer("parentID")
+    val parentFolder = varchar("parentName", 255)
+    val marked = bool("isStared")
+    override val primaryKey = PrimaryKey(id, name = "PK_User_ID")
+}
+
+
+@Serializable
+data class FileItem(
+    val id: Int,
+    var name: String,
+    var content: String,
+    var folder: String,
+    var marked: Boolean
+)
+
+@Serializable
+data class FolderItem(
+    val id: Int,
+    var name: String,
+    var parentFolderName: String,
+    var marked: Boolean
+)
 
 fun Application.configureRouting() {
     Database.connect("jdbc:sqlite:chinook.db", "org.sqlite.JDBC")
@@ -217,7 +262,7 @@ fun Application.configureRouting() {
                 }
             )
         }
-        // Get a single todo item by id
+
         get("/todos/{id}") {
             val todoId = call.parameters["id"]?.toIntOrNull()
             if (todoId == null) {
@@ -229,14 +274,7 @@ fun Application.configureRouting() {
                     .mapNotNull { it.toTodoItem() }
                     .singleOrNull()
             }
-            if (todo == null) {
-                call.respond(HttpStatusCode.NotFound, "Todo not found")
-            } else {
-                call.respond(todo)
-            }
         }
-
-        // Create a new todo item
         post("/todos") {
             val newTodo = call.receive<TodoItem>()
             val todoId = call.parameters["id"]?.toIntOrNull()
@@ -264,7 +302,38 @@ fun Application.configureRouting() {
             }
         }
 
-// Update an existing todo item
+
+        post("/notes") {
+            val newItem = call.receive<FileItem>()
+            val todoId = call.parameters["id"]?.toIntOrNull()
+            val todo = transaction {
+                Table__File.insert {
+                    it[name] = newItem.name
+                    it[content] = newItem.content
+                    it[folderName] = newItem.folder
+                    it[folderID] = 0
+                    it[marked] = false
+                }
+            }
+            if (todo != null) {
+                call.respond(HttpStatusCode.Created, todo)
+            } else {
+                call.respond(HttpStatusCode.InternalServerError, "Failed to create todo item")
+            }
+        }
+
+        post("/Folder") {
+            val newItem = call.receive<FolderItem>()
+            val todoId = call.parameters["id"]?.toIntOrNull()
+            val todo = transaction {
+                Folders__Table.insert {
+                    it[name] = newItem.name
+                    it[parentFolder] = newItem.parentFolderName
+                    it[parentID] = 0
+                    it[marked] = false
+                }
+            }
+        }
         post("/update/{id}") {
             val newTodo = call.receive<TodoItem>()
             val todoId = call.parameters["id"]?.toIntOrNull()
@@ -278,12 +347,26 @@ fun Application.configureRouting() {
                     it[recur] = newTodo.recur
                 }
             }
-            if (todo != null) {
-                call.respond(HttpStatusCode.Created, todo)
+        }
+
+        post("/updateFileContent") {
+            val requestData = call.receive<FileNamePara>()
+            val name = requestData.name
+            val folderName = requestData.folderName
+            val content_tem = requestData.content
+            // Perform the transaction
+            val updateCount = transaction {
+                Table__File.update({(Table__File.name eq name) and (Table__File.folderName eq folderName)}) {
+                    it[content] = content_tem
+                }
+            }
+            if (updateCount > 0) {
+                call.respond(HttpStatusCode.OK, "Content updated successfully")
             } else {
-                call.respond(HttpStatusCode.InternalServerError, "Failed to create todo item")
+                call.respond(HttpStatusCode.NotFound, "File not found")
             }
         }
+
 
         delete("/todos/{id}") {
             val todoId = call.parameters["id"]?.toIntOrNull()
@@ -294,11 +377,61 @@ fun Application.configureRouting() {
             val isDeleted = transaction {
                 TodoTable.deleteWhere { TodoTable.id eq todoId }
             }
-            if (isDeleted > 0) {
-                call.respond(HttpStatusCode.OK, "Todo item deleted successfully")
-            } else {
-                call.respond(HttpStatusCode.NotFound, "Todo item not found")
+        }
+
+
+        delete("/notes/{id}") {
+            val todoId = call.parameters["id"]?.toString()
+            if (todoId == null) {
+                call.respond(HttpStatusCode.BadRequest, "Invalid ID")
+                return@delete
             }
+            val isDeleted = transaction {
+                Table__File.deleteWhere { Table__File.name eq todoId}
+            }
+        }
+
+        delete("/folder/{id}") {
+            val todoId = call.parameters["id"]?.toString()
+            if (todoId == null) {
+                call.respond(HttpStatusCode.BadRequest, "Invalid ID")
+                return@delete
+            }
+            val isDeleted = transaction {
+                Folders__Table.deleteWhere {Folders__Table.name eq todoId}
+                Table__File.deleteWhere { folderName eq todoId }
+            }
+        }
+
+        get("/notes_name") {
+            call.respond(
+                transaction {
+                    Table__File.selectAll().map { row ->
+                        FileItem(
+                            id = row[Table__File.id],
+                            content = row[Table__File.content],
+                            folder = row[Table__File.folderName],
+                            name = row[Table__File.name],
+                            marked = row[Table__File.marked]
+                        )
+                    }
+                }
+            )
+        }
+
+        get("/folder_name") {
+            call.respond(
+                transaction {
+                    Folders__Table.selectAll().map { row ->
+                        FolderItem(
+                            id = row[Folders__Table.id],
+                            parentFolderName = row[Folders__Table.parentFolder],
+                            name = row[Folders__Table.name],
+                            marked = row[Folders__Table.marked]
+                        )
+                    }
+                }
+            )
         }
     }
 }
