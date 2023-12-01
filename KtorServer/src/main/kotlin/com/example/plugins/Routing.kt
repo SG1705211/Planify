@@ -14,12 +14,9 @@ import com.mohamedrejeb.richeditor.model.RichTextState
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 
-
-
-
-
 @Serializable
 data class FileNamePara(val name: String, val folderName: String, val content: String)
+
 @Serializable
 data class TodoItem(
     val id: Int,
@@ -33,7 +30,7 @@ data class TodoItem(
     val starttime: String,
     val recur: String,
     val pid: Int,
-    val deleted:Int,
+    val deleted: Int,
     val misc1: Int,
     val misc2: Int
 )
@@ -356,7 +353,7 @@ fun Application.configureRouting() {
             val content_tem = requestData.content
             // Perform the transaction
             val updateCount = transaction {
-                Table__File.update({(Table__File.name eq name) and (Table__File.folderName eq folderName)}) {
+                Table__File.update({ (Table__File.name eq name) and (Table__File.folderName eq folderName) }) {
                     it[content] = content_tem
                 }
             }
@@ -386,8 +383,10 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.BadRequest, "Invalid ID")
                 return@delete
             }
-            val isDeleted = transaction {
-                Table__File.deleteWhere { Table__File.name eq todoId}
+            if ((Folders__Table.selectAll().count().toInt() != 0)) {
+                val isDeleted = transaction {
+                    Table__File.deleteWhere { Table__File.name eq todoId }
+                }
             }
         }
 
@@ -397,10 +396,13 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.BadRequest, "Invalid ID")
                 return@delete
             }
-            val isDeleted = transaction {
-                Folders__Table.deleteWhere {Folders__Table.name eq todoId}
-                Table__File.deleteWhere { folderName eq todoId }
+            if ((Folders__Table.selectAll().count().toInt() != 0)) {
+                val isDeleted = transaction {
+                    Folders__Table.deleteWhere { Folders__Table.name eq todoId }
+                    Table__File.deleteWhere { folderName eq todoId }
+                }
             }
+
         }
 
         get("/notes_name") {

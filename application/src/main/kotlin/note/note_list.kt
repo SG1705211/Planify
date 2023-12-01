@@ -140,6 +140,24 @@ suspend fun updateFileContent(updateRequest: FileNamePara) {
 }
 
 @OptIn(InternalAPI::class)
+suspend fun deleteFolder(todoId: String) {
+    val client = HttpClient(CIO)
+    val response: HttpResponse = client.delete("http://localhost:8080/folder/$todoId") {
+        contentType(ContentType.Application.Json)
+    }
+    client.close()
+}
+
+@OptIn(InternalAPI::class)
+suspend fun deleteNotes(todoId: String) {
+    val client = HttpClient(CIO)
+    val response: HttpResponse = client.delete("http://localhost:8080/notes/$todoId") {
+        contentType(ContentType.Application.Json)
+    }
+    client.close()
+}
+
+@OptIn(InternalAPI::class)
 suspend fun fetchnotes(): List<FileItemJson> {
     val client = HttpClient(CIO)
     val response: HttpResponse = client.get("http://localhost:8080/notes_name")
@@ -353,29 +371,21 @@ fun NoteList(state: RichTextState): Result {
             FloatingActionButton(
                 modifier = Modifier.padding(5.dp),
                 onClick = {
-                    // highlight database access ============================================
-                    transaction {
-                        // delete a file
-                        if ((Table__File.selectAll().count().toInt() != 0) and (selectedNoteIndex.value != -1)) {
-                            Table__File.deleteWhere {
-                                Table__File.name eq idList[selectedNoteIndex.value]
-                            }
+                    var result_notes: List<FileItemJson>
+                    var result_folder: List<FolderItemJson>
+                    runBlocking {
+                        result_notes = fetchnotes()
+                        result_folder = fetchFolder()
+                        if (( result_notes.count() != 0 ) and (selectedNoteIndex.value != -1)) {
+                            deleteNotes(idList[selectedNoteIndex.value])
                             idList.remove(idList[selectedNoteIndex.value])
                         }
-
-                        // delete a folder
-                        if ((Folders__Table.selectAll().count().toInt() != 0) and (selectedFolderIndex.value != -1)) {
-                            Folders__Table.deleteWhere {
-                                Folders__Table.name eq folderList[selectedFolderIndex.value]
-                            }
-                            Table__File.deleteWhere {
-                                Table__File.folderName eq folderList[selectedFolderIndex.value]
-                            }
-
+                        if ((result_folder.count() != 0) and (selectedFolderIndex.value != -1)) {
+                            deleteFolder(folderList[selectedFolderIndex.value])
+                            deleteNotes(folderList[selectedFolderIndex.value])
                             folderList.remove(folderList[selectedFolderIndex.value])
                         }
                     }
-                    // highlight database access ============================================
                     selectedNoteIndex.value = -1
                     selectedFolderIndex.value = -1
                     isFile = false
@@ -387,8 +397,6 @@ fun NoteList(state: RichTextState): Result {
             ) {
                 Text("DEL")
             }
-
-
             // 6. show current folder
             FloatingActionButton(
                 modifier = Modifier.padding(5.dp).size(width = 200.dp, height = 55.dp),
