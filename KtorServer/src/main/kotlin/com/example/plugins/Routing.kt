@@ -92,144 +92,144 @@ data class FolderItem(
 
 fun Application.configureRouting() {
     Database.connect("jdbc:sqlite:chinook.db", "org.sqlite.JDBC")
-//     Database.connect("jdbc:sqlite:/app/chinook.db", "org.sqlite.JDBC")
-//                Database.connect("jdbc:sqlite:chinook.db")
-//                transaction {
-//                    SchemaUtils.createMissingTablesAndColumns(TodoTable) // Create table if not exists
-//                    // Delete all existing records (Optional, if you want to start fresh)
-//                    TodoTable.deleteAll()
-//                    // Work section
-//                    TodoTable.insert {
-//                        it[primaryTask] = "Write report"
-//                        it[secondaryTask] = "Due next week"
-//                        it[priority] = 1
-//                        it[starttime] = "08:00"
-//                        it[completed] = false
-//                        it[section] = "Work"
-//                        it[duration] = 3
-//                        it[datetime] = "20231030"
-//                        it[recur] = "None"
-//                        it[pid] = 0
-//                        it[deleted] = 0
-//                        it[misc1] = 0
-//                        it[misc2] = 0
-//                    }
-//
-//                    TodoTable.insert {
-//                        it[primaryTask] = "Email client"
-//                        it[secondaryTask] = "Urgent"
-//                        it[priority] = 2
-//                        it[completed] = false
-//                        it[starttime] = "08:00"
-//                        it[section] = "Work"
-//                        it[duration] = 3
-//                        it[datetime] = "20231029"
-//                        it[recur] = "None"
-//                        it[pid] = 0
-//                        it[deleted] = 0
-//                        it[misc1] = 0
-//                        it[misc2] = 0
-//                    }
-//
-//                    // Study section
-//                    TodoTable.insert {
-//                        it[primaryTask] = "Study for exam"
-//                        it[secondaryTask] = "Chapter 1-5"
-//                        it[priority] = 1
-//                        it[completed] = false
-//                        it[starttime] = "08:00"
-//                        it[section] = "Study"
-//                        it[duration] = 3
-//                        it[datetime] = "20231030"
-//                        it[recur] = "None"
-//                        it[pid] = 0
-//                        it[deleted] = 0
-//                        it[misc1] = 0
-//                        it[misc2] = 0
-//                    }
-//
-//                    TodoTable.insert {
-//                        it[primaryTask] = "Complete assignment"
-//                        it[secondaryTask] = "Submit online"
-//                        it[priority] = 2
-//                        it[completed] = false
-//                        it[starttime] = "08:00"
-//                        it[section] = "Study"
-//                        it[duration] = 3
-//                        it[datetime] = "20231030"
-//                        it[recur] = "None"
-//                        it[pid] = 0
-//                        it[deleted] = 0
-//                        it[misc1] = 0
-//                        it[misc2] = 0
-//                    }
-//
-//                    // Hobby section
-//                    TodoTable.insert {
-//                        it[primaryTask] = "Learn guitar"
-//                        it[secondaryTask] = "Practice chords"
-//                        it[priority] = 3
-//                        it[completed] = false
-//                        it[starttime] = "08:00"
-//                        it[section] = "Hobby"
-//                        it[duration] = 3
-//                        it[datetime] = "20231030"
-//                        it[recur] = "None"
-//                        it[pid] = 0
-//                        it[deleted] = 0
-//                        it[misc1] = 0
-//                        it[misc2] = 0
-//                    }
-//
-//                    TodoTable.insert {
-//                        it[primaryTask] = "Go fishing"
-//                        it[secondaryTask] = "This weekend"
-//                        it[priority] = 4
-//                        it[completed] = false
-//                        it[starttime] = "08:00"
-//                        it[section] = "Hobby"
-//                        it[duration] = 3
-//                        it[datetime] = "20231030"
-//                        it[recur] = "None"
-//                        it[pid] = 0
-//                        it[deleted] = 0
-//                        it[misc1] = 0
-//                        it[misc2] = 0
-//                    }
-//
-//                    // Life section
-//                    TodoTable.insert {
-//                        it[primaryTask] = "Buy groceries"
-//                        it[secondaryTask] = "Fruits, Vegetables"
-//                        it[priority] = 3
-//                        it[completed] = false
-//                        it[starttime] = "08:00"
-//                        it[section] = "Life"
-//                        it[duration] = 3
-//                        it[datetime] = "20231030"
-//                        it[recur] = "None"
-//                        it[pid] = 0
-//                        it[deleted] = 0
-//                        it[misc1] = 0
-//                        it[misc2] = 0
-//                    }
-//
-//                    TodoTable.insert {
-//                        it[primaryTask] = "Call mom"
-//                        it[secondaryTask] = "Weekend catchup"
-//                        it[priority] = 4
-//                        it[completed] = false
-//                        it[starttime] = "08:00"
-//                        it[section] = "Life"
-//                        it[duration] = 1
-//                        it[datetime] = "20231028"
-//                        it[recur] = "None"
-//                        it[pid] = 0
-//                        it[deleted] = 0
-//                        it[misc1] = 0
-//                        it[misc2] = 0
-//                    }
-//                }
+    //     Database.connect("jdbc:sqlite:/app/chinook.db", "org.sqlite.JDBC")
+    //                Database.connect("jdbc:sqlite:chinook.db")
+    //                transaction {
+    //                    SchemaUtils.createMissingTablesAndColumns(TodoTable) // Create table if not exists
+    //                    // Delete all existing records (Optional, if you want to start fresh)
+    //                    TodoTable.deleteAll()
+    //                    // Work section
+    //                    TodoTable.insert {
+    //                        it[primaryTask] = "Write report"
+    //                        it[secondaryTask] = "Due next week"
+    //                        it[priority] = 1
+    //                        it[starttime] = "08:00"
+    //                        it[completed] = false
+    //                        it[section] = "Work"
+    //                        it[duration] = 3
+    //                        it[datetime] = "20231030"
+    //                        it[recur] = "None"
+    //                        it[pid] = 0
+    //                        it[deleted] = 0
+    //                        it[misc1] = 0
+    //                        it[misc2] = 0
+    //                    }
+    //
+    //                    TodoTable.insert {
+    //                        it[primaryTask] = "Email client"
+    //                        it[secondaryTask] = "Urgent"
+    //                        it[priority] = 2
+    //                        it[completed] = false
+    //                        it[starttime] = "08:00"
+    //                        it[section] = "Work"
+    //                        it[duration] = 3
+    //                        it[datetime] = "20231029"
+    //                        it[recur] = "None"
+    //                        it[pid] = 0
+    //                        it[deleted] = 0
+    //                        it[misc1] = 0
+    //                        it[misc2] = 0
+    //                    }
+    //
+    //                    // Study section
+    //                    TodoTable.insert {
+    //                        it[primaryTask] = "Study for exam"
+    //                        it[secondaryTask] = "Chapter 1-5"
+    //                        it[priority] = 1
+    //                        it[completed] = false
+    //                        it[starttime] = "08:00"
+    //                        it[section] = "Study"
+    //                        it[duration] = 3
+    //                        it[datetime] = "20231030"
+    //                        it[recur] = "None"
+    //                        it[pid] = 0
+    //                        it[deleted] = 0
+    //                        it[misc1] = 0
+    //                        it[misc2] = 0
+    //                    }
+    //
+    //                    TodoTable.insert {
+    //                        it[primaryTask] = "Complete assignment"
+    //                        it[secondaryTask] = "Submit online"
+    //                        it[priority] = 2
+    //                        it[completed] = false
+    //                        it[starttime] = "08:00"
+    //                        it[section] = "Study"
+    //                        it[duration] = 3
+    //                        it[datetime] = "20231030"
+    //                        it[recur] = "None"
+    //                        it[pid] = 0
+    //                        it[deleted] = 0
+    //                        it[misc1] = 0
+    //                        it[misc2] = 0
+    //                    }
+    //
+    //                    // Hobby section
+    //                    TodoTable.insert {
+    //                        it[primaryTask] = "Learn guitar"
+    //                        it[secondaryTask] = "Practice chords"
+    //                        it[priority] = 3
+    //                        it[completed] = false
+    //                        it[starttime] = "08:00"
+    //                        it[section] = "Hobby"
+    //                        it[duration] = 3
+    //                        it[datetime] = "20231030"
+    //                        it[recur] = "None"
+    //                        it[pid] = 0
+    //                        it[deleted] = 0
+    //                        it[misc1] = 0
+    //                        it[misc2] = 0
+    //                    }
+    //
+    //                    TodoTable.insert {
+    //                        it[primaryTask] = "Go fishing"
+    //                        it[secondaryTask] = "This weekend"
+    //                        it[priority] = 4
+    //                        it[completed] = false
+    //                        it[starttime] = "08:00"
+    //                        it[section] = "Hobby"
+    //                        it[duration] = 3
+    //                        it[datetime] = "20231030"
+    //                        it[recur] = "None"
+    //                        it[pid] = 0
+    //                        it[deleted] = 0
+    //                        it[misc1] = 0
+    //                        it[misc2] = 0
+    //                    }
+    //
+    //                    // Life section
+    //                    TodoTable.insert {
+    //                        it[primaryTask] = "Buy groceries"
+    //                        it[secondaryTask] = "Fruits, Vegetables"
+    //                        it[priority] = 3
+    //                        it[completed] = false
+    //                        it[starttime] = "08:00"
+    //                        it[section] = "Life"
+    //                        it[duration] = 3
+    //                        it[datetime] = "20231030"
+    //                        it[recur] = "None"
+    //                        it[pid] = 0
+    //                        it[deleted] = 0
+    //                        it[misc1] = 0
+    //                        it[misc2] = 0
+    //                    }
+    //
+    //                    TodoTable.insert {
+    //                        it[primaryTask] = "Call mom"
+    //                        it[secondaryTask] = "Weekend catchup"
+    //                        it[priority] = 4
+    //                        it[completed] = false
+    //                        it[starttime] = "08:00"
+    //                        it[section] = "Life"
+    //                        it[duration] = 1
+    //                        it[datetime] = "20231028"
+    //                        it[recur] = "None"
+    //                        it[pid] = 0
+    //                        it[deleted] = 0
+    //                        it[misc1] = 0
+    //                        it[misc2] = 0
+    //                    }
+    //                }
     routing {
         get("/") {
             call.respondText("Hello Sherlock")
@@ -263,12 +263,11 @@ fun Application.configureRouting() {
             val todoId = call.parameters["id"]?.toIntOrNull()
             if (todoId == null) {
                 call.respond(HttpStatusCode.BadRequest, "Invalid todo ID")
-                return@get
             }
-            val todo = transaction {
-                TodoTable.select { TodoTable.id eq todoId }
-                    .mapNotNull { it.toTodoItem() }
-                    .singleOrNull()
+            else {
+                transaction {
+                    TodoTable.select { TodoTable.id eq todoId }.mapNotNull { it.toTodoItem() }.singleOrNull()
+                }
             }
         }
         post("/todos") {
@@ -330,12 +329,12 @@ fun Application.configureRouting() {
             val todoId = call.parameters["id"]?.toIntOrNull()
             if (todoId == null) {
                 call.respond(HttpStatusCode.BadRequest, "Invalid todo ID")
-                return@post
-            }
-            val todo = transaction {
-                TodoTable.update({ TodoTable.id eq todoId }) {
-                    it[completed] = newTodo.completed
-                    it[recur] = newTodo.recur
+            }else {
+                transaction {
+                    TodoTable.update({ TodoTable.id eq todoId }) {
+                        it[completed] = newTodo.completed
+                        it[recur] = newTodo.recur
+                    }
                 }
             }
         }
@@ -369,11 +368,12 @@ fun Application.configureRouting() {
             val todoId = call.parameters["id"]?.toIntOrNull()
             if (todoId == null) {
                 call.respond(HttpStatusCode.BadRequest, "Invalid ID")
-                return@delete
-            }
-                val isDeleted = transaction {
+            } else {
+                transaction {
                     Table__File.deleteWhere { Table__File.id eq todoId }
                 }
+                call.respond(HttpStatusCode.OK, "Yes")
+            }
         }
 
 
@@ -382,11 +382,12 @@ fun Application.configureRouting() {
             val todoId = call.parameters["id"]?.toIntOrNull()
             if (todoId == null) {
                 call.respond(HttpStatusCode.BadRequest, "Invalid ID")
-                return@delete
             }
-            val isDeleted = transaction {
-                Folders__Table.deleteWhere { Folders__Table.id eq todoId }
-                Table__File.deleteWhere { Table__File.id eq todoId }
+            else {
+                transaction {
+                    Folders__Table.deleteWhere { Folders__Table.id eq todoId }
+                    Table__File.deleteWhere { Table__File.id eq todoId }
+                }
             }
 
         }
@@ -424,7 +425,7 @@ fun Application.configureRouting() {
     }
 }
 
-// Utility function to convert a ResultRow to a TodoItem
+
 fun ResultRow.toTodoItem() = TodoItem(
     id = this[TodoTable.id],
     primaryTask = this[TodoTable.primaryTask],

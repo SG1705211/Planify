@@ -22,7 +22,7 @@ fun Application.configureSecurity() {
             userParamName = "user"
             passwordParamName = "password"
             challenge {
-
+                /**/
             }
         }
     }
