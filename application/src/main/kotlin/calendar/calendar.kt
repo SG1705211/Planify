@@ -136,9 +136,12 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
                                     if (events_list.find { it.date == currentDateString && it.pid == each.id } != null) {
                                         continue
                                     }
-                                    val eachRecur = MutableList(1) { each }
+                                    val eachRecur = MutableList(1) { each.copy() }
                                     eachRecur[0].date = currentDateString
-                                    eventsOnThisDate = eventsOnThisDate + eachRecur
+                                    if (each.date <= currentDateString)  {
+                                        println(each)
+                                        eventsOnThisDate = eventsOnThisDate + eachRecur
+                                    }
                                 }
                                 val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                                 val potentialrecur_monthly = events_list.filter { it.recur == "Monthly" }
@@ -150,13 +153,14 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
                                         if (events_list.find { it.date == currentDateString && it.pid == each.id } != null){
                                             continue
                                         }
-                                        val eachRecur = MutableList(1) { each }
+                                        val eachRecur = MutableList(1) { each.copy() }
                                         eachRecur[0].date = currentDateString
-                                        eventsOnThisDate = eventsOnThisDate + eachRecur
+                                        if (each.date <= currentDateString)  {
+                                            eventsOnThisDate = eventsOnThisDate + eachRecur
+                                        }
                                     }
                                 }
 
-                                // Display events
                                 Column(
                                     modifier = Modifier.verticalScroll(rememberScrollState())
                                 ) {
