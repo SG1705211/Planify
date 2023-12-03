@@ -31,7 +31,7 @@ fun NotesEditor() {
     var state = rememberRichTextState()
     var isFile by remember { mutableStateOf(false) }
     var folderPath = remember { mutableStateListOf<String>("")}
-    var selectedFile by remember { mutableStateOf("/") }
+    var selectedFile by remember { mutableStateOf(FileItem(2,"a","a","sherlock beautiful",true)) }
     var currentFolder by remember { mutableStateOf("/") }
 
     state.setConfig(

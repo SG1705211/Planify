@@ -10,12 +10,11 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.*
 import kotlinx.serialization.Serializable
-import com.mohamedrejeb.richeditor.model.RichTextState
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 
 @Serializable
-data class FileNamePara(val name: String, val folderName: String, val content: String)
+data class FileNamePara(val name: String, val folderName: String, val content: String, val id: Int)
 
 @Serializable
 data class TodoItem(
@@ -92,8 +91,8 @@ data class FolderItem(
 )
 
 fun Application.configureRouting() {
-//    Database.connect("jdbc:sqlite:chinook.db", "org.sqlite.JDBC")
-     Database.connect("jdbc:sqlite:/app/chinook.db", "org.sqlite.JDBC")
+    Database.connect("jdbc:sqlite:chinook.db", "org.sqlite.JDBC")
+//     Database.connect("jdbc:sqlite:/app/chinook.db", "org.sqlite.JDBC")
 //                Database.connect("jdbc:sqlite:chinook.db")
 //                transaction {
 //                    SchemaUtils.createMissingTablesAndColumns(TodoTable) // Create table if not exists
@@ -233,7 +232,7 @@ fun Application.configureRouting() {
 //                }
     routing {
         get("/") {
-            call.respondText("a")
+            call.respondText("Hello Sherlock")
         }
         get("/todos") {
             call.respond(
@@ -341,14 +340,13 @@ fun Application.configureRouting() {
             }
         }
 
-        post("/updateFileContent") {
-            val requestData = call.receive<FileNamePara>()
-            val name = requestData.name
-            val folderName = requestData.folderName
+        post("/updateFile/{id}") {
+            val requestData = call.receive<FileItem>()
             val content_tem = requestData.content
+            val id = requestData.id
             // Perform the transaction
             val updateCount = transaction {
-                Table__File.update({ (Table__File.name eq name) and (Table__File.folderName eq folderName) }) {
+                Table__File.update({ (Table__File.id eq id) }) {
                     it[content] = content_tem
                 }
             }
@@ -368,29 +366,27 @@ fun Application.configureRouting() {
 
 
         delete("/notes/{id}") {
-            val todoId = call.parameters["id"]
+            val todoId = call.parameters["id"]?.toIntOrNull()
             if (todoId == null) {
                 call.respond(HttpStatusCode.BadRequest, "Invalid ID")
                 return@delete
             }
-            if ((Folders__Table.selectAll().count().toInt() != 0)) {
                 val isDeleted = transaction {
-                    Table__File.deleteWhere { Table__File.name eq todoId }
+                    Table__File.deleteWhere { Table__File.id eq todoId }
                 }
-            }
         }
 
 
 
         delete("/folder/{id}") {
-            val todoId = call.parameters["id"]
+            val todoId = call.parameters["id"]?.toIntOrNull()
             if (todoId == null) {
                 call.respond(HttpStatusCode.BadRequest, "Invalid ID")
                 return@delete
             }
-                val isDeleted = transaction {
-                    Folders__Table.deleteWhere { Folders__Table.name eq todoId }
-                    Table__File.deleteWhere { folderName eq todoId }
+            val isDeleted = transaction {
+                Folders__Table.deleteWhere { Folders__Table.id eq todoId }
+                Table__File.deleteWhere { Table__File.id eq todoId }
             }
 
         }

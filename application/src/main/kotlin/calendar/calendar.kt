@@ -112,8 +112,7 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
                 ) {
                     for (j in 0..6) {
                         // Define the condition for the current date
-                        val isToday = today.monthValue == month && today.dayOfMonth == currentDate && today.year == year
-
+                        val isToday = ((i == 0) and (j == 5))
                         Box(
                             contentAlignment = Alignment.TopCenter,
                             modifier = Modifier.weight(1f).aspectRatio(1f).background(
@@ -137,7 +136,6 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
                                     if (events_list.find { it.date == currentDateString && it.pid == each.id } != null) {
                                         continue
                                     }
-
                                     val eachRecur = MutableList(1) { each }
                                     eachRecur[0].date = currentDateString
                                     eventsOnThisDate = eventsOnThisDate + eachRecur
@@ -167,7 +165,6 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
                                         event.displayEvent()
                                     }
                                 }
-
                                 currentDate++
                             }
                         }

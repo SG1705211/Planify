@@ -17,30 +17,17 @@ import androidx.compose.ui.unit.dp
 import com.mohamedrejeb.richeditor.model.RichTextState
 
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.isMetaPressed
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onKeyEvent
 import kotlinx.serialization.Serializable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import io.ktor.client.request.*
 import io.ktor.http.*
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextField
-import androidx.compose.runtime.*
-import androidx.compose.ui.text.input.KeyboardType
-import org.jetbrains.exposed.sql.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.HttpClient
 import io.ktor.client.statement.*
@@ -129,30 +116,37 @@ suspend fun create(notes: FolderItem) {
 }
 
 
-@OptIn(InternalAPI::class)
-suspend fun updateFileContent(updateRequest: FileNamePara) {
-    val client = HttpClient(CIO)
-    val response: HttpResponse = client.post("http://localhost:8080/updateFileContent") {
-        contentType(ContentType.Application.Json)
-        body = Json.encodeToString(updateRequest)
-    }
-}
+
 
 @OptIn(InternalAPI::class)
-suspend fun deleteFolder(todoId: String) {
+suspend fun updateTodoItem(todoId: Int, updatedTodo: FileItem) {
     val client = HttpClient(CIO)
-    val response: HttpResponse = client.delete("http://localhost:8080/folder/$todoId") {
+    val response: HttpResponse = client.post("http://localhost:8080/updateFile/$todoId") {
         contentType(ContentType.Application.Json)
+        body = Json.encodeToString(updatedTodo.ToFileJson())
     }
     client.close()
 }
 
+
 @OptIn(InternalAPI::class)
-suspend fun deleteNotes(todoId: String) {
+suspend fun deleteFolder(todoId: Int) {
+    val client = HttpClient(CIO)
+    val response: HttpResponse = client.delete("http://localhost:8080/folder/$todoId") {
+        contentType(ContentType.Application.Json)
+
+    }
+    println(response)
+    client.close()
+}
+
+@OptIn(InternalAPI::class)
+suspend fun deleteNotes(todoId: Int) {
     val client = HttpClient(CIO)
     val response: HttpResponse = client.delete("http://localhost:8080/notes/$todoId") {
         contentType(ContentType.Application.Json)
     }
+    println(response)
     client.close()
 }
 
@@ -232,15 +226,15 @@ fun CreateFolderDialog(parentFolder: String, onCreate: (FolderItem) -> Unit, onC
 }
 
 data class Result(
-    val firstValue: Boolean, val secondValue: List<String>, val thirdValue: String, val fourthValue: String
+    val firstValue: Boolean, val secondValue: List<String>, val thirdValue: FileItem, val fourthValue: String
 )
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun NoteList(state: RichTextState): Result {
     Database.connect("jdbc:sqlite:chinook.db")
-    var idList = remember { mutableStateListOf<String>() }
-    val folderList = remember { mutableStateListOf<String>() }
+    var idList = remember { mutableStateListOf<FileItem>() }
+    val folderList = remember { mutableStateListOf<FolderItem>() }
     val folderPath = remember { mutableStateListOf<String>("") }
     var isDialogOpen by remember { mutableStateOf(false) }
     var isFolderDialogOpen by remember { mutableStateOf(false) }
@@ -253,10 +247,7 @@ fun NoteList(state: RichTextState): Result {
     val numItemInFolder = remember { mutableStateOf<Int?>(0) }
     var isFile by remember { mutableStateOf(false) }
     val (currentFolder, setCurrentFolder) = remember { mutableStateOf("") }
-    val (selectedFile, setSelectedFile) = remember { mutableStateOf("") }
-
-    print(folderPath.size)
-
+    val (selectedFile, setSelectedFile) = remember { mutableStateOf(FileItem(0,"a","a","a",true)) }
     idList.clear()
     runBlocking {
         var result: List<FileItemJson>
@@ -264,11 +255,20 @@ fun NoteList(state: RichTextState): Result {
             result = fetchnotes()
             result.forEach { jsonItem ->
                 if (jsonItem.folder == currentFolder) {
-                    idList.add(jsonItem.name)
+                    idList.add(
+                        FileItem(
+                        content = jsonItem.content,
+                        folder = jsonItem.folder,
+                        id = jsonItem.id,
+                        marked = jsonItem.marked,
+                        name = jsonItem.name
+                    )
+                    )
                 }
             }
         }
     }
+
     folderList.clear()
     runBlocking {
         var result: List<FolderItemJson>
@@ -276,7 +276,14 @@ fun NoteList(state: RichTextState): Result {
             result = fetchFolder()
             result.forEach { jsonItem ->
                 if (jsonItem.parentFolderName == currentFolder) {
-                    folderList.add(jsonItem.name)
+                    folderList.add(
+                        FolderItem(
+                        id = jsonItem.id,
+                        marked = jsonItem.marked,
+                        name = jsonItem.name,
+                        parentFolderName = jsonItem.parentFolderName
+                    )
+                    )
                 }
             }
         }
@@ -327,12 +334,14 @@ fun NoteList(state: RichTextState): Result {
                         isSaveDialogOpen = true
                         runBlocking {
                             launch {
-                                val updateRequest = updateFileContent(
-                                    FileNamePara(
-                                        idList[selectedNoteIndex.value], currentFolder, state.toHtml()
-                                    )
-                                )
-
+                                val updateRequest = updateTodoItem(idList[selectedNoteIndex.value].id,
+                                    FileItem(
+                                        id = idList[selectedNoteIndex.value].id,
+                                        content = state.toHtml(),
+                                        folder = "",
+                                        marked = false,
+                                        name = "a"
+                                    ))
                             }
                         }
                     }
@@ -373,22 +382,42 @@ fun NoteList(state: RichTextState): Result {
                     var result_notes: List<FileItemJson>
                     var result_folder: List<FolderItemJson>
                     runBlocking {
-//                        result_notes = fetchnotes()
-//                        result_folder = fetchFolder()
-//                        if (( result_notes.count() != 0 ) and (selectedNoteIndex.value != -1)) {
-//                            deleteNotes(idList[selectedNoteIndex.value])
-//                            println(idList[selectedNoteIndex.value])
-//                            idList.remove(idList[selectedNoteIndex.value])
+                        result_notes = fetchnotes()
+                        result_folder = fetchFolder()
+                        if (( result_notes.count() != 0 ) and (selectedNoteIndex.value != -1)) {
+                            deleteNotes(idList[selectedNoteIndex.value].id)
+                            idList.remove(idList[selectedNoteIndex.value])
+                        }
+                        if ((result_folder.count() != 0) and (selectedFolderIndex.value != -1)) {
+                            deleteFolder(folderList[selectedFolderIndex.value].id)
+                            deleteNotes(folderList[selectedFolderIndex.value].id)
+                            folderList.remove(folderList[selectedFolderIndex.value])
+                        }
+                    }
+//                    transaction {
+//                        // delete a file
+//                        if ((Table__File.selectAll().count().toInt() != 0) and (selectedNoteIndex.value != -1)) {
+//                            Table__File.deleteWhere {
+//                                (name eq fileList[selectedNoteIndex.value].name) and
+//                                        (id eq fileList[selectedNoteIndex.value].id)
+//                            }
+//                            fileList.remove(fileList[selectedNoteIndex.value])
 //                        }
-//                        if ((result_folder.count() != 0) and (selectedFolderIndex.value != -1)) {
-//                            deleteFolder(folderList[selectedFolderIndex.value])
-//                            deleteNotes(folderList[selectedFolderIndex.value])
-//                            println("Running Delete")
-//                            println(folderList[selectedFolderIndex.value])
-//                            println(selectedFolderIndex.value)
+//
+//                        // delete a folder
+//                        if ((Folders__Table.selectAll().count().toInt() != 0) and (selectedFolderIndex.value != -1)) {
+//                            Folders__Table.deleteWhere {
+//                                (name eq folderList[selectedFolderIndex.value].name) and
+//                                        (id eq folderList[selectedFolderIndex.value].id)
+//                            }
+//                            Table__File.deleteWhere {
+//                                (folderName eq folderList[selectedFolderIndex.value].name) and
+//                                        (id eq folderList[selectedFolderIndex.value].id)
+//                            }
+//
 //                            folderList.remove(folderList[selectedFolderIndex.value])
 //                        }
-                    }
+//                    }
                     selectedNoteIndex.value = -1
                     selectedFolderIndex.value = -1
                     isFile = false
@@ -452,7 +481,7 @@ fun NoteList(state: RichTextState): Result {
                                 launch {
                                     result = fetchnotes()
                                     result.forEach { JsonItem ->
-                                        if (JsonItem.name == idList[it]) {
+                                        if (JsonItem.name == idList[it].name) {
                                             state.setHtml(JsonItem.content)
                                             println(JsonItem.content)
                                         }
@@ -466,7 +495,7 @@ fun NoteList(state: RichTextState): Result {
                                 .padding(horizontal = 10.dp))
 
                         Text(
-                            text = idList[it],
+                            text = idList[it].name,
                             fontWeight = fontWeight,
                             modifier = Modifier.padding(16.dp),
                         )
@@ -504,8 +533,8 @@ fun NoteList(state: RichTextState): Result {
                             isFile = false
                             selectedFolderIndex.value = -1
                             selectedNoteIndex.value = -1
-                            setCurrentFolder(folderList[num])
-                            folderPath.add(folderList[num])
+                            setCurrentFolder(folderList[num].name)
+                            folderPath.add(folderList[num].name)
                         }, onLongClick = {}).fillMaxWidth().clip(RoundedCornerShape(8.dp))) {
                         Icon(Icons.Filled.Menu, // icon image
                             contentDescription = "A Pen",
@@ -513,7 +542,7 @@ fun NoteList(state: RichTextState): Result {
                                 .padding(horizontal = 10.dp))
 
                         Text(
-                            text = folderList[num],
+                            text = folderList[num].name,
                             fontWeight = fontWeight,
                             modifier = Modifier.padding(16.dp),
                         )
@@ -527,9 +556,8 @@ fun NoteList(state: RichTextState): Result {
             CreateFileDialog(folder = currentFolder, onCreate = { newItem ->
                 isDialogOpen = false
                 print("newItem.name in idList:")
-                print(newItem.name in idList)
-
-                if (newItem.name in idList) {
+                var id_list = idList.map { it.name }
+                if (newItem.name in id_list) {
                     isDupDialogOpen = true
                 } else {
                     runBlocking {
@@ -554,8 +582,8 @@ fun NoteList(state: RichTextState): Result {
         if (isFolderDialogOpen) {
             CreateFolderDialog(parentFolder = currentFolder, onCreate = { newItem ->
                 isFolderDialogOpen = false
-
-                if (newItem.name in folderList) {
+                val names = folderList.map { it.name }
+                if (newItem.name in names) {
                     isDupDialogOpen = true
                 } else {
                     runBlocking {

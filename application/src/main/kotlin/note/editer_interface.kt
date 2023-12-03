@@ -28,6 +28,8 @@ import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import com.mohamedrejeb.richeditor.model.RichTextState
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
@@ -38,7 +40,7 @@ import java.io.File
 
 
 @Composable
-fun EditorInterface(state: RichTextState, selectedFile: String, currentFolder: String) {
+fun EditorInterface(state: RichTextState, selectedFile: FileItem, currentFolder: String) {
     Database.connect("jdbc:sqlite:chinook.db")
     var isSaveDialogOpen by remember { mutableStateOf(false) }
     if (isSaveDialogOpen) {
@@ -62,7 +64,7 @@ fun EditorInterface(state: RichTextState, selectedFile: String, currentFolder: S
 
         controlBar(
             state = state,
-            fileName = selectedFile
+            fileName = selectedFile.name
         )
 
 
@@ -123,10 +125,22 @@ fun EditorInterface(state: RichTextState, selectedFile: String, currentFolder: S
                                 Key.S -> {
                                     isSaveDialogOpen = true
                                     // highlight database access ============================================
-                                    transaction {
-                                        Table__File.update({(Table__File.name eq selectedFile) and
-                                                (Table__File.folderName eq currentFolder) }) {
-                                            it[content] = state.toHtml()
+//                                    transaction {
+//                                        Table__File.update({(Table__File.name eq selectedFile) and
+//                                                (Table__File.folderName eq currentFolder) }) {
+//                                            it[content] = state.toHtml()
+//                                        }
+//                                    }
+                                    runBlocking {
+                                        launch {
+                                            val updateRequest = updateTodoItem(selectedFile.id,
+                                                FileItem(
+                                                    id = selectedFile.id,
+                                                    content = state.toHtml(),
+                                                    folder = "",
+                                                    marked = false,
+                                                    name = "a"
+                                                ))
                                         }
                                     }
                                     // highlight database access ============================================
