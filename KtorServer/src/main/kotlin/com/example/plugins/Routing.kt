@@ -356,10 +356,11 @@ fun Application.configureRouting() {
             val todoId = call.parameters["id"]?.toIntOrNull()
             if (todoId == null) {
                 call.respond(HttpStatusCode.BadRequest, "Invalid ID")
-                return@delete
             }
-            val isDeleted = transaction {
-                TodoTable.deleteWhere { TodoTable.id eq todoId }
+            else {
+                val isDeleted = transaction {
+                    TodoTable.deleteWhere { TodoTable.id eq todoId }
+                }
             }
         }
 
