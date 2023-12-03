@@ -52,7 +52,6 @@ object TodoTable : Table() {
     override val primaryKey = PrimaryKey(id, name = "PK_User_ID")
 }
 
-
 data class TodoItem(
     val id: Int,
     val primaryTask: String,
@@ -69,7 +68,6 @@ data class TodoItem(
     val misc1: Int,
     val misc2: Int
 )
-
 @Serializable
 data class TodoItemjson(
     val id: Int,
@@ -97,7 +95,7 @@ fun TodoItem.toTodoItemJson(): TodoItemjson {
         completed = this.completed,
         datetime = this.date_time,
         section = this.section,
-        duration = this.duration.toIntOrNull() ?: 0, // Converts String to Int, defaulting to 0 if conversion fails
+        duration = this.duration.toIntOrNull() ?: 0,
         starttime = this.start_time,
         recur = this.recur,
         pid = this.pid,
@@ -110,9 +108,12 @@ fun TodoItem.toTodoItemJson(): TodoItemjson {
 enum class RecurOption {
     None, Daily, Monthly
 }
-
 @Composable
-fun CreateTodoDialog(onCreate: (TodoItem) -> Unit, onClose: () -> Unit) {
+fun CreateTodoDialog(
+    onCreate: (TodoItem) -> Unit,
+    onClose: () -> Unit,
+    defaultTodo: TodoItem
+) {
     var primaryTask by remember { mutableStateOf("") }
     var secondaryTask by remember { mutableStateOf("") }
     var priority by remember { mutableStateOf(1) }
@@ -123,6 +124,24 @@ fun CreateTodoDialog(onCreate: (TodoItem) -> Unit, onClose: () -> Unit) {
     var areFieldsValid by remember { mutableStateOf(true) }
     var duration_in by remember { mutableStateOf("") }
     var recurOption by remember { mutableStateOf(RecurOption.None) }
+    if (defaultTodo.primaryTask != "This is a dummy variable") {
+        primaryTask = defaultTodo.primaryTask
+        secondaryTask =defaultTodo.secondaryTask
+        priority =defaultTodo.priority
+        section =defaultTodo.section
+        dueDate =defaultTodo.date_time
+        start_time =defaultTodo.start_time
+        isDateValid =true
+        areFieldsValid =true
+        duration_in =defaultTodo.duration
+        if (defaultTodo.recur == "Monthly") {
+            recurOption = RecurOption.Monthly
+        } else if (defaultTodo.recur == "Daily") {
+            recurOption = RecurOption.Daily
+        } else {
+            recurOption = RecurOption.None
+        }
+    }
     AlertDialog(onDismissRequest = { /* dismiss dialog */ }, title = {
         Text(text = "Create New Todo Item")
     }, text = {
@@ -136,30 +155,22 @@ fun CreateTodoDialog(onCreate: (TodoItem) -> Unit, onClose: () -> Unit) {
             )
             TextField(value = section, onValueChange = { section = it }, label = { Text("Section") })
             TextField(value = start_time, onValueChange = { start_time = it }, label = { Text("Start Time (HH:MM)") })
-
             TextField(value = duration_in,
                 onValueChange = { duration_in = it },
                 label = { Text("Duration (in Hours)") })
-
             TextField(value = dueDate, onValueChange = { dueDate = it }, label = { Text("Due Date (yyyy-MM-dd)") })
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Recur")
-                // Radio button for 'Daily'
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(
-                        selected = recurOption == RecurOption.Daily,
+                    RadioButton(selected = recurOption == RecurOption.Daily,
                         onClick = { recurOption = RecurOption.Daily })
                     Text("Daily")
                 }
-                // Radio button for 'Monthly'
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(
-                        selected = recurOption == RecurOption.Monthly,
+                    RadioButton(selected = recurOption == RecurOption.Monthly,
                         onClick = { recurOption = RecurOption.Monthly })
                     Text("Monthly")
                 }
             }
-            // Error messages appear here, inside the AlertDialog
             if (!isDateValid) {
                 Text("Invalid date format", color = Color.Red)
             }
@@ -219,25 +230,20 @@ private fun validateDate(dateStr: String): Boolean {
         false
     }
 }
-
-
 @OptIn(InternalAPI::class)
 suspend fun create(todoItem: TodoItem) {
     val client = HttpClient(CIO)
     val response: HttpResponse = client.post("http://localhost:8080/todos") {
         contentType(ContentType.Application.Json)
-        println(Json.encodeToString(todoItem.toTodoItemJson()))
         body = Json.encodeToString(todoItem.toTodoItemJson())
     }
 }
-
 
 suspend fun fetchTodos(): List<TodoItemjson> {
     val client = HttpClient(CIO)
     val response: HttpResponse = client.get("http://localhost:8080/todos")
     val jsonString = response.bodyAsText()
     client.close()
-    println(jsonString)
     return Json.decodeFromString(jsonString)
 }
 
@@ -245,12 +251,9 @@ suspend fun fetchTodosa(todoId: Int): TodoItemjson {
     val client = HttpClient(CIO)
     val response: HttpResponse = client.get("http://localhost:8080/todos/$todoId")
     val jsonString = response.bodyAsText()
-    println(jsonString)
     client.close()
     return Json.decodeFromString(jsonString)
 }
-
-
 @OptIn(InternalAPI::class)
 suspend fun updateTodoItem(todoId: Int, updatedTodo: TodoItem) {
     val client = HttpClient(CIO)
@@ -260,7 +263,6 @@ suspend fun updateTodoItem(todoId: Int, updatedTodo: TodoItem) {
     }
     client.close()
 }
-
 @OptIn(InternalAPI::class)
 suspend fun deleteTodo(todoId: Int) {
     val client = HttpClient(CIO)
@@ -269,8 +271,6 @@ suspend fun deleteTodo(todoId: Int) {
     }
     client.close()
 }
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ToDoList() {
@@ -302,14 +302,21 @@ fun ToDoList() {
     val current_month = monthNames[month - 1]
     val (selectedSection, setSelectedSection) = remember { mutableStateOf("Work") }
     var todoListFromDb = remember { mutableStateListOf<TodoItem>() }
+    var if_update by remember { mutableStateOf(false) }
+    var if_create by remember { mutableStateOf(false) }
+    var currentid by remember {
+        mutableStateOf(
+            TodoItem(
+                0, "Initial", "initial", 0, false, "test", "test", "test", "test", "test", 0, 0, 0, 0
+            )
+        )
+    }
     LaunchedEffect(selectedSection, selectedDate) {
         var result: List<TodoItemjson>
         todoListFromDb.clear()
-        // update fetched data
         runBlocking {
             launch {
                 result = fetchTodos()
-
                 result.forEach { jsonItem ->
                     if (jsonItem.section == selectedSection && jsonItem.datetime == selectedDate.format(formatter) && jsonItem.recur != "Daily" && jsonItem.recur != "Monthly") {
                         todoListFromDb.add(
@@ -356,8 +363,7 @@ fun ToDoList() {
                             )
                         }
                     } else if (jsonItem.recur == "Monthly" && jsonItem.section == selectedSection && LocalDate.parse(
-                            jsonItem.datetime,
-                            formatter
+                            jsonItem.datetime, formatter
                         ).dayOfWeek == selectedDate.dayOfWeek
                     ) {
                         val duplicate_item = todoListFromDb.find { it.pid == jsonItem.id }
@@ -382,7 +388,6 @@ fun ToDoList() {
                             )
                         }
                     }
-                    
                 }
             }
         }
@@ -391,7 +396,6 @@ fun ToDoList() {
     Column(
         modifier = Modifier.fillMaxHeight().padding(top = 24.dp)
     ) {
-
         Box(
             modifier = Modifier.fillMaxWidth().weight(0.05f)
         ) {
@@ -422,7 +426,6 @@ fun ToDoList() {
                                 if (month > 1) {
                                     month--
                                     date = LocalDate.of(year, month, 1).lengthOfMonth()
-
                                 } else {
                                     month = 12
                                     year--
@@ -458,13 +461,10 @@ fun ToDoList() {
         }
 
         Box(
-            modifier = Modifier.fillMaxWidth().weight(0.08f)  // 10% of parent's height
+            modifier = Modifier.fillMaxWidth().weight(0.08f)
         ) {
             Row() {
-                val commonButtonModifier =
-                    Modifier.padding(14.dp).size(width = 240.dp, height = 40.dp) // Adjust the size as needed
-
-                // Wrapping each button with a Box to center it and apply the same weight
+                val commonButtonModifier = Modifier.padding(14.dp).size(width = 240.dp, height = 40.dp)
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                     OutlinedButton(
                         onClick = { setSelectedSection("Work") }, modifier = commonButtonModifier
@@ -498,20 +498,22 @@ fun ToDoList() {
         Box(
             modifier = Modifier.fillMaxWidth().weight(0.8f)
         ) {
-            val sortedTodoList = todoListFromDb.sortedWith(compareBy<TodoItem> { it.completed }.thenBy { it.priority })
             LazyColumn() {
                 todoListFromDb.forEachIndexed { index, todoItem ->
                     item {
                         ListItem(headlineContent = { Text(todoItem.primaryTask) },
                             supportingContent = { Text(todoItem.secondaryTask) },
                             trailingContent = {
-                                Column() {
-//                                    Text("Priority ${todoItem.priority}")
+                                Column() { //                                    Text("Priority ${todoItem.priority}")
+
                                     TextButton(
-                                        onClick = { setSelectedSection("Life") },
-                                        modifier = Modifier.size(width = 50.dp, height = 35.dp)
+                                        onClick = {
+                                            currentid = todoItem.copy()
+                                            if_update = true
+                                            isDialogOpen = true
+                                        }, modifier = Modifier.size(width = 100.dp, height = 35.dp)
                                     ) {
-                                        Text("Edit", style = TextStyle(fontSize = 5.sp))
+                                        Text("Edit", style = TextStyle(fontSize = 13.sp))
                                     }
                                     TextButton(
                                         onClick = {
@@ -520,7 +522,7 @@ fun ToDoList() {
                                                     deleteTodo(todoItem.id)
                                                 }
                                             }
-                                        }, modifier = Modifier.size(width = 50.dp, height = 35.dp)
+                                        }, modifier = Modifier.size(width = 100.dp, height = 35.dp)
                                     ) {
                                         Text("Delete", style = TextStyle(fontSize = 13.sp))
                                     }
@@ -554,8 +556,7 @@ fun ToDoList() {
                                             launch {
                                                 create(copy_of_copy)
                                             }
-                                        }
-                                        // update fetched data
+                                        } // update fetched data
                                         runBlocking {
                                             var result: List<TodoItemjson> = fetchTodos()
                                             launch {
@@ -637,13 +638,10 @@ fun ToDoList() {
                                                             )
                                                         }
                                                     }
-                                                    
                                                 }
                                             }
                                         }
-
                                     }
-
                                 })
                             })
                         Divider()
@@ -653,20 +651,35 @@ fun ToDoList() {
             Box(
                 modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd
             ) {
-                ExtendedFloatingActionButton(modifier = Modifier.padding(bottom = 16.dp, end = 16.dp),
-                    onClick = { isDialogOpen = true }) {
+                ExtendedFloatingActionButton(modifier = Modifier.padding(bottom = 16.dp, end = 16.dp), onClick = {
+                    isDialogOpen = true
+                    if_create = true
+                }) {
                     Text(text = "Create New")
                 }
             }
             if (isDialogOpen) {
+                var tem_todo = TodoItem(
+                    0, "This is a dummy variable", "", 0, false, "", "", "", "", "", 0, 0, 0, 0
+                )
+                if (if_update) {
+                    tem_todo = currentid.copy()
+                    println("20")
+                    println(tem_todo)
+                }
                 CreateTodoDialog(onClose = {
                     isDialogOpen = false
                 }, onCreate = { newItem ->
                     isDialogOpen = false
-                    // update fetched data
                     runBlocking {
                         launch {
-                            create(newItem)
+                            if (if_create) {
+                                create(newItem)
+                                if_create = false
+                            } else if (if_update) {
+                                updateTodoItem(currentid.id, newItem)
+                                if_update = false
+                            }
                             todoListFromDb.clear()
                             var result: List<TodoItemjson> = fetchTodos()
                             result.forEach { jsonItem ->
@@ -695,9 +708,7 @@ fun ToDoList() {
                                 }
                             }
                             result.forEach { jsonItem ->
-
                                 if (jsonItem.section == selectedSection && jsonItem.recur == "Daily") {
-
                                     val duplicate_item = todoListFromDb.find { it.pid == jsonItem.id }
                                     if (duplicate_item == null) {
                                         todoListFromDb.add(
@@ -720,8 +731,7 @@ fun ToDoList() {
                                         )
                                     }
                                 } else if (jsonItem.recur == "Monthly" && jsonItem.section == selectedSection && LocalDate.parse(
-                                        jsonItem.datetime,
-                                        formatter
+                                        jsonItem.datetime, formatter
                                     ).dayOfWeek == selectedDate.dayOfWeek
                                 ) {
                                     val duplicate_item = todoListFromDb.find { it.pid == jsonItem.id }
@@ -746,11 +756,10 @@ fun ToDoList() {
                                         )
                                     }
                                 }
-                                
                             }
                         }
                     }
-                })
+                }, defaultTodo = tem_todo)
             }
         }
     }

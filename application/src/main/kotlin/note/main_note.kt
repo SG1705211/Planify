@@ -48,11 +48,11 @@ fun NotesEditor() {
         Box(
             modifier = Modifier
                 .fillMaxHeight()
-                .weight(0.26f)  // 15% of parent's height
+                .weight(0.26f)
                 .padding(top = 10.dp)
-            // other modifiers, content, etc.
+
         ) {
-            /////////// do some shit arrange
+
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
@@ -84,8 +84,8 @@ fun NotesEditor() {
         Box(
             modifier = Modifier
                 .fillMaxHeight()
-                .weight(0.74f)  // 85% of parent's height
-            // other modifiers, content, etc.
+                .weight(0.74f)
+
         ) {
             if (isFile) {
                 EditorInterface(state, selectedFile, currentFolder)

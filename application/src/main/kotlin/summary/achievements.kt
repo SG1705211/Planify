@@ -31,7 +31,7 @@ fun Achievement(
     var studyWeekDuration = eventsInRange.filter{ it.section == "Study" && it.completed == true}.map { it.duration }.sum().toFloat()
     var hobbyWeekDuration = eventsInRange.filter{ it.section == "Hobby" && it.completed == true}.map { it.duration }.sum().toFloat()
     var lifeWeekDuration = eventsInRange.filter{ it.section == "Life" && it.completed == true}.map { it.duration }.sum().toFloat()
-//    val todaysEvents = eventsInRange.filter{it.datetime == currentDate.toString() && it.completecnt >= 21}
+
     var habitsCompletedWeekly: MutableList<String> = mutableListOf()
 
     if (focusDuration >= 50 * factor) {
@@ -50,9 +50,9 @@ fun Achievement(
         habitsCompletedWeekly.add("Life Hacker")
     }
 
-//    todaysEvents.forEach {
-//        habitsCompletedWeekly.add("Habit \"" + it.primaryTask + "\" Completed")
-//    }
+
+
+
 
     Column {
         Text(

@@ -138,7 +138,7 @@ fun Summary() {
 
 
 
-// Current Year
+
     val currentYearStartDate = currentDate.withDayOfYear(1)
     val currentYearEndDate = currentYearStartDate.plusYears(1).minusDays(1)
     var currentYearTable = todoListFromDb.filter {
@@ -177,11 +177,11 @@ fun Summary() {
             currentDate = LocalDate.now()
             Date1 = getMondayOfCurrentWeek(currentDate).second
             Date2 = getSundayOfCurrentWeek(currentDate).second
-//            monthNumber = currentDate.format(DateTimeFormatter.ofPattern("MM")).toInt() - 1
+
             currMonth = getMondayOfCurrentWeek(currentDate).first
             currMonth2 = getSundayOfCurrentWeek(currentDate).first
             currYear = currentDate.format(DateTimeFormatter.ofPattern("yyyy"))
-            delay(1000) // Update every second or as needed
+            delay(1000)
         }
     }
 
@@ -288,10 +288,10 @@ fun Summary() {
                         modifier = Modifier
                             .fillMaxWidth(),
                     ) {
-//                    currentWeekTable.forEach{
-//                        println(LocalDate.parse(it.datetime, formatter).dayOfWeek.toString())
-//                        println(it.completed)
-//                    }
+
+
+
+
 
                         item {
                             var monDuration = currentWeekTable.filter {

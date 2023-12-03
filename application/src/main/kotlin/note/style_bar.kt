@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.mohamedrejeb.richeditor.model.RichTextState
 import androidx.compose.ui.platform.LocalFocusManager
 
-//import androidx.compose.ui.input.key.shortcuts
+
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.key.Key
@@ -208,9 +208,9 @@ fun controlBar(
 
         functionButton(
             onClick = {
-//                val html = "<p><b>Compose Rich Editor</b></p>"
-//                state.setHtml(html)
-                // Open file dialog to choose a file
+
+
+
                 val window = ComposeWindow()
                 val fileDialog = FileDialog(window, "Select a File", FileDialog.LOAD)
                 fileDialog.isVisible = true
@@ -219,7 +219,7 @@ fun controlBar(
                     File(fileDialog.directory, fileName)
                 }
 
-                // Read the file
+
                 file?.let {
                     val content = it.readText()
                     if (file.extension.equals("html", ignoreCase = true)) {
@@ -233,17 +233,17 @@ fun controlBar(
 
         functionButton(
             onClick = {
-                // Open file save dialog to choose where to save the file
+
                 val window = ComposeWindow()
                 val fileDialog = FileDialog(window, "Save File", FileDialog.SAVE)
-                fileDialog.file = "$fileName.html" // Default file name
+                fileDialog.file = "$fileName.html"
                 fileDialog.isVisible = true
 
                 val file = fileDialog.file?.let { fileName ->
                     File(fileDialog.directory, fileName)
                 }
 
-                // Write the HTML content to the file
+
                 file?.let {
                     it.writeText(state.toHtml())
                 }

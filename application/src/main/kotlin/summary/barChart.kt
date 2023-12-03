@@ -24,8 +24,8 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.math.round
 
-//barchart
-//https://github.com/developerchunk/BarGraph-JetpackCompose/tree/main/app/src/main/java/com/example/customchar
+
+
 
 @Composable
 fun Chart(
@@ -35,10 +35,10 @@ fun Chart(
     max_value: Float
 ) {
 
-    // BarGraph Dimensions
+
     val barGraphHeight by remember { mutableStateOf(300.dp) }
     val barGraphWidth by remember { mutableStateOf(barwidth) }
-    // Scale Dimensions
+
     val scaleYAxisWidth by remember { mutableStateOf(50.dp) }
     val scaleLineWidth by remember { mutableStateOf(2.dp) }
 
@@ -56,7 +56,7 @@ fun Chart(
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.Start
             ) {
-                // scale Y-Axis
+
                 Box(
                     modifier = Modifier
                         .fillMaxHeight()
@@ -67,7 +67,7 @@ fun Chart(
                 }
 
 
-                // Y-Axis Line
+
                 Column() {
                     Text("hrs")
                     Box(
@@ -79,7 +79,7 @@ fun Chart(
                 }
 
 
-                // graph
+
                 data.forEach {
                     Box(
                         modifier = Modifier
@@ -91,7 +91,7 @@ fun Chart(
                         contentAlignment = Alignment.Center,
                     ) {
                         BoxWithConstraints {
-                            val text = it.value.toString() // You can format the text as needed
+                            val text = it.value.toString()
 
                             Text(
                                 text = text,
@@ -103,7 +103,7 @@ fun Chart(
 
             }
 
-            // X-Axis Line
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -111,7 +111,7 @@ fun Chart(
                     .background(Color.Black)
             )
 
-            // Scale X-Axis
+
             Row(
                 modifier = Modifier
                     .padding(start = scaleYAxisWidth + barGraphWidth + scaleLineWidth * 10)

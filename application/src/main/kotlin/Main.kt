@@ -3,7 +3,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-
 import ui.theme.AppTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -11,38 +10,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import summary.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.materialIcon
 import java.awt.Dimension
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.material3.*
-import androidx.compose.runtime.getValue
-
 import androidx.compose.ui.res.*
-
-//import androidx.compose.ui.input.key.Key.Companion.R
-
 import note.*
-// Sample Composable functions for each section
-
-import org.jetbrains.exposed.sql.Database
-import java.io.*
-import com.google.cloud.storage.BlobId
-import com.google.cloud.storage.BlobInfo
-import com.google.cloud.storage.StorageOptions
-import com.google.auth.oauth2.ServiceAccountCredentials
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.deleteAll
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.transactions.transaction
-import java.awt.Button
-import java.nio.file.Files
-import java.nio.file.Paths
 
 
 
@@ -88,8 +65,8 @@ fun AppLayout() {
     }
     Row() {
         Column(
-            verticalArrangement = Arrangement.SpaceBetween, // Controls vertical arrangement
-            horizontalAlignment = Alignment.CenterHorizontally, // Controls horizontal alignment
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxHeight()
 
         ) {
@@ -187,33 +164,6 @@ fun AppLayout() {
 }
 
 
-class DatabaseManager {
-    fun setupDatabase(): Database {
-        val dbName = "chinook.db"
-        val persistentDir = File(System.getProperty("user.home"), ".myApp")
-        val persistentDBFile = File(persistentDir, dbName)
-        // Check if the database file exists in a persistent location
-        if (!persistentDBFile.exists()) {
-            // Ensure the directory exists
-            persistentDir.mkdirs()
-            // Copy the database from the resources to the persistent location
-            val resourceStream = this::class.java.getResourceAsStream("/$dbName")
-            FileOutputStream(persistentDBFile).use { output ->
-                resourceStream.copyTo(output)
-            }
-        }
-
-        // Load SQLite JDBC driver (required for some configurations)
-        Class.forName("org.sqlite.JDBC")
-        // Connect to the SQLite database in the persistent location
-        val connectionUrl = "jdbc:sqlite:${persistentDBFile.absolutePath}"
-        return Database.connect(connectionUrl)
-    }
-}
-
-
-
-
 
 fun main() = application {
     val window = Window(
@@ -224,7 +174,6 @@ fun main() = application {
             Box(
                 modifier = Modifier.background(MaterialTheme.colorScheme.background)
             ) {
-                //
                 AppLayout()
             }
         }

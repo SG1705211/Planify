@@ -29,8 +29,8 @@ import androidx.compose.ui.input.key.Key.Companion.R
 import androidx.compose.ui.res.painterResource
 
 
-//barchart
-//https://github.com/developerchunk/BarGraph-JetpackCompose/tree/main/app/src/main/java/com/example/customchar
+
+
 
 
 @Composable
@@ -43,12 +43,12 @@ fun DailyCalendar(date: Int, month: Int, year: Int) {
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        // Display the date
+
         Text(text = dateFormatter.format(selectedDate), fontSize = 24.sp)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Display the hours of the day
+
         (0..23).forEach { hour ->
             Text(
                 text = "${if (hour < 10) "0$hour" else hour}:00",
@@ -66,7 +66,7 @@ fun ButtonBox(date: String? = null, time: String? = null) {
             .clip(RoundedCornerShape(8.dp))
             .height(50.dp)
             .width(250.dp)
-            .background(MaterialTheme.colorScheme.background), // A more muted shade of blue
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -82,9 +82,9 @@ fun ButtonBox(date: String? = null, time: String? = null) {
 fun homeCalendar() {
     Box(
         modifier = Modifier
-            .size(250.dp, 400.dp) // Adjust these values as per your desired size
+            .size(250.dp, 400.dp)
             .verticalScroll(rememberScrollState())
-            .background(MaterialTheme.colorScheme.errorContainer), // Optional: If you want a background color
+            .background(MaterialTheme.colorScheme.errorContainer),
         contentAlignment = Alignment.TopStart
     ) {
         DailyCalendar(date = 14, month = 10, year = 2023)
@@ -128,7 +128,7 @@ fun HomeSummary() {
             weekProgress = daysPassed / 7.0
             monthProgress = daysPassedInMonth.toDouble() / totalDaysInMonth
             yearProgress = daysPassedInYear.toDouble() / totalDaysInYear
-            delay(1000) // Update every second or as needed
+            delay(1000)
         }
     }
 
@@ -149,8 +149,8 @@ fun HomeSummary() {
         ) {
             Image(
                 painter = backgroundPainter,
-                contentDescription = null, // Set a content description if needed
-                contentScale = ContentScale.Crop, // Adjust the content scale as needed
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
             Column(
@@ -189,7 +189,7 @@ fun HomeSummary() {
             Row {
                 Column(
                     modifier = Modifier
-//                        .padding(10.dp)
+
                 ) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text("Day",
@@ -211,7 +211,7 @@ fun HomeSummary() {
                 }
                 Column(
                     modifier = Modifier
-//                        .padding(10.dp)
+
                 ) {
                     Spacer(modifier = Modifier.height(8.dp))
                     LinearProgressIndicator(

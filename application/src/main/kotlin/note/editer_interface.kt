@@ -45,7 +45,7 @@ fun EditorInterface(state: RichTextState, selectedFile: FileItem, currentFolder:
     var isSaveDialogOpen by remember { mutableStateOf(false) }
     if (isSaveDialogOpen) {
         AlertDialog(
-            onDismissRequest = { /* dismiss dialog */ },
+            onDismissRequest = {  },
             title = {
                 Text(text = "Save Successfully")
             },
@@ -68,7 +68,7 @@ fun EditorInterface(state: RichTextState, selectedFile: FileItem, currentFolder:
         )
 
 
-        // the place to text
+
         RichTextEditor(
             state = state,
             modifier = Modifier
@@ -121,16 +121,16 @@ fun EditorInterface(state: RichTextState, selectedFile: FileItem, currentFolder:
                                     true
                                 }
 
-                                // save file
+
                                 Key.S -> {
                                     isSaveDialogOpen = true
-                                    // highlight database access ============================================
-//                                    transaction {
-//                                        Table__File.update({(Table__File.name eq selectedFile) and
-//                                                (Table__File.folderName eq currentFolder) }) {
-//                                            it[content] = state.toHtml()
-//                                        }
-//                                    }
+
+
+
+
+
+
+
                                     runBlocking {
                                         launch {
                                             val updateRequest = updateTodoItem(selectedFile.id,
@@ -143,31 +143,31 @@ fun EditorInterface(state: RichTextState, selectedFile: FileItem, currentFolder:
                                                 ))
                                         }
                                     }
-                                    // highlight database access ============================================
+
                                     true
                                 }
 
-                                // export file
+
                                 Key.P -> {
                                     val window = ComposeWindow()
                                     val fileDialog = FileDialog(window, "Save File", FileDialog.SAVE)
-                                    fileDialog.file = "${selectedFile}.html" // Default file name
+                                    fileDialog.file = "${selectedFile}.html"
                                     fileDialog.isVisible = true
 
                                     val file = fileDialog.file?.let { fileName ->
                                         File(fileDialog.directory, fileName)
                                     }
 
-                                    // Write the HTML content to the file
+
                                     file?.let {
                                         it.writeText(state.toHtml())
                                     }
                                     true
                                 }
 
-                                // open file
+
                                 Key.O -> {
-                                    // Open file dialog to choose a file
+
                                     val window = ComposeWindow()
                                     val fileDialog = FileDialog(window, "Select a File", FileDialog.LOAD)
                                     fileDialog.isVisible = true
@@ -176,7 +176,7 @@ fun EditorInterface(state: RichTextState, selectedFile: FileItem, currentFolder:
                                         File(fileDialog.directory, fileName)
                                     }
 
-                                    // Read the file
+
                                     file?.let {
                                         val content = it.readText()
                                         if (file.extension.equals("html", ignoreCase = true)) {
