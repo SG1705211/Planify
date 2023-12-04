@@ -42,8 +42,6 @@ data class Event(
             modifier = Modifier.fillMaxWidth().padding(8.dp).border(
                 1.dp, Color.Gray, shape = RoundedCornerShape(4.dp)
             ), contentAlignment = Alignment.TopStart
-
-
         ) {
             Text(
                 text = title, fontWeight = FontWeight.Bold, modifier = Modifier.padding(8.dp)

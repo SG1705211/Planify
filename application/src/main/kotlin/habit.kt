@@ -33,24 +33,9 @@ import java.time.format.DateTimeParseException
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
+// ********************
 
-object TodoTable : Table() {
-    val id = integer("id").autoIncrement()
-    val primaryTask = varchar("primaryTask", 255)
-    val secondaryTask = varchar("secondaryTask", 255)
-    val priority = integer("priority")
-    val completed = bool("completed")
-    val datetime = varchar("datetime", 255)
-    val section = varchar("section", 255)
-    val duration = integer("duration")
-    val starttime = varchar("starttime", 255)
-    val recur = varchar("recur", 255)
-    val pid = integer("pid")
-    val deleted = integer("deleted")
-    val misc1 = integer("misc1")
-    val misc2 = integer("misc2")
-    override val primaryKey = PrimaryKey(id, name = "PK_User_ID")
-}
+
 
 data class TodoItem(
     val id: Int,
@@ -86,6 +71,7 @@ data class TodoItemjson(
     val misc2: Int
 )
 
+
 fun TodoItem.toTodoItemJson(): TodoItemjson {
     return TodoItemjson(
         id = this.id,
@@ -110,6 +96,7 @@ enum class RecurOption {
 }
 @Composable
 fun CreateTodoDialog(
+
     onCreate: (TodoItem) -> Unit,
     onClose: () -> Unit,
     defaultTodo: TodoItem
@@ -124,6 +111,7 @@ fun CreateTodoDialog(
     var areFieldsValid by remember { mutableStateOf(true) }
     var duration_in by remember { mutableStateOf("") }
     var recurOption by remember { mutableStateOf(RecurOption.None) }
+
     if (defaultTodo.primaryTask != "This is a dummy variable") {
         primaryTask = defaultTodo.primaryTask
         secondaryTask =defaultTodo.secondaryTask
@@ -248,13 +236,6 @@ suspend fun fetchTodos(): List<TodoItemjson> {
     return Json.decodeFromString(jsonString)
 }
 
-suspend fun fetchTodosa(todoId: Int): TodoItemjson {
-    val client = HttpClient(CIO)
-    val response: HttpResponse = client.get("http://localhost:8080/todos/$todoId")
-    val jsonString = response.bodyAsText()
-    client.close()
-    return Json.decodeFromString(jsonString)
-}
 @OptIn(InternalAPI::class)
 suspend fun updateTodoItem(todoId: Int, updatedTodo: TodoItem) {
     val client = HttpClient(CIO)

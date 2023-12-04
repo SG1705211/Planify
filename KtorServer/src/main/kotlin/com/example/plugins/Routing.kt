@@ -10,94 +10,20 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.*
 import kotlinx.serialization.Serializable
+import net.codebot.models.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 
-@Serializable
-data class FileNamePara(val name: String, val folderName: String, val content: String, val id: Int)
-
-@Serializable
-data class TodoItem(
-    val id: Int,
-    val primaryTask: String,
-    val secondaryTask: String,
-    val priority: Int,
-    val completed: Boolean,
-    val datetime: String,
-    val section: String,
-    val duration: Int,
-    val starttime: String,
-    val recur: String,
-    val pid: Int,
-    val deleted: Int,
-    val misc1: Int,
-    val misc2: Int
-)
-
-object TodoTable : Table() {
-    val id = integer("id").autoIncrement()
-    val primaryTask = varchar("primaryTask", 255)
-    val secondaryTask = varchar("secondaryTask", 255)
-    val priority = integer("priority")
-    val completed = bool("completed")
-    val datetime = varchar("datetime", 255)
-    val section = varchar("section", 255)
-    val duration = integer("duration")
-    val starttime = varchar("starttime", 255)
-    val recur = varchar("recur", 255)
-    val pid = integer("pid")
-    val deleted = integer("deleted")
-    val misc1 = integer("misc1")
-    val misc2 = integer("misc2")
-    override val primaryKey = PrimaryKey(id, name = "PK_User_ID")
-}
-
-
-object Table__File : Table() {
-    val id = integer("id").autoIncrement()
-    var name = varchar("name", 255)
-    var content = text("content")
-    val folderName = varchar("folderName", 255)
-    val folderID = integer("folderID")
-    val marked = bool("isStared")
-    override val primaryKey = PrimaryKey(id, name = "PK_User_ID")
-}
-
-object Folders__Table : Table() {
-    val id = integer("id").autoIncrement()
-    val name = varchar("name", 255)
-    val parentID = integer("parentID")
-    val parentFolder = varchar("parentName", 255)
-    val marked = bool("isStared")
-    override val primaryKey = PrimaryKey(id, name = "PK_User_ID")
-}
-
-
-@Serializable
-data class FileItem(
-    val id: Int,
-    var name: String,
-    var content: String,
-    var folder: String,
-    var marked: Boolean
-)
-
-@Serializable
-data class FolderItem(
-    val id: Int,
-    var name: String,
-    var parentFolderName: String,
-    var marked: Boolean
-)
-
-fun Application.configureRouting() {
-    Database.connect("jdbc:sqlite:chinook.db", "org.sqlite.JDBC")
+fun Application.configureRouting(testing: Boolean = false) {
+    // set the url
+    val potential_url = if (testing) "jdbc:sqlite:test.db" else "jdbc:sqlite:chinook.db"
+    Database.connect(potential_url, "org.sqlite.JDBC")
     //     Database.connect("jdbc:sqlite:/app/chinook.db", "org.sqlite.JDBC")
     //                Database.connect("jdbc:sqlite:chinook.db")
 
     routing {
         get("/") {
-            call.respondText("Hello Sherlock")
+            call.respondText("Connection Success")
         }
         get("/todos") {
             call.respond(
@@ -123,18 +49,19 @@ fun Application.configureRouting() {
                 }
             )
         }
-
-        get("/todos/{id}") {
-            val todoId = call.parameters["id"]?.toIntOrNull()
-            if (todoId == null) {
-                call.respond(HttpStatusCode.BadRequest, "Invalid todo ID")
-            }
-            else {
-                transaction {
-                    TodoTable.select { TodoTable.id eq todoId }.mapNotNull { it.toTodoItem() }.singleOrNull()
-                }
-            }
-        }
+//
+//        get("/todos/{id}") {
+//            val todoId = call.parameters["id"]?.toIntOrNull()
+//            if (todoId == null) {
+//                call.respond(HttpStatusCode.BadRequest, "Invalid todo ID")
+//            }
+//            else {
+//                transaction {
+//                    TodoTable.select { TodoTable.id eq todoId }.mapNotNull { it.toTodoItem() }.singleOrNull()
+//                }
+//            }
+//            call.respond(HttpStatusCode.OK, "Good")
+//        }
         post("/todos") {
             val newTodo = call.receive<TodoItem>()
             val todoId = call.parameters["id"]?.toIntOrNull()
@@ -155,11 +82,7 @@ fun Application.configureRouting() {
                     it[misc2] = newTodo.misc2
                 }.resultedValues?.singleOrNull()?.toTodoItem()
             }
-            if (todo != null) {
-                call.respond(HttpStatusCode.Created, todo)
-            } else {
-                call.respond(HttpStatusCode.InternalServerError, "Failed to create todo item")
-            }
+            call.respond(HttpStatusCode.Created, "Okay")
         }
 
 
@@ -175,6 +98,7 @@ fun Application.configureRouting() {
                     it[marked] = false
                 }
             }
+            call.respond(HttpStatusCode.OK, "Good")
         }
 
         post("/Folder") {
@@ -188,7 +112,23 @@ fun Application.configureRouting() {
                     it[marked] = false
                 }
             }
+            call.respond(HttpStatusCode.OK, "Good")
         }
+
+
+        post("/updateFile/{id}") {
+            val requestData = call.receive<FileItem>()
+            val content_tem = requestData.content
+            val id = requestData.id
+            // Perform the transaction
+            val updateCount = transaction {
+                Table__File.update({ (Table__File.id eq id) }) {
+                    it[content] = content_tem
+                }
+            }
+            call.respond(HttpStatusCode.OK, "Good")
+        }
+
         post("/update/{id}") {
             val newTodo = call.receive<TodoItem>()
             val todoId = call.parameters["id"]?.toIntOrNull()
@@ -200,18 +140,6 @@ fun Application.configureRouting() {
                         it[completed] = newTodo.completed
                         it[recur] = newTodo.recur
                     }
-                }
-            }
-        }
-
-        post("/updateFile/{id}") {
-            val requestData = call.receive<FileItem>()
-            val content_tem = requestData.content
-            val id = requestData.id
-            // Perform the transaction
-            val updateCount = transaction {
-                Table__File.update({ (Table__File.id eq id) }) {
-                    it[content] = content_tem
                 }
             }
         }

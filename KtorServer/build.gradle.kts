@@ -15,7 +15,6 @@ version = "0.0.1"
 
 application {
     mainClass.set("com.example.ApplicationKt")
-
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
@@ -33,6 +32,7 @@ dependencies {
     implementation("io.ktor:ktor-server-netty-jvm")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("org.testng:testng:7.1.0")
+    implementation(project(mapOf("path" to ":models")))
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
     implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-beta03")
@@ -46,7 +46,6 @@ dependencies {
     implementation ("joda-time:joda-time:2.10.10") // Adjust version as necessary
     implementation ("io.ktor:ktor-client-core:2.3.6")
     implementation ("io.ktor:ktor-client-cio:2.3.6")
-    implementation("com.google.cloud:google-cloud-storage:2.29.1")
     testImplementation("io.ktor:ktor-server-test-host-jvm:2.3.6")
     implementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")

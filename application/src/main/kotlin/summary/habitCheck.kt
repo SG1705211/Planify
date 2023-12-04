@@ -47,6 +47,7 @@ suspend fun fetchTodo_check(): List<TodoItemjson> {
     client.close()
     return Json.decodeFromString(jsonString)
 }
+
 @Composable
 fun HabitCheck(habit: String) {
     val todoListFromDb: MutableList<TodoItem> = mutableListOf()
