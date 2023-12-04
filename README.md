@@ -53,25 +53,50 @@ Sherlock Yang (j586yang@uwaterloo.ca)
 - Life Hacker: 120 hrs of Life tasks
 
 ## Notes Hotkeys
-Left: Ctrl+L
+Left: cmd+L
 
-Center: Ctrl+E
+Center: cmd+E
 
-Right: Ctrl+R
+Right: cmd+R
 
-Bold: Ctrl+B
+Bold: cmd+B
 
-Italic: Ctrl+I
+Italic: cmd+I
 
-Underline: Ctrl+U
+Underline: cmd+U
 
-Line Through: Ctrl+T
+Line Through: cmd + -
 
-Head: Ctrl+H
+Title: cmd+T
 
-Highlight Red: Ctrl+R
+Highlight Red: cmd+R
 
-Highlight Yellow: Ctrl+Y
+Highlight Yellow: cmd+shift+Y
+
+Save file: cmd+S
+
+Load file: cmd+O
+
+Export file: cmp+P
+
+Undo: cmd+Z
+
+Redo: cmd+shift+Z
+
+## Library
+
+### Compose Rich Editor
+
+This project makes use of the [Compose Rich Editor](https://github.com/MohamedRejeb/Compose-Rich-Editor) library to implement rich text formatting in the note editor. The library offers a various set of tools and APls for rich-format textcontent, like Bold, ltalic, Underline, aligning, Highlight, List, Load HTML, and Export HTML
+
+GitHub Repository: [Compose Rich Editor](https://github.com/MohamedRejeb/Compose-Rich-Editor)
+
+### Bar Chart
+
+The bar chart in summary page referenced the code from the following repository
+
+Bar Chart in: [Bar Chart](https://github.com/developerchunk/BarGraph-JetpackCompose/tree/main/app/src/main/java/com/example/customchar)
+
 
 ## Project Documents
 Wiki page/Project proposal:https://git.uwaterloo.ca/s29lai/CS346-project/-/wikis/home

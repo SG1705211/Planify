@@ -67,13 +67,14 @@ fun EditorInterface(state: RichTextState, selectedFile: FileItem, currentFolder:
             fileName = selectedFile.name
         )
 
-
-
         RichTextEditor(
             state = state,
             modifier = Modifier
                 .fillMaxSize()
                 .onKeyEvent {
+                    // Reference: This implementation use the API for rich text formatting
+                    // in [Compose Rich Text Editor]'s documentation. I use hotkey to
+                    // trigger the rich state format changing
                     if (it.type == KeyEventType.KeyDown) {
                         if (it.isMetaPressed ) {
                             when(it.key) {
@@ -125,12 +126,6 @@ fun EditorInterface(state: RichTextState, selectedFile: FileItem, currentFolder:
                                 Key.S -> {
                                     isSaveDialogOpen = true
 
-
-
-
-
-
-
                                     runBlocking {
                                         launch {
                                             val updateRequest = updateTodoItem(selectedFile.id,
@@ -147,17 +142,12 @@ fun EditorInterface(state: RichTextState, selectedFile: FileItem, currentFolder:
                                     true
                                 }
 
-
                                 Key.P -> {
-                                    val window = ComposeWindow()
-                                    val fileDialog = FileDialog(window, "Save File", FileDialog.SAVE)
-                                    fileDialog.file = "${selectedFile}.html"
+                                    val fileDialog = FileDialog(ComposeWindow(), "Save File", FileDialog.SAVE)
+                                    fileDialog.file = "${selectedFile.name}.html"
                                     fileDialog.isVisible = true
 
-                                    val file = fileDialog.file?.let { fileName ->
-                                        File(fileDialog.directory, fileName)
-                                    }
-
+                                    val file = fileDialog.file?.let { File(fileDialog.directory, it) }
 
                                     file?.let {
                                         it.writeText(state.toHtml())
@@ -165,24 +155,17 @@ fun EditorInterface(state: RichTextState, selectedFile: FileItem, currentFolder:
                                     true
                                 }
 
-
                                 Key.O -> {
-
-                                    val window = ComposeWindow()
-                                    val fileDialog = FileDialog(window, "Select a File", FileDialog.LOAD)
+                                    val fileDialog = FileDialog(ComposeWindow(), "Select a File", FileDialog.LOAD)
                                     fileDialog.isVisible = true
 
-                                    val file = fileDialog.file?.let { fileName ->
-                                        File(fileDialog.directory, fileName)
-                                    }
-
+                                    val file = fileDialog.file?.let { File(fileDialog.directory, it) }
 
                                     file?.let {
                                         val content = it.readText()
-                                        if (file.extension.equals("html", ignoreCase = true)) {
+                                        if (file.name.endsWith("html")) {
                                             state.setHtml(content)
                                         }
-
                                     }
                                     true
                                 }
