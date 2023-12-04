@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier //import androidx.compose.ui.draw.EmptyBuildDrawCacheParams.size
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp //import androidx.compose.material3.md.sys.shape.corner.full.Circular
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.draw.drawBehind
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -81,7 +81,7 @@ fun HabitCheck(habit: String) {
             it.datetime,
             formatter
         ) in currentWeekStartDate..currentWeekStartDate.plusDays(6) && it.recur != "Daily" && it.recur != "Monthly"
-    } // add recurring event
+    }
     var current_iterator = currentWeekStartDate
     while (!current_iterator.isAfter(currentWeekStartDate.plusDays(6))) {
         val potentialrecur = todoListFromDb.filter { it.recur == "Daily" }
@@ -94,7 +94,7 @@ fun HabitCheck(habit: String) {
             println(currentWeekTable)
         }
         current_iterator = current_iterator.plusDays(1)
-    } // *********
+    }
     var workTodo = currentWeekTable.filter { todoItem -> todoItem.section == "Work" }
     var studyTodo = currentWeekTable.filter { todoItem -> todoItem.section == "Study" }
     var hobbyTodo = currentWeekTable.filter { todoItem -> todoItem.section == "Hobby" }
@@ -137,14 +137,7 @@ fun HabitCheck(habit: String) {
             false, false, false, false, false, false, false
         )
         val formatter =
-            DateTimeFormatter.ofPattern("yyyyMMdd") //        println(LocalDate.parse(workTodo[0].datetime, formatter).dayOfWeek.toString())
-        //        println(workTodo[0].completed)
-        //        println(LocalDate.parse(workTodo[1].datetime, formatter).dayOfWeek.toString())
-        //        println(workTodo[1].completed)
-        //        println(LocalDate.parse(workTodo[2].datetime, formatter).dayOfWeek.toString())
-        //        println(workTodo[2].completed)
-        //        println(LocalDate.parse(workTodo[3].datetime, formatter).dayOfWeek.toString())
-        //        println(workTodo[3].completed)
+            DateTimeFormatter.ofPattern("yyyyMMdd")
         listOf(
             "MONDAY",
             "TUESDAY",
@@ -206,7 +199,7 @@ fun HabitCheck(habit: String) {
                 modifier = Modifier.padding(16.dp).offset(position.x.dp, y = position.y.dp).drawBehind {
                         if (habitCompleted[index]) {
                             drawCircle(
-                                color = Color(0xFF476810), //primary
+                                color = Color(0xFF476810),
                                 radius = radius
                             )
                         } else {
@@ -215,7 +208,7 @@ fun HabitCheck(habit: String) {
                             )
                         }
                     }, text = Weekday[index], color = if (habitCompleted[index]) {
-                    Color(0xFFFFFFFF) //onPrimary
+                    Color(0xFFFFFFFF)
                 } else {
                     Color.Black
                 }

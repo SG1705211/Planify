@@ -5,12 +5,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,19 +18,14 @@ import androidx.compose.ui.text.font.FontFamily
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.text.DateFormatSymbols
 import java.time.Month
 import kotlin.math.max
-import kotlin.math.min
 
 val currentDate = LocalDate.now()
-val currentDateTime = LocalDateTime.now()
 
 fun getMonthName(monthNumber: Int): String {
     val symbols = DateFormatSymbols()
@@ -90,9 +83,6 @@ fun Summary() {
             }
         }
     }
-    val (monday_month, monday_day) = getMondayOfCurrentWeek(currentDate)
-    val (sunday_month, sunday_day) = getSundayOfCurrentWeek(currentDate)
-    var completed = todoListFromDb.filter { it.completed == true }
     val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
     val currentWeekStartDate = currentDate.minusDays(currentDate.dayOfWeek.value.toLong() - 1)
     var currentWeekTable =
@@ -161,14 +151,8 @@ fun Summary() {
     var currentDate by remember { mutableStateOf(LocalDate.now()) }
     var Date1 by remember { mutableStateOf(getMondayOfCurrentWeek(currentDate).second) }
     var Date2 by remember { mutableStateOf(getSundayOfCurrentWeek(currentDate).second) }
-    var monthNumber by remember { mutableStateOf(currentDate.format(DateTimeFormatter.ofPattern("MM")).toInt() - 1) }
     var currMonth by remember { mutableStateOf(getMondayOfCurrentWeek(currentDate).first) }
     var currMonth2 by remember { mutableStateOf(getSundayOfCurrentWeek(currentDate).first) }
-    var monthNumber2 by remember {
-        mutableStateOf(
-            currentDate.plusDays(7).format(DateTimeFormatter.ofPattern("MM")).toInt() - 1
-        )
-    }
 
     var currYear by remember { mutableStateOf(currentDate.format(DateTimeFormatter.ofPattern("yyyy"))) }
 
@@ -288,11 +272,6 @@ fun Summary() {
                         modifier = Modifier
                             .fillMaxWidth(),
                     ) {
-
-
-
-
-
                         item {
                             var monDuration = currentWeekTable.filter {
                                 LocalDate.parse(

@@ -12,15 +12,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.SQLException
-import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.math.round
-import kotlin.random.Random
 
 data class TodoItem(
     val id: Int, val primaryTask: String, val secondaryTask: String, val priority: Int,
