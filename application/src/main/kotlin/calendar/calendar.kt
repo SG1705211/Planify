@@ -60,7 +60,6 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
     val firstDayOfMonth = LocalDate.of(year, month, 1).dayOfWeek.value % 7
     val daysInMonth = LocalDate.of(year, month, 1).lengthOfMonth()
     val dayNames = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
-    // Month names list
     val monthNames = listOf(
         "January",
         "February",
@@ -75,8 +74,7 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
         "November",
         "December"
     )
-    val monthName = monthNames[month - 1]  // Arrays are 0-indexed, so subtract 1 from the month number
-    // Use a vertical Column to hold the month and year, day names, and the calendar dates
+    val monthName = monthNames[month - 1]
     Column {
         // Month and Year
         Text(
@@ -84,7 +82,6 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(start = 8.dp, top = 8.dp)
         )
-
         Spacer(modifier = Modifier.height(8.dp))
         // Day Names Row
         Row(
@@ -110,8 +107,7 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
                     modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     for (j in 0..6) {
-                        // Define the condition for the current date
-                        val isToday = ((i == 0) and (j == 5))
+                        val isToday = ((j == today.dayOfWeek.getValue()) && (currentDate == today.dayOfMonth) && (year == today.year) && (month == today.monthValue))
                         Box(
                             contentAlignment = Alignment.TopCenter,
                             modifier = Modifier.weight(1f).aspectRatio(1f).background(
@@ -253,8 +249,6 @@ fun DailyCalendar(date: Int, month: Int, year: Int, events_list: List<Event>) {
 
                 }
             }
-
-            // Add Divider after each hour row
             item {
                 Divider(modifier = Modifier.padding(vertical = 2.dp))
             }
@@ -306,6 +300,7 @@ fun Calendar() {
     } else {
         DailyCalendar(date, month, year, events_list)
     }
+    val today = LocalDate.now()
     Box(
         modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter
     ) {
@@ -313,15 +308,22 @@ fun Calendar() {
             FilledTonalButton(
                 onClick = {
                     mode = 1
+                    date = today.dayOfMonth
+                    month = today.monthValue
+                    year = today.year
                 }, modifier = Modifier.size(105.dp, 32.dp)
             ) {
                 Text("Daily")
             }
             FilledTonalButton(
                 onClick = {
+                    date = today.dayOfMonth
+                    month = today.monthValue
+                    year = today.year
                     mode = 0
                 }, modifier = Modifier.size(105.dp, 32.dp)
             ) {
+
                 Text("Monthly")
             }
 
