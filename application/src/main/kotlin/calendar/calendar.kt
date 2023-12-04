@@ -56,11 +56,9 @@ data class Event(
 
 @Composable
 fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
-    // Get the day of the week for the first day of the month
     val scrollState = rememberScrollState()
     val firstDayOfMonth = LocalDate.of(year, month, 1).dayOfWeek.value % 7
     val daysInMonth = LocalDate.of(year, month, 1).lengthOfMonth()
-    // List of day names
     val dayNames = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
     // Month names list
     val monthNames = listOf(

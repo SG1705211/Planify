@@ -94,6 +94,25 @@ data class FolderItem(
     var marked: Boolean
 )
 
+@Serializable
+data class TodoItemjson(
+    val id: Int,
+    val primaryTask: String,
+    val secondaryTask: String,
+    val priority: Int,
+    val completed: Boolean,
+    val datetime: String,
+    val section: String,
+    val duration: Int,
+    val starttime: String,
+    val recur: String,
+    val pid: Int,
+    val deleted: Int,
+    val misc1: Int,
+    val misc2: Int
+)
+
+
 
 // ********************
 
@@ -131,22 +150,3 @@ data class FolderItem(
 //    val misc1: Int,
 //    val misc2: Int
 //)
-@Serializable
-data class TodoItemjson(
-    val id: Int,
-    val primaryTask: String,
-    val secondaryTask: String,
-    val priority: Int,
-    val completed: Boolean,
-    val datetime: String,
-    val section: String,
-    val duration: Int,
-    val starttime: String,
-    val recur: String,
-    val pid: Int,
-    val deleted: Int,
-    val misc1: Int,
-    val misc2: Int
-)
-
-

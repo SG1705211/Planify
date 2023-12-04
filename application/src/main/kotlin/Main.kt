@@ -4,6 +4,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import ui.theme.AppTheme
+
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +21,16 @@ import androidx.compose.ui.window.application
 import androidx.compose.material3.*
 import androidx.compose.ui.res.*
 import note.*
+
+
+
+
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Button
+import androidx.compose.runtime.*
+import androidx.compose.ui.window.*
 
 
 
@@ -167,8 +178,19 @@ fun AppLayout() {
 
 fun main() = application {
     val window = Window(
-        onCloseRequest = ::exitApplication, title = "My Journal"
+
+        onCloseRequest = ::exitApplication, title = "My Journal",
+
     ) {
+        MenuBar{
+            Menu("Sherlock is beautiful", mnemonic = 'F') {
+                Item(
+                    text = "Help Menu",
+                    onClick = {
+                    }
+                )
+            }
+        }
         window.minimumSize = Dimension(1300, 800)
         AppTheme {
             Box(

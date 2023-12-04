@@ -60,7 +60,6 @@ enum class RecurOption {
 }
 @Composable
 fun CreateTodoDialog(
-
     onCreate: (TodoItem) -> Unit,
     onClose: () -> Unit,
     defaultTodo: TodoItem
@@ -75,26 +74,25 @@ fun CreateTodoDialog(
     var areFieldsValid by remember { mutableStateOf(true) }
     var duration_in by remember { mutableStateOf("") }
     var recurOption by remember { mutableStateOf(RecurOption.None) }
-
-    if (defaultTodo.primaryTask != "This is a dummy variable") {
-        primaryTask = defaultTodo.primaryTask
-        secondaryTask =defaultTodo.secondaryTask
-        priority =defaultTodo.priority
-        section =defaultTodo.section
-        dueDate =defaultTodo.datetime
-        starttime =defaultTodo.starttime
-        isDateValid =true
-        areFieldsValid =true
-        duration_in =defaultTodo.duration.toString()
-        if (defaultTodo.recur == "Monthly") {
-            recurOption = RecurOption.Monthly
-        } else if (defaultTodo.recur == "Daily") {
-            recurOption = RecurOption.Daily
-        } else {
-            recurOption = RecurOption.None
+    LaunchedEffect(defaultTodo) {
+        if (defaultTodo.primaryTask != "This is a dummy variable") {
+            primaryTask = defaultTodo.primaryTask
+            secondaryTask = defaultTodo.secondaryTask
+            priority = defaultTodo.priority
+            section = defaultTodo.section
+            dueDate = defaultTodo.datetime
+            starttime = defaultTodo.starttime
+            isDateValid = true
+            areFieldsValid = true
+            duration_in = defaultTodo.duration.toString()
+            recurOption = when (defaultTodo.recur) {
+                "Monthly" -> RecurOption.Monthly
+                "Daily" -> RecurOption.Daily
+                else -> RecurOption.None
+            }
         }
     }
-    AlertDialog(onDismissRequest = { /* dismiss dialog */ }, title = {
+    AlertDialog(onDismissRequest = {}, title = {
         Text(text = "Create New Todo Item")
     }, text = {
         Column {
@@ -113,15 +111,27 @@ fun CreateTodoDialog(
             TextField(value = dueDate, onValueChange = { dueDate = it }, label = { Text("Due Date (yyyy-MM-dd)") })
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(selected = recurOption == RecurOption.Daily,
-                        onClick = { recurOption = RecurOption.Daily })
+                    RadioButton(
+                        selected = recurOption == RecurOption.Daily,
+                        onClick = { recurOption = RecurOption.Daily }
+                    )
                     Text("Daily")
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    RadioButton(selected = recurOption == RecurOption.Monthly,
-                        onClick = { recurOption = RecurOption.Monthly })
+                    RadioButton(
+                        selected = recurOption == RecurOption.Monthly,
+                        onClick = { recurOption = RecurOption.Monthly }
+                    )
                     Text("Monthly")
                 }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    RadioButton(
+                        selected = recurOption == RecurOption.None,
+                        onClick = { recurOption = RecurOption.None }
+                    )
+                    Text("None")
+                }
+
             }
             if (!isDateValid) {
                 Text("Invalid date format", color = Color.Red)
@@ -608,13 +618,21 @@ fun ToDoList() {
                 var tem_todo = TodoItem(
                     0, "This is a dummy variable", "", 0, false, "", "", 0, "", "", 0, 0, 0, 0
                 )
+                var tem_todo_reset = TodoItem(
+                    0, "This is a dummy variable", "", 0, false, "", "", 0, "", "", 0, 0, 0, 0
+                )
                 if (if_update) {
                     tem_todo = currentid.copy()
-                    println("20")
-                    println(tem_todo)
+                    println("2")
                 }
                 CreateTodoDialog(onClose = {
                     isDialogOpen = false
+                    if (if_create) {
+                        if_create = false
+                    } else if (if_update) {
+                        if_update = false
+                        tem_todo = tem_todo_reset.copy()
+                    }
                 }, onCreate = { newItem ->
                     isDialogOpen = false
                     runBlocking {
@@ -625,6 +643,7 @@ fun ToDoList() {
                             } else if (if_update) {
                                 updateTodoItem(currentid.id, newItem)
                                 if_update = false
+                                tem_todo = tem_todo_reset.copy()
                             }
                             todoListFromDb.clear()
                             var result: List<TodoItemjson> = fetchTodos()
