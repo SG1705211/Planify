@@ -41,6 +41,7 @@ dependencies {
     testImplementation("io.ktor:ktor-client-mock:2.3.6")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation(kotlin("test"))
+    implementation("io.github.kevinnzou:compose-webview-multiplatform:1.6.0")
 }
 
 

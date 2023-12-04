@@ -15,18 +15,16 @@ import summary.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.width
 import java.awt.Dimension
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
 import androidx.compose.material3.*
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.*
-import androidx.compose.ui.window.WindowPosition
-import androidx.compose.ui.window.WindowState
+import androidx.compose.ui.window.*
+import com.multiplatform.webview.web.WebView
+import com.multiplatform.webview.web.rememberWebViewState
+import com.multiplatform.webview.web.rememberWebViewStateWithHTMLFile
 import note.*
 import java.awt.Window
-
 import java.util.prefs.Preferences
-import javax.swing.JFrame
 
 @Composable
 fun MagicHome() {
@@ -201,11 +199,65 @@ fun AppLayout(window: Window) {
 
 
 
+
+@Composable
+fun Dialog() {
+    // render HTML here@Composable
+    //fun Dialog() {
+    //    // render HTML here
+    //
+    //}
+    //
+    //fun main() = application {
+    //    var openDialogue = remember { mutableStateOf(false) }
+    //
+    //    val window = Window(
+    //        onCloseRequest = ::exitApplication,
+    //        title = "My Journal",
+    //
+    //        state = WindowState(
+    //            width = Preferences.userRoot().node("Root").getInt("Width", 1300).dp,
+    //            height = Preferences.userRoot().node("Root").getInt("High", 800).dp,
+    //            position = WindowPosition(
+    //                Preferences.userRoot().node("Root").getInt("X", 100).dp,
+    //                Preferences.userRoot().node("Root").getInt("Y", 100).dp
+    //            )
+    //        )
+    //    ) {
+    //        MenuBar{
+    //            Menu("Sherlock is beautiful", mnemonic = 'F') {
+    //                Item(
+    //                    text = "Help Menu",
+    //                    onClick = {
+    //                        openDialogue.value = true
+    //                    }
+    //                )
+    //            }
+    //        }
+    //        window.minimumSize = Dimension(1300, 800)
+    //
+    //        AppTheme {
+    //            Box(
+    //                modifier = Modifier.background(MaterialTheme.colorScheme.background)
+    //            ) {
+    //                AppLayout(window)
+    //                if (openDialogue.value) {
+    //                    Dialog()
+    //                    println(2)
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
+
+}
+
 fun main() = application {
+    var openDialogue = remember { mutableStateOf(false) }
+
     val window = Window(
         onCloseRequest = ::exitApplication,
         title = "My Journal",
-        // new
 
         state = WindowState(
             width = Preferences.userRoot().node("Root").getInt("Width", 1300).dp,
@@ -216,13 +268,29 @@ fun main() = application {
             )
         )
     ) {
+        MenuBar{
+            Menu("Sherlock is beautiful", mnemonic = 'F') {
+                Item(
+                    text = "Help Menu",
+                    onClick = {
+                        openDialogue.value = true
+                    }
+                )
+            }
+        }
         window.minimumSize = Dimension(1300, 800)
+
         AppTheme {
             Box(
                 modifier = Modifier.background(MaterialTheme.colorScheme.background)
             ) {
                 AppLayout(window)
+                if (openDialogue.value) {
+                    Dialog()
+                    println(2)
+                }
             }
         }
     }
 }
+

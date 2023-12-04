@@ -19,14 +19,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import org.jetbrains.exposed.sql.*
 import io.ktor.client.engine.cio.*
-import kotlinx.serialization.Serializable
 import io.ktor.client.HttpClient
 import io.ktor.client.statement.*
 import io.ktor.util.*
 import kotlinx.coroutines.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.jetbrains.exposed.sql.Table
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
