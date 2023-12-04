@@ -28,6 +28,16 @@ import java.awt.Window
 import java.util.prefs.Preferences
 import javax.swing.JFrame
 
+
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Button
+import androidx.compose.runtime.*
+import androidx.compose.ui.window.*
+
+
+
 @Composable
 fun MagicHome() {
     LazyColumn(
@@ -216,6 +226,15 @@ fun main() = application {
             )
         )
     ) {
+        MenuBar{
+            Menu("Sherlock is beautiful", mnemonic = 'F') {
+                Item(
+                    text = "Help Menu",
+                    onClick = {
+                    }
+                )
+            }
+        }
         window.minimumSize = Dimension(1300, 800)
         AppTheme {
             Box(
