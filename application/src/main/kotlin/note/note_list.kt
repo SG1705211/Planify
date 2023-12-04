@@ -244,7 +244,6 @@ fun NoteList(state: RichTextState): Result {
     var canIdelete by remember { mutableStateOf(false) }
     val selectedNoteIndex = remember { mutableStateOf<Int>(-1) }
     val selectedFolderIndex = remember { mutableStateOf<Int>(-1) }
-    val numItemInFolder = remember { mutableStateOf<Int?>(0) }
     var isFile by remember { mutableStateOf(false) }
     val (currentFolder, setCurrentFolder) = remember { mutableStateOf("") }
     val (selectedFile, setSelectedFile) = remember { mutableStateOf(FileItem(0,"a","a","a",true)) }
@@ -461,7 +460,6 @@ fun NoteList(state: RichTextState): Result {
                 val fontWeight = if (it == selectedNoteIndex.value) FontWeight.Bold else FontWeight.Normal
 
                 ElevatedCard(
-                    // shadow
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 3.dp
                     ),
@@ -513,7 +511,6 @@ fun NoteList(state: RichTextState): Result {
                 val fontWeight = if (num == selectedFolderIndex.value) FontWeight.Bold else FontWeight.Normal
 
                 ElevatedCard(
-                    // shadow
                     elevation = CardDefaults.cardElevation(
                         defaultElevation = 3.dp
                     ),
@@ -536,7 +533,7 @@ fun NoteList(state: RichTextState): Result {
                             setCurrentFolder(folderList[num].name)
                             folderPath.add(folderList[num].name)
                         }, onLongClick = {}).fillMaxWidth().clip(RoundedCornerShape(8.dp))) {
-                        Icon(Icons.Filled.Menu, // icon image
+                        Icon(Icons.Filled.Menu,
                             contentDescription = "A Pen",
                             modifier = Modifier.clickable { }.align(Alignment.CenterVertically)
                                 .padding(horizontal = 10.dp))
@@ -573,7 +570,6 @@ fun NoteList(state: RichTextState): Result {
                             )
                         }
                     }
-//
 
                 }
             }, onClose = { isDialogOpen = false })

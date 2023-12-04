@@ -13,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.jetbrains.exposed.sql.Database
 
 @Composable
 fun HabitSelection(selectedSection: String, onSelectedSectionChanged: (String) -> Unit) {

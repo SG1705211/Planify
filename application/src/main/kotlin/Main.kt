@@ -177,19 +177,19 @@ fun AppLayout(window: Window) {
             ) {
                 Text("Notes")
             }
-            FilledTonalButton(
-                onClick = {
-                    setSelectedSection("Help")
-                    listOfBooleans[0].value = false
-                    listOfBooleans[1].value = false
-                    listOfBooleans[2].value = false
-                    listOfBooleans[3].value = false
-                    listOfBooleans[4].value = false
-                    listOfBooleans[5].value = true
-                }, modifier = commonButtonModifier, colors = color_button(listOfBooleans[5].value)
-            ) {
-                Text("Help")
-            }
+//            FilledTonalButton(
+//                onClick = {
+//                    setSelectedSection("Help")
+//                    listOfBooleans[0].value = false
+//                    listOfBooleans[1].value = false
+//                    listOfBooleans[2].value = false
+//                    listOfBooleans[3].value = false
+//                    listOfBooleans[4].value = false
+//                    listOfBooleans[5].value = true
+//                }, modifier = commonButtonModifier, colors = color_button(listOfBooleans[5].value)
+//            ) {
+//                Text("Help")
+//            }
         }
         Box(
             modifier = Modifier.weight(3f).fillMaxWidth(), contentAlignment = Alignment.Center
@@ -200,7 +200,7 @@ fun AppLayout(window: Window) {
                 "Summary" -> Summary()
                 "To-Do-List" -> ToDoList()
                 "Notes" -> Notes()
-                "Help" -> {}
+//                "Help" -> {}
                 else -> MagicHome()
             }
         }

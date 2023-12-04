@@ -15,49 +15,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.*
-import androidx.compose.material.Button
 import androidx.compose.runtime.*
 import java.time.format.DateTimeFormatter
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import kotlinx.coroutines.delay
 import java.time.LocalDate
 import java.time.LocalDateTime
 import androidx.compose.foundation.Image
-import androidx.compose.ui.input.key.Key.Companion.R
-import androidx.compose.ui.res.painterResource
 
-
-
-
-
-
-@Composable
-fun DailyCalendar(date: Int, month: Int, year: Int) {
-    val selectedDate = LocalDate.of(year, month, date)
-    val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-
-        Text(text = dateFormatter.format(selectedDate), fontSize = 24.sp)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-
-        (0..23).forEach { hour ->
-            Text(
-                text = "${if (hour < 10) "0$hour" else hour}:00",
-                fontSize = 18.sp,
-                modifier = Modifier.padding(vertical = 4.dp)
-            )
-        }
-    }
-}
 
 @Composable
 fun ButtonBox(date: String? = null, time: String? = null) {
@@ -78,19 +44,6 @@ fun ButtonBox(date: String? = null, time: String? = null) {
 }
 
 
-@Composable
-fun homeCalendar() {
-    Box(
-        modifier = Modifier
-            .size(250.dp, 400.dp)
-            .verticalScroll(rememberScrollState())
-            .background(MaterialTheme.colorScheme.errorContainer),
-        contentAlignment = Alignment.TopStart
-    ) {
-        DailyCalendar(date = 14, month = 10, year = 2023)
-    }
-}
-
 
 @Composable
 fun HomeSummary() {
@@ -99,8 +52,6 @@ fun HomeSummary() {
     var Date2 by remember { mutableStateOf(currentDate.plusDays(7).format(DateTimeFormatter.ofPattern("dd"))) }
     var monthNumber by remember { mutableStateOf(currentDate.format(DateTimeFormatter.ofPattern("MM")).toInt() - 1) }
     var currMonth by remember { mutableStateOf(getMonthName(monthNumber)) }
-    var monthNumber2 by remember { mutableStateOf(currentDate.plusDays(7).format(DateTimeFormatter.ofPattern("MM")).toInt() - 1) }
-    var currMonth2 by remember { mutableStateOf(getMonthName(monthNumber2)) }
     var currYear by remember { mutableStateOf(currentDate.format(DateTimeFormatter.ofPattern("yyyy"))) }
     var currentTimeFormatted by remember { mutableStateOf(formatTimeAs24HourClock(LocalDateTime.now())) }
     var dayProgress by remember {mutableStateOf(0.0)}
