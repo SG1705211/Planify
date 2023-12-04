@@ -18,19 +18,8 @@ import java.awt.Dimension
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.material3.*
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.input.pointer.onPointerEvent
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.*
-import androidx.compose.ui.window.WindowPosition
-import androidx.compose.ui.window.WindowState
 import note.*
-import java.awt.Window
-
-import java.util.prefs.Preferences
-import javax.swing.JFrame
-
 
 
 
@@ -44,7 +33,7 @@ fun MagicHome() {
         items(4) { index ->
             when (index) {
                 0 -> HomeSummary()
-                1 -> summary.homeCalendar()
+                1 -> homeCalendar()
             }
         }
     }
@@ -63,13 +52,7 @@ fun color_button(boo: Boolean):ButtonColors {
     return tonalButtonColors
 }
 @Composable
-fun AppLayout(window: Window) {
-//    val perf = Preferences.userRoot().node("Root")
-//    perf.putInt("X", window.x)
-//    perf.putInt("Y", window.y)
-//    perf.putInt("Width", window.width)
-//    perf.putInt("High", window.height)
-
+fun AppLayout() {
     val (selectedSection, setSelectedSection) = remember { mutableStateOf("Section 1") }
     val listOfBooleans = remember {
         listOf(
@@ -84,18 +67,7 @@ fun AppLayout(window: Window) {
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxHeight()
-                // new
-                .onSizeChanged {
-                    val perf = Preferences.userRoot().node("Root")
-                    perf.putInt("X", window.x)
-                    perf.putInt("Y", window.y)
-                    perf.putInt("Width", window.width)
-                    perf.putInt("High", window.height)
-                }
-
-
+            modifier = Modifier.fillMaxHeight()
 
         ) {
             val commonButtonModifier = Modifier
@@ -194,28 +166,15 @@ fun AppLayout(window: Window) {
 
 
 fun main() = application {
-
     val window = Window(
-        onCloseRequest = ::exitApplication,
-        title = "My Journal",
-        // new
-        state = WindowState(
-            width = Preferences.userRoot().node("Root").getInt("Width", 1300).dp,
-            height = Preferences.userRoot().node("Root").getInt("High", 800).dp,
-            position = WindowPosition(
-                Preferences.userRoot().node("Root").getInt("X", 100).dp,
-                Preferences.userRoot().node("Root").getInt("Y", 100).dp
-            )
-        )
+        onCloseRequest = ::exitApplication, title = "My Journal"
     ) {
         window.minimumSize = Dimension(1300, 800)
-
-
         AppTheme {
             Box(
                 modifier = Modifier.background(MaterialTheme.colorScheme.background)
             ) {
-                AppLayout(window)
+                AppLayout()
             }
         }
     }

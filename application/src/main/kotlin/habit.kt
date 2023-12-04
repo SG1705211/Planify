@@ -33,43 +33,7 @@ import java.time.format.DateTimeParseException
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
-// ********************
-
-
-
-data class TodoItem(
-    val id: Int,
-    val primaryTask: String,
-    val secondaryTask: String,
-    val priority: Int,
-    var completed: Boolean,
-    val section: String,
-    var date_time: String,
-    val start_time: String,
-    val duration: String,
-    var recur: String,
-    var pid: Int,
-    val deleted: Int,
-    val misc1: Int,
-    val misc2: Int
-)
-@Serializable
-data class TodoItemjson(
-    val id: Int,
-    val primaryTask: String,
-    val secondaryTask: String,
-    val priority: Int,
-    val completed: Boolean,
-    val datetime: String,
-    val section: String,
-    val duration: Int,
-    val starttime: String,
-    val recur: String,
-    val pid: Int,
-    val deleted: Int,
-    val misc1: Int,
-    val misc2: Int
-)
+import net.codebot.models.*
 
 
 fun TodoItem.toTodoItemJson(): TodoItemjson {
@@ -79,10 +43,10 @@ fun TodoItem.toTodoItemJson(): TodoItemjson {
         secondaryTask = this.secondaryTask,
         priority = this.priority,
         completed = this.completed,
-        datetime = this.date_time,
+        datetime = this.datetime,
         section = this.section,
-        duration = this.duration.toIntOrNull() ?: 0,
-        starttime = this.start_time,
+        duration = this.duration,
+        starttime = this.starttime,
         recur = this.recur,
         pid = this.pid,
         deleted = this.deleted,
@@ -106,7 +70,7 @@ fun CreateTodoDialog(
     var priority by remember { mutableStateOf(1) }
     var section by remember { mutableStateOf("") }
     var dueDate by remember { mutableStateOf("") }
-    var start_time by remember { mutableStateOf("") }
+    var starttime by remember { mutableStateOf("") }
     var isDateValid by remember { mutableStateOf(true) }
     var areFieldsValid by remember { mutableStateOf(true) }
     var duration_in by remember { mutableStateOf("") }
@@ -117,11 +81,11 @@ fun CreateTodoDialog(
         secondaryTask =defaultTodo.secondaryTask
         priority =defaultTodo.priority
         section =defaultTodo.section
-        dueDate =defaultTodo.date_time
-        start_time =defaultTodo.start_time
+        dueDate =defaultTodo.datetime
+        starttime =defaultTodo.starttime
         isDateValid =true
         areFieldsValid =true
-        duration_in =defaultTodo.duration
+        duration_in =defaultTodo.duration.toString()
         if (defaultTodo.recur == "Monthly") {
             recurOption = RecurOption.Monthly
         } else if (defaultTodo.recur == "Daily") {
@@ -142,7 +106,7 @@ fun CreateTodoDialog(
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
             )
             TextField(value = section, onValueChange = { section = it }, label = { Text("Section") })
-            TextField(value = start_time, onValueChange = { start_time = it }, label = { Text("Start Time (HH:MM)") })
+            TextField(value = starttime, onValueChange = { starttime = it }, label = { Text("Start Time (HH:MM)") })
             TextField(value = duration_in,
                 onValueChange = { duration_in = it },
                 label = { Text("Duration (in Hours)") })
@@ -186,9 +150,9 @@ fun CreateTodoDialog(
                         priority = priority,
                         completed = false,
                         section = section,
-                        date_time = dueDate,
-                        duration = duration_in,
-                        start_time = start_time,
+                        datetime = dueDate,
+                        duration = duration_in.toInt(),
+                        starttime = starttime,
                         recur = tem_str,
                         deleted = 0,
                         pid = 0,
@@ -289,7 +253,7 @@ fun ToDoList() {
     var currentid by remember {
         mutableStateOf(
             TodoItem(
-                0, "Initial", "initial", 0, false, "test", "test", "test", "test", "test", 0, 0, 0, 0
+                0, "Initial", "initial", 0, false, "test", "test", 3, "test", "test", 0, 0, 0, 0
             )
         )
     }
@@ -309,9 +273,9 @@ fun ToDoList() {
                                 priority = jsonItem.priority,
                                 completed = jsonItem.completed,
                                 section = jsonItem.section,
-                                date_time = jsonItem.datetime,
-                                start_time = jsonItem.starttime,
-                                duration = jsonItem.duration.toString(),
+                                datetime = jsonItem.datetime,
+                                starttime = jsonItem.starttime,
+                                duration = jsonItem.duration,
                                 recur = jsonItem.recur,
                                 pid = jsonItem.pid,
                                 deleted = jsonItem.deleted,
@@ -333,9 +297,9 @@ fun ToDoList() {
                                     priority = jsonItem.priority,
                                     completed = jsonItem.completed,
                                     section = jsonItem.section,
-                                    date_time = jsonItem.datetime,
-                                    start_time = jsonItem.starttime,
-                                    duration = jsonItem.duration.toString(),
+                                    datetime = jsonItem.datetime,
+                                    starttime = jsonItem.starttime,
+                                    duration = jsonItem.duration,
                                     recur = jsonItem.recur,
                                     pid = jsonItem.pid,
                                     deleted = jsonItem.deleted,
@@ -358,9 +322,9 @@ fun ToDoList() {
                                     priority = jsonItem.priority,
                                     completed = jsonItem.completed,
                                     section = jsonItem.section,
-                                    date_time = jsonItem.datetime,
-                                    start_time = jsonItem.starttime,
-                                    duration = jsonItem.duration.toString(),
+                                    datetime = jsonItem.datetime,
+                                    starttime = jsonItem.starttime,
+                                    duration = jsonItem.duration,
                                     recur = jsonItem.recur,
                                     pid = jsonItem.pid,
                                     deleted = jsonItem.deleted,
@@ -530,7 +494,7 @@ fun ToDoList() {
                                         }
                                     } else {
                                         var copy_of_copy = todoListFromDb[index].copy()
-                                        copy_of_copy.date_time = selectedDate.format(formatter)
+                                        copy_of_copy.datetime = selectedDate.format(formatter)
                                         copy_of_copy.recur = "None"
                                         copy_of_copy.completed = true
                                         copy_of_copy.pid = todoItem.id
@@ -557,9 +521,9 @@ fun ToDoList() {
                                                                 priority = jsonItem.priority,
                                                                 completed = jsonItem.completed,
                                                                 section = jsonItem.section,
-                                                                date_time = jsonItem.datetime,
-                                                                start_time = jsonItem.starttime,
-                                                                duration = jsonItem.duration.toString(),
+                                                                datetime = jsonItem.datetime,
+                                                                starttime = jsonItem.starttime,
+                                                                duration = jsonItem.duration,
                                                                 recur = jsonItem.recur,
                                                                 pid = jsonItem.pid,
                                                                 deleted = jsonItem.deleted,
@@ -582,9 +546,9 @@ fun ToDoList() {
                                                                     priority = jsonItem.priority,
                                                                     completed = jsonItem.completed,
                                                                     section = jsonItem.section,
-                                                                    date_time = jsonItem.datetime,
-                                                                    start_time = jsonItem.starttime,
-                                                                    duration = jsonItem.duration.toString(),
+                                                                    datetime = jsonItem.datetime,
+                                                                    starttime = jsonItem.starttime,
+                                                                    duration = jsonItem.duration,
                                                                     recur = jsonItem.recur,
                                                                     pid = jsonItem.pid,
                                                                     deleted = jsonItem.deleted,
@@ -608,9 +572,9 @@ fun ToDoList() {
                                                                     priority = jsonItem.priority,
                                                                     completed = jsonItem.completed,
                                                                     section = jsonItem.section,
-                                                                    date_time = jsonItem.datetime,
-                                                                    start_time = jsonItem.starttime,
-                                                                    duration = jsonItem.duration.toString(),
+                                                                    datetime = jsonItem.datetime,
+                                                                    starttime = jsonItem.starttime,
+                                                                    duration = jsonItem.duration,
                                                                     recur = jsonItem.recur,
                                                                     pid = jsonItem.pid,
                                                                     deleted = jsonItem.deleted,
@@ -642,7 +606,7 @@ fun ToDoList() {
             }
             if (isDialogOpen) {
                 var tem_todo = TodoItem(
-                    0, "This is a dummy variable", "", 0, false, "", "", "", "", "", 0, 0, 0, 0
+                    0, "This is a dummy variable", "", 0, false, "", "", 0, "", "", 0, 0, 0, 0
                 )
                 if (if_update) {
                     tem_todo = currentid.copy()
@@ -677,9 +641,9 @@ fun ToDoList() {
                                             priority = jsonItem.priority,
                                             completed = jsonItem.completed,
                                             section = jsonItem.section,
-                                            date_time = jsonItem.datetime,
-                                            start_time = jsonItem.starttime,
-                                            duration = jsonItem.duration.toString(),
+                                            datetime = jsonItem.datetime,
+                                            starttime = jsonItem.starttime,
+                                            duration = jsonItem.duration,
                                             recur = jsonItem.recur,
                                             pid = jsonItem.pid,
                                             deleted = jsonItem.deleted,
@@ -701,9 +665,9 @@ fun ToDoList() {
                                                 priority = jsonItem.priority,
                                                 completed = jsonItem.completed,
                                                 section = jsonItem.section,
-                                                date_time = jsonItem.datetime,
-                                                start_time = jsonItem.starttime,
-                                                duration = jsonItem.duration.toString(),
+                                                datetime = jsonItem.datetime,
+                                                starttime = jsonItem.starttime,
+                                                duration = jsonItem.duration,
                                                 recur = jsonItem.recur,
                                                 pid = jsonItem.pid,
                                                 deleted = jsonItem.deleted,
@@ -726,9 +690,9 @@ fun ToDoList() {
                                                 priority = jsonItem.priority,
                                                 completed = jsonItem.completed,
                                                 section = jsonItem.section,
-                                                date_time = jsonItem.datetime,
-                                                start_time = jsonItem.starttime,
-                                                duration = jsonItem.duration.toString(),
+                                                datetime = jsonItem.datetime,
+                                                starttime = jsonItem.starttime,
+                                                duration = jsonItem.duration,
                                                 recur = jsonItem.recur,
                                                 pid = jsonItem.pid,
                                                 deleted = jsonItem.deleted,

@@ -24,13 +24,13 @@ data class TodoItem(
     val primaryTask: String,
     val secondaryTask: String,
     val priority: Int,
-    val completed: Boolean,
-    val datetime: String,
+    var completed: Boolean,
+    var datetime: String,
     val section: String,
     val duration: Int,
     val starttime: String,
-    val recur: String,
-    val pid: Int,
+    var recur: String,
+    var pid: Int,
     val deleted: Int,
     val misc1: Int,
     val misc2: Int
@@ -148,4 +148,5 @@ data class TodoItemjson(
     val misc1: Int,
     val misc2: Int
 )
+
 

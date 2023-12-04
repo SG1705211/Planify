@@ -19,6 +19,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
+import net.codebot.models.*
+
+
+
 
 @Serializable
 
@@ -49,7 +53,6 @@ data class Event(
         }
     }
 }
-
 
 @Composable
 fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
