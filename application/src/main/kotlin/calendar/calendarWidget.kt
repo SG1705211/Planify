@@ -56,7 +56,9 @@ fun homeCalendar() {
                         endTime = addHoursToTimeString(jsonItem.starttime, jsonItem.duration),
                         title = jsonItem.primaryTask,
                         recur = jsonItem.recur,
-                        pid = jsonItem.pid
+                        pid = jsonItem.pid,
+                        misc1 = jsonItem.misc1
+
                     )
                 )
             }

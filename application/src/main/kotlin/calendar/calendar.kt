@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,8 +21,14 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 
-@Serializable
+fun convert_date(date: String): String {
+    val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val outputFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+    val parsedDate = LocalDate.parse(date, inputFormatter)
+    return parsedDate.format(outputFormatter)
+}
 
+@Serializable
 data class Event(
     val id: Int,
     var date: String,
@@ -36,8 +41,11 @@ data class Event(
     var completed: Boolean,
     val section: String,
     val recur: String,
-    val pid: Int
+    val pid: Int,
+    val misc1: Int
 ) {
+
+
     @Composable
     fun displayEvent() {
         Box(
@@ -53,7 +61,7 @@ data class Event(
 }
 
 @Composable
-fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
+fun WeeklyCalendar(month: Int, year: Int, events_list: List<Event>) {
     val scrollState = rememberScrollState()
     val firstDayOfMonth = LocalDate.of(year, month, 1).dayOfWeek.value % 7
     val daysInMonth = LocalDate.of(year, month, 1).lengthOfMonth()
@@ -105,7 +113,8 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
                     modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     for (j in 0..6) {
-                        val isToday = ((j == today.dayOfWeek.getValue()) && (currentDate == today.dayOfMonth) && (year == today.year) && (month == today.monthValue))
+                        val isToday =
+                            ((j == today.dayOfWeek.getValue()) && (currentDate == today.dayOfMonth) && (year == today.year) && (month == today.monthValue))
                         Box(
                             contentAlignment = Alignment.TopCenter,
                             modifier = Modifier.weight(1f).aspectRatio(1f).background(
@@ -123,32 +132,43 @@ fun MonthlyCalendar(month: Int, year: Int, events_list: List<Event>) {
 
                                 // Check for events on this date
                                 val currentDateString = LocalDate.of(year, month, currentDate).toString()
-                                var eventsOnThisDate = events_list.filter { it.date == currentDateString }
-                                val potentialrecur = events_list.filter { it.recur == "Daily" }
+                                var eventsOnThisDate = events_list.filter { it.date == currentDateString
+                                        && it.recur != "Daily" && it.recur != "Weekly"}
+                                val potentialrecur = events_list.filter {
+                                    it.recur == "Daily" && in_range(
+                                        convert_date(currentDateString), convert_date(it.date), it.misc1.toString()
+                                    )
+                                }
                                 for (each in potentialrecur) {
                                     if (events_list.find { it.date == currentDateString && it.pid == each.id } != null) {
                                         continue
                                     }
                                     val eachRecur = MutableList(1) { each.copy() }
                                     eachRecur[0].date = currentDateString
-                                    if (each.date <= currentDateString)  {
-                                        println(each)
+                                    if (each.date <= currentDateString) {
                                         eventsOnThisDate = eventsOnThisDate + eachRecur
                                     }
                                 }
+
+
                                 val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                                val potentialrecur_monthly = events_list.filter { it.recur == "Monthly" }
-                                for (each in potentialrecur_monthly) {
+                                val potentialrecur_Weekly = events_list.filter {
+                                    it.recur == "Weekly" && in_range(
+                                        convert_date(currentDateString), convert_date(it.date), it.misc1.toString()
+                                    )
+                                }
+                                for (each in potentialrecur_Weekly) {
                                     if (LocalDate.parse(each.date, formatter).dayOfWeek == LocalDate.of(
                                             year, month, currentDate
                                         ).dayOfWeek
+
                                     ) {
-                                        if (events_list.find { it.date == currentDateString && it.pid == each.id } != null){
+                                        if (events_list.find { it.date == currentDateString && it.pid == each.id } != null) {
                                             continue
                                         }
                                         val eachRecur = MutableList(1) { each.copy() }
                                         eachRecur[0].date = currentDateString
-                                        if (each.date <= currentDateString)  {
+                                        if (each.date <= currentDateString) {
                                             eventsOnThisDate = eventsOnThisDate + eachRecur
                                         }
                                     }
@@ -178,9 +198,12 @@ fun DailyCalendar(date: Int, month: Int, year: Int, events_list: List<Event>) {
     var selectedDate = LocalDate.of(year, month, date)
     var currentDateString = selectedDate.toString()
     val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
-    var eventsOnThisDay = events_list.filter { it.date == selectedDate.toString() }
+    var eventsOnThisDay = events_list.filter { it.date == selectedDate.toString()
+            && it.recur != "Daily" && it.recur != "Weekly"}
 
-    val potentialrecur = events_list.filter { it.recur == "Daily" }
+    val potentialrecur = events_list.filter {
+        it.recur == "Daily" && in_range(convert_date(currentDateString), convert_date(it.date), it.misc1.toString())
+    }
     for (each in potentialrecur) {
         if (events_list.find { it.date == currentDateString && it.pid == each.id } != null) {
             continue
@@ -191,11 +214,14 @@ fun DailyCalendar(date: Int, month: Int, year: Int, events_list: List<Event>) {
         eventsOnThisDay += eachRecur[0]
     }
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    val potentialrecur_monthly = events_list.filter { it.recur == "Monthly" }
-    for (each in potentialrecur_monthly) {
-        if (LocalDate.parse(each.date, formatter).dayOfWeek == selectedDate.dayOfWeek
-        ) {
-            if (events_list.find { it.date == currentDateString && it.pid == each.id } != null){
+    val potentialrecur_Weekly = events_list.filter {
+        it.recur == "Weekly"
+                && in_range(convert_date(currentDateString), convert_date(it.date), it.misc1.toString())
+    }
+//    println(potentialrecur_Weekly)
+    for (each in potentialrecur_Weekly) {
+        if (LocalDate.parse(each.date, formatter).dayOfWeek == selectedDate.dayOfWeek) {
+            if (events_list.find { it.date == currentDateString && it.pid == each.id } != null) {
                 continue
             }
             val eachRecur = MutableList(1) { each }
@@ -218,7 +244,9 @@ fun DailyCalendar(date: Int, month: Int, year: Int, events_list: List<Event>) {
         // Display the hours of the day
         for (hour in 0..23) {
             val eventsThisHour = eventsOnThisDay.filter {
-                it.startTime.substringBefore(":").toInt() <= hour && (it.endTime.substringBefore(":").toInt() > hour) || (it.endTime.substringBefore(":").toInt() == hour && (it.endTime.substringAfter(":").toInt() > 0))
+                it.startTime.substringBefore(":").toInt() <= hour && (it.endTime.substringBefore(":")
+                    .toInt() > hour) || (it.endTime.substringBefore(":")
+                    .toInt() == hour && (it.endTime.substringAfter(":").toInt() > 0))
             }
 
             item {
@@ -282,7 +310,8 @@ fun Calendar() {
                         endTime = addHoursToTimeString(jsonItem.starttime, jsonItem.duration),
                         title = jsonItem.primaryTask,
                         recur = jsonItem.recur,
-                        pid = jsonItem.pid
+                        pid = jsonItem.pid,
+                        misc1 = jsonItem.misc1
                     )
                 )
             }
@@ -294,7 +323,7 @@ fun Calendar() {
     }
     val selectedDate = LocalDate.of(year, month, date)
     if (mode == 0) {
-        MonthlyCalendar(month, year, events_list)
+        WeeklyCalendar(month, year, events_list)
     } else {
         DailyCalendar(date, month, year, events_list)
     }
@@ -322,7 +351,7 @@ fun Calendar() {
                 }, modifier = Modifier.size(105.dp, 32.dp)
             ) {
 
-                Text("Monthly")
+                Text("Weekly")
             }
 
         }

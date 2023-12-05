@@ -1,36 +1,32 @@
+
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import ui.theme.AppTheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-
-import androidx.compose.material3.Text
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import summary.*
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.width
-import java.awt.Dimension
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.res.*
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichTextEditor
-import com.mohamedrejeb.richeditor.*
-import note.*
+import note.NotesEditor
+import summary.HomeSummary
+import summary.Summary
+import ui.theme.AppTheme
 import java.awt.Desktop
+import java.awt.Dimension
 import java.awt.Window
 import java.io.File
 import java.net.URI
 import java.util.prefs.Preferences
-
 
 
 @Composable
@@ -248,7 +244,15 @@ fun main() = application {
         window.minimumSize = Dimension(1300, 800)
         AppTheme {
             Box(
-                modifier = Modifier.background(MaterialTheme.colorScheme.background)
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.background)
+                    .onSizeChanged {
+                        val perf = Preferences.userRoot().node("Root")
+                        perf.putInt("X", window.x)
+                        perf.putInt("Y", window.y)
+                        perf.putInt("Width", window.width)
+                        perf.putInt("High", window.height)
+                    }
             ) {
                 AppLayout(window)
                 if (openDialogue.value) {

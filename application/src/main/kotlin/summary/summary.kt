@@ -5,24 +5,26 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material.Text
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.text.font.FontFamily
+import in_range
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import net.codebot.models.TodoItem
+import java.text.DateFormatSymbols
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.text.DateFormatSymbols
 import java.time.Month
+import java.time.format.DateTimeFormatter
 import kotlin.math.max
 
 val currentDate = LocalDate.now()
@@ -77,7 +79,11 @@ fun Summary() {
                         datetime = jsonItem.datetime,
                         duration = jsonItem.duration,
                         pid = jsonItem.pid,
-                        recur = jsonItem.recur
+                        recur = jsonItem.recur,
+                        misc1 = jsonItem.misc1,
+                        misc2 = 0,
+                        deleted = 0,
+                        starttime = "0"
                     )
                 )
             }
@@ -87,12 +93,26 @@ fun Summary() {
     val currentWeekStartDate = currentDate.minusDays(currentDate.dayOfWeek.value.toLong() - 1)
     var currentWeekTable =
         todoListFromDb.filter { LocalDate.parse(it.datetime, formatter) in currentWeekStartDate..currentWeekStartDate.plusDays(6)
-                && it.recur != "Daily" && it.recur != "Monthly"}
-
+                && it.recur != "Daily" && it.recur != "Weekly"}
+//    println(currentWeekTable)
     var current_iterator = currentWeekStartDate
     while (!current_iterator.isAfter(currentWeekStartDate.plusDays(6))) {
-        val potentialrecur = todoListFromDb.filter { it.recur == "Daily" }
+
+        val potentialrecur = todoListFromDb.filter { it.recur == "Daily"
+                && in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())}
         for (each in potentialrecur) {
+            if (todoListFromDb.find { it.datetime == current_iterator.format(formatter) && it.pid == each.id } != null) {
+                continue
+            }
+            val newTodoItem = each.copy(datetime = current_iterator.format(formatter))
+            currentWeekTable += newTodoItem
+        }
+
+        val potentialrecurweekly = todoListFromDb.filter { it.recur == "Weekly"
+                && in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())
+                && isSameDayOfWeek(current_iterator.format(formatter).toString(), it.datetime)
+        }
+        for (each in potentialrecurweekly) {
             if (todoListFromDb.find { it.datetime == current_iterator.format(formatter) && it.pid == each.id } != null) {
                 continue
             }
@@ -103,19 +123,30 @@ fun Summary() {
     }
 
 
-
     val currentMonthStartDate = currentDate.withDayOfMonth(1)
     val lastDayOfMonth = currentDate.lengthOfMonth()
     val currentMonthEndDate = currentMonthStartDate.plusDays(lastDayOfMonth.toLong() - 1)
     var currentMonthTable = todoListFromDb.filter {
         LocalDate.parse(it.datetime, formatter) in currentMonthStartDate..currentMonthEndDate
-                && it.recur != "Daily" && it.recur != "Monthly"
+                && it.recur != "Daily" && it.recur != "Weekly"
     }
-
     current_iterator = currentMonthStartDate
     while (!current_iterator.isAfter(currentMonthEndDate)) {
-        val potentialrecur = todoListFromDb.filter { it.recur == "Daily" }
+        val potentialrecur = todoListFromDb.filter { it.recur == "Daily" &&
+            in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())}
         for (each in potentialrecur) {
+            if (todoListFromDb.find { it.datetime == current_iterator.format(formatter) && it.pid == each.id } != null) {
+                continue
+            }
+
+            val newTodoItem = each.copy(datetime = current_iterator.format(formatter))
+            currentMonthTable += newTodoItem
+        }
+        val potentialrecurweekly = todoListFromDb.filter { it.recur == "Weekly"
+                && in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())
+                && isSameDayOfWeek(current_iterator.format(formatter).toString(), it.datetime)
+        }
+        for (each in potentialrecurweekly) {
             if (todoListFromDb.find { it.datetime == current_iterator.format(formatter) && it.pid == each.id } != null) {
                 continue
             }
@@ -133,18 +164,30 @@ fun Summary() {
     val currentYearEndDate = currentYearStartDate.plusYears(1).minusDays(1)
     var currentYearTable = todoListFromDb.filter {
         LocalDate.parse(it.datetime, formatter) in currentYearStartDate..currentYearEndDate
-                && it.recur != "Daily" && it.recur != "Monthly"
+                && it.recur != "Daily" && it.recur != "Weekly"
     }
 
     current_iterator = currentYearStartDate
     while (!current_iterator.isAfter(currentYearEndDate)) {
-        val potentialrecur = todoListFromDb.filter { it.recur == "Daily" }
+        val potentialrecur = todoListFromDb.filter { it.recur == "Daily"
+                && in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())}
         for (each in potentialrecur) {
             if (todoListFromDb.find { it.datetime == current_iterator.format(formatter) && it.pid == each.id } != null) {
                 continue
             }
             val newTodoItem = each.copy(datetime = current_iterator.format(formatter))
-            currentMonthTable += newTodoItem
+            currentYearTable += newTodoItem
+        }
+        val potentialrecurweekly = todoListFromDb.filter { it.recur == "Weekly"
+                && in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())
+                && isSameDayOfWeek(current_iterator.format(formatter).toString(), it.datetime)
+        }
+        for (each in potentialrecurweekly) {
+            if (todoListFromDb.find { it.datetime == current_iterator.format(formatter) && it.pid == each.id } != null) {
+                continue
+            }
+            val newTodoItem = each.copy(datetime = current_iterator.format(formatter))
+            currentYearTable += newTodoItem
         }
         current_iterator = current_iterator.plusDays(1)
     }
@@ -219,6 +262,7 @@ fun Summary() {
                             progress = 0f
                         }
                         else{
+
                             progress = (currentMonthTable.count{it.completed == true}.toDouble() / currentMonthTable.size).toFloat()
                         }
                         Text(
@@ -349,7 +393,7 @@ fun Summary() {
                 }
 
                 "Monthly" -> {
-                    var maxvalue = 0.0f
+                    var maxvalue = 0.1f
                     val groupedByDateTime = currentMonthTable
                         .groupBy { it.datetime.substring(6, 8) }
                         .mapValues { (_, events) ->
