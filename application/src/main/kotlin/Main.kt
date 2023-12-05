@@ -25,8 +25,10 @@ import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichTextEditor
 import com.mohamedrejeb.richeditor.*
 import note.*
+import java.awt.Desktop
 import java.awt.Window
 import java.io.File
+import java.net.URI
 import java.util.prefs.Preferences
 
 
@@ -238,7 +240,7 @@ fun main() = application {
                 Item(
                     text = "Help Menu",
                     onClick = {
-                        openDialogue.value = true
+                        Desktop.getDesktop().browse(URI("https://sites.google.com/view/myjournalhelp"))
                     }
                 )
             }
