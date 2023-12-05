@@ -4,10 +4,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import ui.theme.AppTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+
+import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -16,15 +15,23 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.width
 import java.awt.Dimension
 import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.*
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.window.*
-import com.multiplatform.webview.web.WebView
-import com.multiplatform.webview.web.rememberWebViewState
-import com.multiplatform.webview.web.rememberWebViewStateWithHTMLFile
+import com.mohamedrejeb.richeditor.model.rememberRichTextState
+import com.mohamedrejeb.richeditor.ui.material3.RichTextEditor
+import com.mohamedrejeb.richeditor.*
 import note.*
+import java.awt.Desktop
 import java.awt.Window
+import java.io.File
+import java.net.URI
 import java.util.prefs.Preferences
+
+
 
 @Composable
 fun MagicHome() {
@@ -167,21 +174,9 @@ fun AppLayout(window: Window) {
             ) {
                 Text("Notes")
             }
-            FilledTonalButton(
-                onClick = {
-                    setSelectedSection("Help")
-                    listOfBooleans[0].value = false
-                    listOfBooleans[1].value = false
-                    listOfBooleans[2].value = false
-                    listOfBooleans[3].value = false
-                    listOfBooleans[4].value = false
-                    listOfBooleans[5].value = true
-                }, modifier = commonButtonModifier, colors = color_button(listOfBooleans[5].value)
-            ) {
-                Text("Help")
-            }
         }
         Box(
+
             modifier = Modifier.weight(3f).fillMaxWidth(), contentAlignment = Alignment.Center
         ) {
             when (selectedSection) {
@@ -197,68 +192,40 @@ fun AppLayout(window: Window) {
     }
 }
 
-
-
-
 @Composable
-fun Dialog() {
-    // render HTML here@Composable
-    //fun Dialog() {
-    //    // render HTML here
-    //
-    //}
-    //
-    //fun main() = application {
-    //    var openDialogue = remember { mutableStateOf(false) }
-    //
-    //    val window = Window(
-    //        onCloseRequest = ::exitApplication,
-    //        title = "My Journal",
-    //
-    //        state = WindowState(
-    //            width = Preferences.userRoot().node("Root").getInt("Width", 1300).dp,
-    //            height = Preferences.userRoot().node("Root").getInt("High", 800).dp,
-    //            position = WindowPosition(
-    //                Preferences.userRoot().node("Root").getInt("X", 100).dp,
-    //                Preferences.userRoot().node("Root").getInt("Y", 100).dp
-    //            )
-    //        )
-    //    ) {
-    //        MenuBar{
-    //            Menu("Sherlock is beautiful", mnemonic = 'F') {
-    //                Item(
-    //                    text = "Help Menu",
-    //                    onClick = {
-    //                        openDialogue.value = true
-    //                    }
-    //                )
-    //            }
-    //        }
-    //        window.minimumSize = Dimension(1300, 800)
-    //
-    //        AppTheme {
-    //            Box(
-    //                modifier = Modifier.background(MaterialTheme.colorScheme.background)
-    //            ) {
-    //                AppLayout(window)
-    //                if (openDialogue.value) {
-    //                    Dialog()
-    //                    println(2)
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
+fun Dialog(onClose: () -> Unit) {
+    val state = rememberRichTextState()
+    val path = "index.html"
+    val content = File(path).readText(Charsets.UTF_8)
+    println(content)
+    state.setHtml(content)
 
+    RichTextEditor(
+        state = state,
+        modifier = Modifier.fillMaxSize()
+    )
+    state.setConfig(
+        linkColor = Color.Blue,
+        linkTextDecoration = TextDecoration.Underline,
+        codeColor = Color.Yellow,
+        codeBackgroundColor = Color.Transparent,
+        codeStrokeColor = Color.LightGray)
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        horizontalArrangement = Arrangement.End
+    ) {
+        Button(onClick = onClose) {
+            Text("Close")
+        }
+    }
 }
+
 
 fun main() = application {
     var openDialogue = remember { mutableStateOf(false) }
-
     val window = Window(
         onCloseRequest = ::exitApplication,
         title = "My Journal",
-
         state = WindowState(
             width = Preferences.userRoot().node("Root").getInt("Width", 1300).dp,
             height = Preferences.userRoot().node("Root").getInt("High", 800).dp,
@@ -269,25 +236,23 @@ fun main() = application {
         )
     ) {
         MenuBar{
-            Menu("Sherlock is beautiful", mnemonic = 'F') {
+            Menu("Help", mnemonic = 'F') {
                 Item(
                     text = "Help Menu",
                     onClick = {
-                        openDialogue.value = true
+                        Desktop.getDesktop().browse(URI("https://sites.google.com/view/myjournalhelp"))
                     }
                 )
             }
         }
         window.minimumSize = Dimension(1300, 800)
-
         AppTheme {
             Box(
                 modifier = Modifier.background(MaterialTheme.colorScheme.background)
             ) {
                 AppLayout(window)
                 if (openDialogue.value) {
-                    Dialog()
-                    println(2)
+                    Dialog(onClose = { openDialogue.value = false })
                 }
             }
         }

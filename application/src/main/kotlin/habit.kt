@@ -1,37 +1,34 @@
+
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
-import io.ktor.client.request.*
-import io.ktor.http.*
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import org.jetbrains.exposed.sql.*
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import io.ktor.client.*
 import io.ktor.client.engine.cio.*
-import io.ktor.client.HttpClient
+import io.ktor.client.request.*
 import io.ktor.client.statement.*
+import io.ktor.http.*
 import io.ktor.util.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import net.codebot.models.TodoItem
+import net.codebot.models.TodoItemjson
+import org.jetbrains.exposed.sql.Database
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
-import androidx.compose.foundation.clickable
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.sp
-import net.codebot.models.*
 
 
 fun TodoItem.toTodoItemJson(): TodoItemjson {
@@ -54,14 +51,18 @@ fun TodoItem.toTodoItemJson(): TodoItemjson {
 }
 
 enum class RecurOption {
-    None, Daily, Monthly
+    None, Daily, Weekly
 }
+
+
 @Composable
 fun CreateTodoDialog(
     onCreate: (TodoItem) -> Unit,
     onClose: () -> Unit,
     defaultTodo: TodoItem
 ) {
+    var create_or_edit by remember { mutableStateOf("Create") }
+    val Formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
     var primaryTask by remember { mutableStateOf("") }
     var secondaryTask by remember { mutableStateOf("") }
     var priority by remember { mutableStateOf(1) }
@@ -72,8 +73,10 @@ fun CreateTodoDialog(
     var areFieldsValid by remember { mutableStateOf(true) }
     var duration_in by remember { mutableStateOf("") }
     var recurOption by remember { mutableStateOf(RecurOption.None) }
+    var recur_until by remember { mutableStateOf("0") }
     LaunchedEffect(defaultTodo) {
         if (defaultTodo.primaryTask != "This is a dummy variable") {
+            create_or_edit = "Edit"
             primaryTask = defaultTodo.primaryTask
             secondaryTask = defaultTodo.secondaryTask
             priority = defaultTodo.priority
@@ -84,19 +87,21 @@ fun CreateTodoDialog(
             areFieldsValid = true
             duration_in = defaultTodo.duration.toString()
             recurOption = when (defaultTodo.recur) {
-                "Monthly" -> RecurOption.Monthly
+                "Weekly" -> RecurOption.Weekly
                 "Daily" -> RecurOption.Daily
                 else -> RecurOption.None
             }
+            recur_until = defaultTodo.misc1.toString()
         }
     }
     AlertDialog(onDismissRequest = {}, title = {
-        Text(text = "Create New Todo Item")
+        Text(text = "$create_or_edit New Todo Item")
     }, text = {
         Column {
             TextField(value = primaryTask, onValueChange = { primaryTask = it }, label = { Text("Primary Task") })
             TextField(value = secondaryTask, onValueChange = { secondaryTask = it }, label = { Text("Secondary Task") })
-            TextField(value = priority.toString(),
+            TextField(
+                value = priority.toString(),
                 onValueChange = { priority = it.toIntOrNull() ?: 1 },
                 label = { Text("Priority") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
@@ -107,6 +112,14 @@ fun CreateTodoDialog(
                 onValueChange = { duration_in = it },
                 label = { Text("Duration (in Hours)") })
             TextField(value = dueDate, onValueChange = { dueDate = it }, label = { Text("Due Date (yyyy-MM-dd)") })
+            TextButton(onClick = {
+                dueDate = LocalDate.now().format(Formatter)
+            }) {
+                Text("Today")
+            }
+
+
+            Text("Repeat Option")
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
@@ -117,10 +130,10 @@ fun CreateTodoDialog(
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
-                        selected = recurOption == RecurOption.Monthly,
-                        onClick = { recurOption = RecurOption.Monthly }
+                        selected = recurOption == RecurOption.Weekly,
+                        onClick = { recurOption = RecurOption.Weekly }
                     )
-                    Text("Monthly")
+                    Text("Weekly")
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     RadioButton(
@@ -131,6 +144,14 @@ fun CreateTodoDialog(
                 }
 
             }
+            if (recurOption == RecurOption.Daily || recurOption == RecurOption.Weekly) {
+                TextField(
+                    value = recur_until,
+                    onValueChange = { recur_until = it },
+                    label = { Text("Repeat Until: (yyyy-MM-DD)") }
+                )
+            }
+
             if (!isDateValid) {
                 Text("Invalid date format", color = Color.Red)
             }
@@ -147,8 +168,8 @@ fun CreateTodoDialog(
                 var tem_str = "None"
                 if (recurOption == RecurOption.Daily) {
                     tem_str = "Daily"
-                } else if (recurOption == RecurOption.Monthly) {
-                    tem_str = "Monthly"
+                } else if (recurOption == RecurOption.Weekly) {
+                    tem_str = "Weekly"
                 }
                 onCreate(
                     TodoItem(
@@ -156,7 +177,7 @@ fun CreateTodoDialog(
                         primaryTask = primaryTask,
                         secondaryTask = secondaryTask,
                         priority = priority,
-                        completed = false,
+                        completed = defaultTodo.completed,
                         section = section,
                         datetime = dueDate,
                         duration = duration_in.toInt(),
@@ -164,13 +185,13 @@ fun CreateTodoDialog(
                         recur = tem_str,
                         deleted = 0,
                         pid = 0,
-                        misc1 = 0,
+                        misc1 = recur_until.toInt(),
                         misc2 = 0
                     )
                 )
             }
         }) {
-            Text("Create")
+            Text(create_or_edit)
         }
     }, dismissButton = {
         Button(onClick = {
@@ -217,6 +238,7 @@ suspend fun updateTodoItem(todoId: Int, updatedTodo: TodoItem) {
     }
     client.close()
 }
+
 @OptIn(InternalAPI::class)
 suspend fun deleteTodo(todoId: Int) {
     val client = HttpClient(CIO)
@@ -225,6 +247,7 @@ suspend fun deleteTodo(todoId: Int) {
     }
     client.close()
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ToDoList() {
@@ -272,7 +295,7 @@ fun ToDoList() {
             launch {
                 result = fetchTodos()
                 result.forEach { jsonItem ->
-                    if (jsonItem.section == selectedSection && jsonItem.datetime == selectedDate.format(formatter) && jsonItem.recur != "Daily" && jsonItem.recur != "Monthly") {
+                    if (jsonItem.section == selectedSection && jsonItem.datetime == selectedDate.format(formatter) && jsonItem.recur != "Daily" && jsonItem.recur != "Weekly") {
                         todoListFromDb.add(
                             TodoItem(
                                 id = jsonItem.id,
@@ -287,8 +310,8 @@ fun ToDoList() {
                                 recur = jsonItem.recur,
                                 pid = jsonItem.pid,
                                 deleted = jsonItem.deleted,
-                                misc1 = 0,
-                                misc2 = 0
+                                misc1 = jsonItem.misc1,
+                                misc2 = jsonItem.misc2
                             )
                         )
                     }
@@ -311,12 +334,12 @@ fun ToDoList() {
                                     recur = jsonItem.recur,
                                     pid = jsonItem.pid,
                                     deleted = jsonItem.deleted,
-                                    misc1 = 0,
-                                    misc2 = 0
+                                    misc1 = jsonItem.misc1,
+                                    misc2 = jsonItem.misc2
                                 )
                             )
                         }
-                    } else if (jsonItem.recur == "Monthly" && jsonItem.section == selectedSection && LocalDate.parse(
+                    } else if (jsonItem.recur == "Weekly" && jsonItem.section == selectedSection && LocalDate.parse(
                             jsonItem.datetime, formatter
                         ).dayOfWeek == selectedDate.dayOfWeek
                     ) {
@@ -336,8 +359,8 @@ fun ToDoList() {
                                     recur = jsonItem.recur,
                                     pid = jsonItem.pid,
                                     deleted = jsonItem.deleted,
-                                    misc1 = 0,
-                                    misc2 = 0
+                                    misc1 = jsonItem.misc1,
+                                    misc2 = jsonItem.misc2
                                 )
                             )
                         }
@@ -459,7 +482,6 @@ fun ToDoList() {
                             supportingContent = { Text(todoItem.secondaryTask) },
                             trailingContent = {
                                 Column() { //                                    Text("Priority ${todoItem.priority}")
-
                                     TextButton(
                                         onClick = {
                                             currentid = todoItem.copy()
@@ -484,20 +506,13 @@ fun ToDoList() {
                             },
                             leadingContent = {
                                 Checkbox(checked = todoItem.completed, onCheckedChange = { isChecked ->
-                                    if (todoItem.recur != "Daily" && todoItem.recur != "Monthly") {
+                                    if (todoItem.recur != "Daily" && todoItem.recur != "Weekly") {
                                         todoListFromDb[index] = todoListFromDb[index].copy(completed = isChecked)
                                         var copy_todo = todoItem.copy()
                                         copy_todo.completed = isChecked
                                         runBlocking {
                                             launch {
-                                                updateTodoItem(todoItem.id, copy_todo)
-                                            }
-                                        }
-                                        if (!isChecked) {
-                                            runBlocking {
-                                                launch {
-                                                    deleteTodo(copy_todo.id)
-                                                }
+                                                println(updateTodoItem(todoItem.id, copy_todo))
                                             }
                                         }
                                     } else {
@@ -519,7 +534,7 @@ fun ToDoList() {
                                                 result.forEach { jsonItem ->
                                                     if (jsonItem.section == selectedSection && jsonItem.datetime == selectedDate.format(
                                                             formatter
-                                                        ) && jsonItem.recur != "Daily" && jsonItem.recur != "Monthly"
+                                                        ) && jsonItem.recur != "Daily" && jsonItem.recur != "Weekly"
                                                     ) {
                                                         todoListFromDb.add(
                                                             TodoItem(
@@ -565,7 +580,7 @@ fun ToDoList() {
                                                                 )
                                                             )
                                                         }
-                                                    } else if (jsonItem.recur == "Monthly" && jsonItem.section == selectedSection && LocalDate.parse(
+                                                    } else if (jsonItem.recur == "Weekly" && jsonItem.section == selectedSection && LocalDate.parse(
                                                             jsonItem.datetime, formatter
                                                         ).dayOfWeek == selectedDate.dayOfWeek
                                                     ) {
@@ -639,7 +654,8 @@ fun ToDoList() {
                                 create(newItem)
                                 if_create = false
                             } else if (if_update) {
-                                updateTodoItem(currentid.id, newItem)
+                                updateTodoItem(currentid.id, newItem.copy())
+                                println(currentid.id)
                                 if_update = false
                                 tem_todo = tem_todo_reset.copy()
                             }
@@ -648,7 +664,7 @@ fun ToDoList() {
                             result.forEach { jsonItem ->
                                 if (jsonItem.section == selectedSection && jsonItem.datetime == selectedDate.format(
                                         formatter
-                                    ) && jsonItem.recur != "Daily" && jsonItem.recur != "Monthly"
+                                    ) && jsonItem.recur != "Daily" && jsonItem.recur != "Weekly"
                                 ) {
                                     todoListFromDb.add(
                                         TodoItem(
@@ -664,8 +680,8 @@ fun ToDoList() {
                                             recur = jsonItem.recur,
                                             pid = jsonItem.pid,
                                             deleted = jsonItem.deleted,
-                                            misc1 = 0,
-                                            misc2 = 0
+                                            misc1 = jsonItem.misc1,
+                                            misc2 = jsonItem.misc2
                                         )
                                     )
                                 }
@@ -688,12 +704,12 @@ fun ToDoList() {
                                                 recur = jsonItem.recur,
                                                 pid = jsonItem.pid,
                                                 deleted = jsonItem.deleted,
-                                                misc1 = 0,
-                                                misc2 = 0
+                                                misc1 = jsonItem.misc1,
+                                                misc2 = jsonItem.misc2
                                             )
                                         )
                                     }
-                                } else if (jsonItem.recur == "Monthly" && jsonItem.section == selectedSection && LocalDate.parse(
+                                } else if (jsonItem.recur == "Weekly" && jsonItem.section == selectedSection && LocalDate.parse(
                                         jsonItem.datetime, formatter
                                     ).dayOfWeek == selectedDate.dayOfWeek
                                 ) {
@@ -713,8 +729,8 @@ fun ToDoList() {
                                                 recur = jsonItem.recur,
                                                 pid = jsonItem.pid,
                                                 deleted = jsonItem.deleted,
-                                                misc1 = 0,
-                                                misc2 = 0
+                                                misc1 = jsonItem.misc1,
+                                                misc2 = jsonItem.misc2
                                             )
                                         )
                                     }
