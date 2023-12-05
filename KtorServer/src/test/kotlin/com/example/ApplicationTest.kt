@@ -1,5 +1,5 @@
 package com.example.plugins
-import net.codebot.models.*
+
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -8,16 +8,30 @@ import io.ktor.util.*
 import junit.framework.TestCase.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import net.codebot.models.TodoItem
+import net.codebot.models.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 class ConfigureRoutingTest {
+    @BeforeTest
+    fun reset() = testApplication {
+        application {
+            configureSecurity()
+            configureMonitoring()
+            configureSerialization()
+            configureDatabases()
+            configureRouting(testing = true)
+        }
+        client.post("/Reset")
+
+    }
+
     @Test
     fun testGet() = testApplication {
         application {
@@ -187,14 +201,15 @@ class ConfigureRoutingTest {
     @Test
     fun testDeleteTodosId() = testApplication {
         application {
-            configureRouting()
+            configureRouting(testing = true)
         }
         client.delete("/todos/4").apply {
             // fetch data firstly
             transaction {
-                val createdNote = TodoTable.select { TodoTable.id eq 4 }.singleOrNull()
+                val createdNote = TodoTable.select { TodoTable.primaryTask eq "Complete assignment" }.singleOrNull()
                 assertNull(createdNote)
                 TodoTable.insert {
+                    it[id] = 4
                     it[primaryTask] = "Complete assignment"
                     it[secondaryTask] = "Submit online"
                     it[priority] = 2
@@ -214,42 +229,42 @@ class ConfigureRoutingTest {
     }
 
 
-        @Test
-        fun testDeleteNotesId() = testApplication {
-            application {
-                configureRouting()
-            }
-            client.delete("/notes/3").apply {
-                transaction {
-                    val createdNote = Table__File.select { Table__File.id eq 3 }.singleOrNull()
-                    assertNull(createdNote)
-                    Table__File.insert {
-                        it[id] = 3
-                        it[name] = "Test File 2"
-                        it[content] = "<p style=\"text-align: left;\">Sherlock is not beautiful</p>"
-                        it[marked] = false
-                        it[folderName] = "Test Folder 2"
-                        it[folderID] = 0
-                    }
-                }
-
-            }
+    @Test
+    fun testDeleteNotesId() = testApplication {
+        application {
+            configureRouting(testing = true)
         }
+        client.delete("/notes/3").apply {
+            transaction {
+                val createdNote = Table__File.select { Table__File.id eq 3 }.singleOrNull()
+                assertNull(createdNote)
+                Table__File.insert {
+                    it[id] = 3
+                    it[name] = "Test File 2"
+                    it[content] = "<p style=\"text-align: left;\">Sherlock is not beautiful</p>"
+                    it[marked] = false
+                    it[folderName] = "Test Folder 2"
+                    it[folderID] = 0
+                }
+            }
 
+        }
+    }
 
 
     @Test
     fun testDeleteFolderId() = testApplication {
 
         application {
-            configureRouting()
+            configureRouting(testing = true)
         }
-    FolderItem(id = 5, name = "Test 2", parentFolderName = "Test Folder 2", marked = false)
+        FolderItem(id = 5, name = "Test 2", parentFolderName = "Test Folder 2", marked = false)
         client.delete("/folder/5").apply {
-            transaction{
+            transaction {
                 val createdNote = Folders__Table.select { Folders__Table.id eq 5 }.singleOrNull()
                 assertNull(createdNote)
                 Folders__Table.insert {
+                    it[id] = 5
                     it[name] = "Test 2"
                     it[marked] = false
                     it[parentFolder] = "Test Folder 2"
@@ -258,6 +273,7 @@ class ConfigureRoutingTest {
             }
         }
     }
+
     @OptIn(InternalAPI::class)
     @Test
     fun testPostUpdateId() = testApplication {
@@ -269,7 +285,10 @@ class ConfigureRoutingTest {
             configureRouting(testing = true)
         }
         var tem_todo = TodoItem(
-            0, "To_Be_Updated", "Due next week", 1, false, "20231030", "Work", 3, "08:00", "None", 0, 0, 0, 0
+            0, "Impress Orange",
+            "Impress Orange", 1, false, "20231126",
+            "Work", 3, "10:00", "None",
+            13, 0, 0, 0
         )
         client.post("/update/0") {
             contentType(ContentType.Application.Json)
@@ -279,12 +298,13 @@ class ConfigureRoutingTest {
                 val createdNote = TodoTable.select { TodoTable.id eq tem_todo.id }.singleOrNull()
                 assertNotNull(createdNote)
                 assertEquals(createdNote?.get(TodoTable.completed), false)
-                TodoTable.update ({ TodoTable.id eq tem_todo.id }) {
+                TodoTable.update({ TodoTable.id eq tem_todo.id }) {
                     it[completed] = true
                 }
             }
         }
     }
+
     @OptIn(InternalAPI::class)
     @Test
     fun testPostUpdatefileId() = testApplication {
@@ -311,7 +331,7 @@ class ConfigureRoutingTest {
                 val createdNote = Table__File.select { Table__File.id eq 2 }.singleOrNull()
                 assertNotNull(createdNote)
                 assertEquals(createdNote?.get(Table__File.content), tem_file.content)
-                Table__File.update ({ Table__File.id eq 2}) {
+                Table__File.update({ Table__File.id eq 2 }) {
                     it[content] = "<p style=\"text-align: left;\">Sherlock is beautiful</p>"
                 }
             }

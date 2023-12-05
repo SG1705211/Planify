@@ -5,23 +5,167 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.*
-import kotlinx.serialization.Serializable
 import net.codebot.models.*
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.transactions.transaction
 
 
 fun Application.configureRouting(testing: Boolean = false) {
     // set the url
-    val potential_url = if (testing) "jdbc:sqlite:test.db" else "jdbc:sqlite:chinook.db"
+    val potential_url = if (testing) "jdbc:sqlite:test.db" else "jdbc:sqlite:test.db"
     Database.connect(potential_url, "org.sqlite.JDBC")
-    //     Database.connect("jdbc:sqlite:/app/chinook.db", "org.sqlite.JDBC")
-    //                Database.connect("jdbc:sqlite:chinook.db")
+//         Database.connect("jdbc:sqlite:/app/test.db", "org.sqlite.JDBC")
+
+//    Database.connect("jdbc:sqlite:test.db", "org.sqlite.JDBC")
 
     routing {
+        post("/Reset") {
+            transaction {
+                SchemaUtils.createMissingTablesAndColumns(TodoTable) // Create table if not exists
+                // Delete all existing records (Optional, if you want to start fresh)
+                TodoTable.deleteAll()
+                Table__File.deleteAll()
+                Folders__Table.deleteAll()
+
+
+                TodoTable.insert {
+                    it[id] = 0
+                    it[primaryTask] = "Impress Orange"
+                    it[secondaryTask] = "Impress Orange"
+                    it[priority] = 1
+                    it[starttime] = "10:00"
+                    it[completed] = true
+                    it[section] = "Work"
+                    it[duration] = 3
+                    it[datetime] = "20231126"
+                    it[recur] = "None"
+                    it[pid] = 13
+                    it[deleted] = 0
+                    it[misc1] = 0
+                    it[misc2] = 0
+                }
+                TodoTable.insert {
+                    it[id] = 1
+                    it[primaryTask] = "Write report"
+                    it[secondaryTask] = "Due next week"
+                    it[priority] = 1
+                    it[completed] = false
+                    it[datetime] = "20231030"
+                    it[section] = "Work"
+                    it[duration] = 3
+                    it[starttime] = "08:00"
+                    it[recur] = "None"
+                    it[pid] = 0
+                    it[deleted] = 0
+                    it[misc1] = 0
+                    it[misc2] = 0
+                }
+                TodoTable.insert {
+                    it[id] = 2
+                    it[primaryTask] = "Email client"
+                    it[secondaryTask] = "Urgent"
+                    it[priority] = 2
+                    it[completed] = false
+                    it[starttime] = "08:00"
+                    it[section] = "Work"
+                    it[duration] = 3
+                    it[datetime] = "20231029"
+                    it[recur] = "None"
+                    it[pid] = 0
+                    it[deleted] = 0
+                    it[misc1] = 0
+                    it[misc2] = 0
+                }
+
+                // Study section
+                TodoTable.insert {
+                    it[id] = 3
+                    it[primaryTask] = "Study for exam"
+                    it[secondaryTask] = "Chapter 1-5"
+                    it[priority] = 1
+                    it[completed] = false
+                    it[starttime] = "08:00"
+                    it[section] = "Study"
+                    it[duration] = 3
+                    it[datetime] = "20231030"
+                    it[recur] = "None"
+                    it[pid] = 0
+                    it[deleted] = 0
+                    it[misc1] = 0
+                    it[misc2] = 0
+                }
+
+                TodoTable.insert {
+                    it[id] = 4
+                    it[primaryTask] = "Complete assignment"
+                    it[secondaryTask] = "Submit online"
+                    it[priority] = 2
+                    it[completed] = false
+                    it[starttime] = "08:00"
+                    it[section] = "Study"
+                    it[duration] = 3
+                    it[datetime] = "20231030"
+                    it[recur] = "None"
+                    it[pid] = 0
+                    it[deleted] = 0
+                    it[misc1] = 0
+                    it[misc2] = 0
+                }
+
+                Table__File.insert {
+                    it[id] = 2
+                    it[name] = "Test File 1"
+                    it[content] = "<p style=\"text-align: left;\">Sherlock is beautiful</p>"
+                    it[folderName] = "Test 2"
+                    it[folderID] = 0
+                    it[marked] = false
+                }
+
+                Table__File.insert {
+                    it[id] = 3
+                    it[name] = "Test File 2"
+                    it[content] = "<p style=\"text-align: left;\">Sherlock is not beautiful</p>"
+                    it[folderName] = "Test Folder 2"
+                    it[folderID] = 0
+                    it[marked] = false
+                }
+
+                Folders__Table.insert {
+                    it[id] = 2
+                    it[name] = "Test Folder 1"
+                    it[parentFolder] = ""
+                    it[marked] = false
+                    it[parentID] = 0
+                }
+
+                Folders__Table.insert {
+                    it[id] = 3
+                    it[name] = "Test Folder 3"
+                    it[parentFolder] = ""
+                    it[marked] = false
+                    it[parentID] = 0
+                }
+
+                Folders__Table.insert {
+                    it[id] = 4
+                    it[name] = "Test Folder 4"
+                    it[parentFolder] = ""
+                    it[marked] = false
+                    it[parentID] = 0
+                }
+                Folders__Table.insert {
+                    it[id] = 5
+                    it[name] = "Test 2"
+                    it[parentFolder] = "Test Folder 2"
+                    it[marked] = false
+                    it[parentID] = 0
+                }
+
+
+
+            }
+        }
         get("/") {
             call.respondText("Connection Success")
         }
@@ -134,7 +278,7 @@ fun Application.configureRouting(testing: Boolean = false) {
             val todoId = call.parameters["id"]?.toIntOrNull()
             if (todoId == null) {
                 call.respond(HttpStatusCode.BadRequest, "Invalid todo ID")
-            }else {
+            } else {
                 var result = transaction {
                     TodoTable.update({ TodoTable.id eq todoId }) {
                         it[primaryTask] = newTodo.primaryTask
@@ -161,11 +305,11 @@ fun Application.configureRouting(testing: Boolean = false) {
             val todoId = call.parameters["id"]?.toIntOrNull()
             if (todoId == null) {
                 call.respond(HttpStatusCode.BadRequest, "Invalid ID")
-            }
-            else {
+            } else {
                 val isDeleted = transaction {
                     TodoTable.deleteWhere { TodoTable.id eq todoId }
                 }
+                call.respond(HttpStatusCode.OK, "Good")
             }
         }
 
@@ -188,12 +332,12 @@ fun Application.configureRouting(testing: Boolean = false) {
             val todoId = call.parameters["id"]?.toIntOrNull()
             if (todoId == null) {
                 call.respond(HttpStatusCode.BadRequest, "Invalid ID")
-            }
-            else {
+            } else {
                 transaction {
                     Folders__Table.deleteWhere { Folders__Table.id eq todoId }
                     Table__File.deleteWhere { Table__File.id eq todoId }
                 }
+                call.respond(HttpStatusCode.OK, "Good")
             }
 
         }
