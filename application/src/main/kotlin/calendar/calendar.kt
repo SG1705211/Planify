@@ -220,7 +220,7 @@ fun DailyCalendar(date: Int, month: Int, year: Int, events_list: List<Event>) {
         // Display the hours of the day
         for (hour in 0..23) {
             val eventsThisHour = eventsOnThisDay.filter {
-                it.startTime.substringBefore(":").toInt() <= hour && it.endTime.substringBefore(":").toInt() > hour
+                it.startTime.substringBefore(":").toInt() <= hour && (it.endTime.substringBefore(":").toInt() > hour) || (it.endTime.substringBefore(":").toInt() == hour && (it.endTime.substringAfter(":").toInt() > 0))
             }
 
             item {
