@@ -11,14 +11,6 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 
 @Serializable
-data class sample(
-    val id: Int,
-    val title: String? = null,
-    val content: String? = null
-)
-
-
-@Serializable
 data class TodoItem(
     val id: Int,
     val primaryTask: String,
