@@ -13,7 +13,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Application.configureRouting(testing: Boolean = false) {
     // set the url
-    val potential_url = if (testing) "jdbc:sqlite:test.db" else "jdbc:sqlite:test.db"
+//    val potential_url = if (testing) "jdbc:sqlite:test.db" else "jdbc:sqlite:/app/test.db"
+    val potential_url = if (testing) "jdbc:sqlite:test.db" else "jdbc:sqlite:/app/chinook.db"
     Database.connect(potential_url, "org.sqlite.JDBC")
 //         Database.connect("jdbc:sqlite:/app/test.db", "org.sqlite.JDBC")
 
@@ -22,13 +23,10 @@ fun Application.configureRouting(testing: Boolean = false) {
     routing {
         post("/Reset") {
             transaction {
-                SchemaUtils.createMissingTablesAndColumns(TodoTable) // Create table if not exists
-                // Delete all existing records (Optional, if you want to start fresh)
+                SchemaUtils.createMissingTablesAndColumns(TodoTable)
                 TodoTable.deleteAll()
                 Table__File.deleteAll()
                 Folders__Table.deleteAll()
-
-
                 TodoTable.insert {
                     it[id] = 0
                     it[primaryTask] = "Impress Orange"
