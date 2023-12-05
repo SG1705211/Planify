@@ -15,11 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.round
 
-data class TodoItem(
-    val id: Int, val primaryTask: String, val secondaryTask: String, val priority: Int,
-    var completed: Boolean, val section: String, var datetime: String, val duration: Int,
-    val pid: Int, val recur: String
-)
+
 
 @Composable
 fun TaskProgress(

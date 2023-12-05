@@ -9,11 +9,21 @@
  3. Open Docker (Ensure Docker is on)
  4. Run the following two commend:
 	 a. Download the server
-    $ `docker pull orasean/ktorserver-image` 
+    $ `docker pull orasean/ktor-server` 
     b. Run the server in the docker
-    $ `docker run -p 8080:8080 orasean/ktorserver-image`
+    $ `docker run -p 8080:8080 orasean/ktor-server`
  5. Now Server is running
 
+### Run Test Server
+In order to run the unit test for client code, a different docker image
+is required. The only difference is the image name.
+From step 4:
+4. Run the following two commend:
+   a. Download the server
+   $ `docker pull orasean/test-server`
+   b. Run the server in the docker
+   $ `docker run -p 8080:8080 orasean/test-server`
+5. Now Server is running
 ### Install the Application
 
 1. Double Click the `.dmg` installer

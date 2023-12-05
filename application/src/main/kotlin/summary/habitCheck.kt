@@ -7,10 +7,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.draw.drawBehind
+import in_range
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
@@ -19,8 +20,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import net.codebot.models.TodoItem
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+
+
+
+fun isSameDayOfWeek(date1: String, date2: String): Boolean {
+    val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+    val dayOfWeek1 = LocalDate.parse(date1, formatter).dayOfWeek
+    val dayOfWeek2 = LocalDate.parse(date2, formatter).dayOfWeek
+    return dayOfWeek1 == dayOfWeek2
+}
 
 @Serializable
 data class TodoItemjson(
@@ -68,7 +79,11 @@ fun HabitCheck(habit: String) {
                         datetime = jsonItem.datetime,
                         duration = jsonItem.duration,
                         pid = jsonItem.pid,
-                        recur = jsonItem.recur
+                        recur = jsonItem.recur,
+                        misc1 = jsonItem.misc1,
+                        misc2 = jsonItem.misc2,
+                        deleted = 0,
+                        starttime = ""
                     )
                 )
             }
@@ -80,18 +95,29 @@ fun HabitCheck(habit: String) {
         LocalDate.parse(
             it.datetime,
             formatter
-        ) in currentWeekStartDate..currentWeekStartDate.plusDays(6) && it.recur != "Daily" && it.recur != "Monthly"
+        ) in currentWeekStartDate..currentWeekStartDate.plusDays(6) && it.recur != "Daily" && it.recur != "Weekly"
     }
     var current_iterator = currentWeekStartDate
     while (!current_iterator.isAfter(currentWeekStartDate.plusDays(6))) {
-        val potentialrecur = todoListFromDb.filter { it.recur == "Daily" }
+        val potentialrecur = todoListFromDb.filter { it.recur == "Daily"
+                && in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())}
         for (each in potentialrecur) {
             if (todoListFromDb.find { it.datetime == current_iterator.format(formatter) && it.pid == each.id } != null) {
                 continue
             }
             val newTodoItem = each.copy(datetime = current_iterator.format(formatter))
             currentWeekTable += newTodoItem
-            println(currentWeekTable)
+        }
+        val potentialrecurweekly = todoListFromDb.filter { it.recur == "Weekly"
+                && in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())
+                && isSameDayOfWeek(current_iterator.format(formatter).toString(), it.datetime)
+        }
+        for (each in potentialrecurweekly) {
+            if (todoListFromDb.find { it.datetime == current_iterator.format(formatter) && it.pid == each.id } != null) {
+                continue
+            }
+            val newTodoItem = each.copy(datetime = current_iterator.format(formatter))
+            currentWeekTable += newTodoItem
         }
         current_iterator = current_iterator.plusDays(1)
     }
