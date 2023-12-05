@@ -135,12 +135,24 @@ fun Application.configureRouting(testing: Boolean = false) {
             if (todoId == null) {
                 call.respond(HttpStatusCode.BadRequest, "Invalid todo ID")
             }else {
-                transaction {
+                var result = transaction {
                     TodoTable.update({ TodoTable.id eq todoId }) {
+                        it[primaryTask] = newTodo.primaryTask
+                        it[secondaryTask] = newTodo.secondaryTask
+                        it[priority] = newTodo.priority
                         it[completed] = newTodo.completed
+                        it[datetime] = newTodo.datetime
+                        it[section] = newTodo.section
+                        it[duration] = newTodo.duration
+                        it[starttime] = newTodo.starttime
                         it[recur] = newTodo.recur
+                        it[pid] = newTodo.pid
+                        it[deleted] = newTodo.deleted
+                        it[misc1] = newTodo.misc1
+                        it[misc2] = newTodo.misc2
                     }
                 }
+                call.respond(HttpStatusCode.OK, "Todo updated successfully")
             }
         }
 
