@@ -24,31 +24,11 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import net.codebot.models.TodoItem
-import net.codebot.models.TodoItemjson
 import org.jetbrains.exposed.sql.Database
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-
-fun TodoItem.toTodoItemJson(): TodoItemjson {
-    return TodoItemjson(
-        id = this.id,
-        primaryTask = this.primaryTask,
-        secondaryTask = this.secondaryTask,
-        priority = this.priority,
-        completed = this.completed,
-        datetime = this.datetime,
-        section = this.section,
-        duration = this.duration,
-        starttime = this.starttime,
-        recur = this.recur,
-        pid = this.pid,
-        deleted = this.deleted,
-        misc1 = this.misc1,
-        misc2 = this.misc2
-    )
-}
 
 enum class RecurOption {
     None, Daily, Weekly
@@ -217,11 +197,11 @@ suspend fun create(todoItem: TodoItem) {
     val client = HttpClient(CIO)
     val response: HttpResponse = client.post("http://localhost:8080/todos") {
         contentType(ContentType.Application.Json)
-        body = Json.encodeToString(todoItem.toTodoItemJson())
+        body = Json.encodeToString(todoItem)
     }
 }
 
-suspend fun fetchTodos(): List<TodoItemjson> {
+suspend fun fetchTodos(): List<TodoItem> {
     val client = HttpClient(CIO)
     val response: HttpResponse = client.get("http://localhost:8080/todos")
     val jsonString = response.bodyAsText()
@@ -234,7 +214,7 @@ suspend fun updateTodoItem(todoId: Int, updatedTodo: TodoItem) {
     val client = HttpClient(CIO)
     val response: HttpResponse = client.post("http://localhost:8080/update/$todoId") {
         contentType(ContentType.Application.Json)
-        body = Json.encodeToString(updatedTodo.toTodoItemJson())
+        body = Json.encodeToString(updatedTodo)
     }
     client.close()
 }
@@ -289,7 +269,7 @@ fun ToDoList() {
         )
     }
     LaunchedEffect(selectedSection, selectedDate) {
-        var result: List<TodoItemjson>
+        var result: List<TodoItem>
         todoListFromDb.clear()
         runBlocking {
             launch {
@@ -527,7 +507,7 @@ fun ToDoList() {
                                             }
                                         } // update fetched data
                                         runBlocking {
-                                            var result: List<TodoItemjson> = fetchTodos()
+                                            var result: List<TodoItem> = fetchTodos()
                                             launch {
                                                 result = fetchTodos()
                                                 todoListFromDb.clear()
@@ -660,7 +640,7 @@ fun ToDoList() {
                                 tem_todo = tem_todo_reset.copy()
                             }
                             todoListFromDb.clear()
-                            var result: List<TodoItemjson> = fetchTodos()
+                            var result: List<TodoItem> = fetchTodos()
                             result.forEach { jsonItem ->
                                 if (jsonItem.section == selectedSection && jsonItem.datetime == selectedDate.format(
                                         formatter

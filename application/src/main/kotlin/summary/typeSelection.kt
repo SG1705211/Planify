@@ -16,8 +16,6 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ReportTypeSelection(selectedSection: String, onSelectedSectionChanged: (String) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
-
-
     Box {
         Column {
             Spacer(modifier = Modifier.height(16.dp))

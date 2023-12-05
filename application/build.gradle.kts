@@ -1,5 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.compose.compose
 
 plugins {
     kotlin("jvm")
@@ -41,7 +40,11 @@ dependencies {
     testImplementation("io.ktor:ktor-client-mock:2.3.6")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation(kotlin("test"))
-    implementation("io.github.kevinnzou:compose-webview-multiplatform:1.6.0")
+    implementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("io.ktor:ktor-client-mock:2.3.6")
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
 }
 
 
