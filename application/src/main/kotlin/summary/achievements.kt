@@ -10,13 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -24,7 +19,6 @@ fun Achievement(
     eventsInRange: List<TodoItem>,
     factor: Int
 ) {
-    val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
 
     var focusDuration = eventsInRange.filter{ it.completed == true}.map { it.duration }.sum().toFloat()
     var workWeekDuration = eventsInRange.filter{ it.section == "Work" && it.completed == true}.map { it.duration }.sum().toFloat()
@@ -49,10 +43,6 @@ fun Achievement(
     if (lifeWeekDuration >= 10 * factor) {
         habitsCompletedWeekly.add("Life Hacker")
     }
-
-
-
-
 
     Column {
         Text(
