@@ -1,27 +1,16 @@
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import java.time.LocalDate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.background
-import androidx.compose.material3.*
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.codebot.models.TodoItemjson
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.jodatime.date
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
 
 fun addHoursToTimeString(time: String, hoursToAdd: Int): String {
     val parts = time.split(":")

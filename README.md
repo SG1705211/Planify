@@ -108,3 +108,7 @@ release v0.1: https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/releases
 release v0.2: https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/releases/v0.2-release-notes.md?ref_type=heads
 
 release v0.3: https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/releases/v0.3-release-notes.md?ref_type=heads
+
+release v0.4: https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/releases/v0.4-release-notes.md?ref_type=heads
+
+release v0.5: https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/releases/v0.5-release-notes.md?ref_type=heads
