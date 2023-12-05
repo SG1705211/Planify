@@ -37,56 +37,25 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Table
+import net.codebot.models.*
 
 
-object Table__File : Table() {
-    val id = integer("id").autoIncrement()
-    var name = varchar("name", 255)
-    var content = text("content")
-    val folderName = varchar("folderName", 255)
-    val folderID = integer("folderID")
-    val marked = bool("isStared")
-    override val primaryKey = PrimaryKey(id, name = "PK_User_ID")
-}
-
-object Folders__Table : Table() {
-    val id = integer("id").autoIncrement()
-    val name = varchar("name", 255)
-    val parentID = integer("parentID")
-    val parentFolder = varchar("parentName", 255)
-    val marked = bool("isStared")
-    override val primaryKey = PrimaryKey(id, name = "PK_User_ID")
-}
-
-data class FileItem(
-    val id: Int, var name: String, var content: String, var folder: String, var marked: Boolean
-)
 
 
-@Serializable
-data class FileItemJson(
-    val id: Int, var name: String, var content: String, var folder: String, var marked: Boolean
-)
 
 
-data class FolderItem(
-    val id: Int, var name: String, var parentFolderName: String, var marked: Boolean
-)
-
-@Serializable
-data class FolderItemJson(
-    val id: Int, var name: String, var parentFolderName: String, var marked: Boolean
-)
 
 
-fun FileItem.ToFileJson(): FileItemJson {
-    return FileItemJson(
+
+
+fun FileItem.ToFileJson(): FileItem {
+    return FileItem(
         id = this.id, name = this.name, content = this.content, folder = this.folder, marked = this.marked
     )
 }
 
-fun FolderItem.ToFolderJson(): FolderItemJson {
-    return FolderItemJson(
+fun FolderItem.ToFolderJson(): FolderItem {
+    return FolderItem(
         id = this.id, name = this.name, parentFolderName = this.parentFolderName, marked = this.marked
     )
 }
@@ -151,7 +120,7 @@ suspend fun deleteNotes(todoId: Int) {
 }
 
 @OptIn(InternalAPI::class)
-suspend fun fetchnotes(): List<FileItemJson> {
+suspend fun fetchnotes(): List<FileItem> {
     val client = HttpClient(CIO)
     val response: HttpResponse = client.get("http://localhost:8080/notes_name")
     val jsonString = response.bodyAsText()
@@ -160,7 +129,7 @@ suspend fun fetchnotes(): List<FileItemJson> {
 }
 
 @OptIn(InternalAPI::class)
-suspend fun fetchFolder(): List<FolderItemJson> {
+suspend fun fetchFolder(): List<FolderItem> {
     val client = HttpClient(CIO)
     val response: HttpResponse = client.get("http://localhost:8080/folder_name")
     val jsonString = response.bodyAsText()
@@ -249,7 +218,7 @@ fun NoteList(state: RichTextState): Result {
     val (selectedFile, setSelectedFile) = remember { mutableStateOf(FileItem(0,"a","a","a",true)) }
     idList.clear()
     runBlocking {
-        var result: List<FileItemJson>
+        var result: List<FileItem>
         launch {
             result = fetchnotes()
             result.forEach { jsonItem ->
@@ -270,7 +239,7 @@ fun NoteList(state: RichTextState): Result {
 
     folderList.clear()
     runBlocking {
-        var result: List<FolderItemJson>
+        var result: List<FolderItem>
         launch {
             result = fetchFolder()
             result.forEach { jsonItem ->
@@ -378,8 +347,8 @@ fun NoteList(state: RichTextState): Result {
             FloatingActionButton(
                 modifier = Modifier.padding(5.dp),
                 onClick = {
-                    var result_notes: List<FileItemJson>
-                    var result_folder: List<FolderItemJson>
+                    var result_notes: List<FileItem>
+                    var result_folder: List<FolderItem>
                     runBlocking {
                         result_notes = fetchnotes()
                         result_folder = fetchFolder()
@@ -475,7 +444,7 @@ fun NoteList(state: RichTextState): Result {
                             isFile = true
 
                             runBlocking {
-                                var result: List<FileItemJson>
+                                var result: List<FileItem>
                                 launch {
                                     result = fetchnotes()
                                     result.forEach { JsonItem ->
