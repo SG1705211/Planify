@@ -1,27 +1,25 @@
+
 import androidx.compose.foundation.*
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import java.time.LocalDate;
-import androidx.compose.runtime.*
-import java.time.format.DateTimeFormatter
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.sp
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material.Divider
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
+import androidx.compose.material.Text
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
-import net.codebot.models.*
-
-
+import net.codebot.models.TodoItem
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 @Serializable
@@ -266,7 +264,7 @@ fun Calendar() {
     var mode by remember { mutableStateOf(0) }
     val events_list = remember { mutableStateListOf<Event>() }
     runBlocking {
-        var result: List<TodoItemjson>
+        var result: List<TodoItem>
         events_list.clear()
         launch {
             result = fetchTodos()
