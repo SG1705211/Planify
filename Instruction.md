@@ -26,6 +26,8 @@ From step 4:
 5. Now Server is running
 ### Install the Application
 
+
+Download the installer in https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/releases/v0.5-final-release-installer.dmg?ref_type=heads
 1. Double Click the `.dmg` installer
 2. Drag the App Icon to the application folder
 3. Run the App in the Launchpad or in the application folder
