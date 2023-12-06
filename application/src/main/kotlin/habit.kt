@@ -47,6 +47,15 @@ fun time_format_detect(input: String): Boolean {
 
 
 
+fun Int_detect(value: String): Boolean {
+    return try {
+        value.toInt()
+        true
+    } catch (e: NumberFormatException) {
+        false
+    }
+}
+
 fun in_range(date: String, start: String, end: String): Boolean {
     val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
     val date_f = LocalDate.parse(date, formatter)
@@ -177,7 +186,7 @@ fun CreateTodoDialog(
                 return@Button
             }
 
-            isDateValid = time_format_detect(starttime) && validateDate(dueDate) && (recurOption == RecurOption.None || validateDate(recur_until))
+            isDateValid = Int_detect(duration_in) && time_format_detect(starttime) && validateDate(dueDate) && (recurOption == RecurOption.None || validateDate(recur_until))
             if(!isDateValid) {
                 return@Button
             }
