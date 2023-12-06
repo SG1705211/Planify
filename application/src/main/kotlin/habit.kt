@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,9 +35,14 @@ enum class RecurOption {
     None, Daily, Weekly
 }
 
-
-enum class SectionOption {
-    Work, Study, Life, Hobby
+fun time_format_detect(input: String): Boolean {
+    val formatter = DateTimeFormatter.ofPattern("HH:mm")
+    return try {
+        LocalTime.parse(input, formatter)
+        true
+    } catch (e: DateTimeParseException) {
+        false
+    }
 }
 
 
@@ -66,12 +70,12 @@ fun CreateTodoDialog(
     var dueDate by remember { mutableStateOf("") }
     var starttime by remember { mutableStateOf("") }
     var isDateValid by remember { mutableStateOf(true) }
-    var duration_exceed by remember { mutableStateOf(false) }
+    var duration_invalid by remember { mutableStateOf(false) }
     var areFieldsValid by remember { mutableStateOf(true) }
     var duration_in by remember { mutableStateOf("") }
-    var no_section by remember{mutableStateOf(true)}
+    var section_valid by remember { mutableStateOf(true) }
     var recurOption by remember { mutableStateOf(RecurOption.None) }
-    var SectionOption_Selected by remember { mutableStateOf(SectionOption.Work) }
+    var empty_input by remember { mutableStateOf(false) }
     var recur_until by remember { mutableStateOf("0") }
     LaunchedEffect(defaultTodo) {
         if (defaultTodo.primaryTask != "This is a dummy variable") {
@@ -110,13 +114,12 @@ fun CreateTodoDialog(
             TextField(value = duration_in,
                 onValueChange = { duration_in = it },
                 label = { Text("Duration (in Hours)") })
-            TextField(value = dueDate, onValueChange = { dueDate = it }, label = { Text("Due Date (yyyyMMdd)") })
+            TextField(value = dueDate, onValueChange = { dueDate = it }, label = { Text("Start Date (yyyyMMdd)") })
             TextButton(onClick = {
                 dueDate = LocalDate.now().format(Formatter)
             }) {
                 Text("Today")
             }
-
 
             Text("Repeat Option")
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -149,34 +152,50 @@ fun CreateTodoDialog(
                     label = { Text("Repeat Until: (yyyyMMDD)") }
                 )
             }
-            if (!isDateValid) {
-                Text("Invalid date format", color = Color.Red)
-            } else if (duration_in == "") {
-            }
-            else if(duration_exceed) {
-                Text("Event exceeds current date", color=Color.Red)
-            } else if (!no_section) {
-                Text("Section must be Work, Study, Hobby or Life", color = Color.Red)
-            }else if(!areFieldsValid) {
+            if (empty_input) {
                 Text("All fields are required", color = Color.Red)
+            } else if (!isDateValid) {
+                Text("Invalid date/time format", color = Color.Red)
+            } else if (duration_in == "") {
+            } else if (duration_invalid) {
+                Text("Event exceeds current date", color = Color.Red)
+            } else if (!section_valid) {
+                Text("Section must be Work, Study, Hobby or Life", color = Color.Red)
             }
         }
     }, confirmButton = {
         Button(onClick = {
+            // empty field
+            empty_input = (primaryTask.isEmpty() || secondaryTask.isEmpty() || section.isEmpty() ||
+                    dueDate.isEmpty() || duration_in.isEmpty() || starttime.isEmpty())
+            if(empty_input){
+                return@Button
+            }
+            // section name
+            section_valid = (section == "Work" || section == "Study" || section == "Life" || section == "Hobby")
+            if(!section_valid) {
+                return@Button
+            }
+
+            isDateValid = time_format_detect(starttime) && validateDate(dueDate) && (recurOption == RecurOption.None || validateDate(recur_until))
+            if(!isDateValid) {
+                return@Button
+            }
             var remaining = Duration.ofDays(1)
-            if (duration_in != "")
-            { val duration_formatter = DateTimeFormatter.ofPattern("HH:mm")
+            if (duration_in != "") {
+                val duration_formatter = DateTimeFormatter.ofPattern("HH:mm")
                 val start_parse = LocalTime.parse(starttime, duration_formatter)
                 println(start_parse)
                 remaining = Duration.between(start_parse, LocalTime.MAX)
                 println(remaining.toHours().toInt())
-                duration_exceed = remaining.toHours().toInt() < duration_in.toInt()
+                duration_invalid = remaining.toHours().toInt() < duration_in.toInt()
+            }
+            if(duration_invalid) {
+                return@Button
             }
 
-            isDateValid =   validateDate(dueDate) && (recurOption == RecurOption.None || validateDate(recur_until))
-            no_section = (section == "Work" || section == "Study" || section == "Life" || section == "Hobby")
-            areFieldsValid =
-               no_section && !duration_exceed && primaryTask.isNotEmpty() && secondaryTask.isNotEmpty() && section.isNotEmpty() && isDateValid
+
+            areFieldsValid = section_valid && !duration_invalid && isDateValid &&!empty_input
             if (areFieldsValid) {
                 var tem_str = "None"
                 if (recurOption == RecurOption.Daily) {
@@ -333,7 +352,8 @@ fun ToDoList() {
                 }
                 result.forEach { jsonItem ->
                     if (jsonItem.section == selectedSection && jsonItem.recur == "Daily"
-                        && in_range(selectedDate.format(formatter), jsonItem.datetime, jsonItem.misc1.toString())) {
+                        && in_range(selectedDate.format(formatter), jsonItem.datetime, jsonItem.misc1.toString())
+                    ) {
                         val duplicate_item = todoListFromDb.find { it.pid == jsonItem.id }
                         if (duplicate_item == null) {
                             todoListFromDb.add(
@@ -362,7 +382,7 @@ fun ToDoList() {
                         && in_range(selectedDate.format(formatter), jsonItem.datetime, jsonItem.misc1.toString())
 
 
-                        ) {
+                    ) {
                         val duplicate_item = todoListFromDb.find { it.pid == jsonItem.id }
                         if (duplicate_item == null) {
                             todoListFromDb.add(
@@ -519,15 +539,14 @@ fun ToDoList() {
                                                     if (todoItem.pid != 0) {
                                                         var to_be_deleted = whole_data.filter { it.pid == todoItem.pid }
                                                         var parent = whole_data.filter { it.id == todoItem.pid }
-                                                        to_be_deleted.forEach{each->
+                                                        to_be_deleted.forEach { each ->
                                                             deleteTodo(each.id)
                                                         }
                                                         deleteTodo(parent[0].id)
                                                         todoListFromDb.remove(todoItem)
-                                                    }
-                                                    else if (todoItem.recur == "Daily" || todoItem.recur == "Weekly") {
+                                                    } else if (todoItem.recur == "Daily" || todoItem.recur == "Weekly") {
                                                         var to_be_deleted = whole_data.filter { it.pid == todoItem.id }
-                                                        to_be_deleted.forEach{each->
+                                                        to_be_deleted.forEach { each ->
                                                             deleteTodo(each.id)
                                                         }
                                                         deleteTodo(todoItem.id)
@@ -598,7 +617,12 @@ fun ToDoList() {
                                                     }
                                                 }
                                                 result.forEach { jsonItem ->
-                                                    if (jsonItem.section == selectedSection && jsonItem.recur == "Daily" && in_range(selectedDate.format(formatter), jsonItem.datetime, jsonItem.misc1.toString())) {
+                                                    if (jsonItem.section == selectedSection && jsonItem.recur == "Daily" && in_range(
+                                                            selectedDate.format(formatter),
+                                                            jsonItem.datetime,
+                                                            jsonItem.misc1.toString()
+                                                        )
+                                                    ) {
                                                         val duplicate_item =
                                                             todoListFromDb.find { it.pid == jsonItem.id }
                                                         if (duplicate_item == null) {
@@ -624,7 +648,12 @@ fun ToDoList() {
                                                     } else if (jsonItem.recur == "Weekly" && jsonItem.section == selectedSection && LocalDate.parse(
                                                             jsonItem.datetime, formatter
                                                         ).dayOfWeek == selectedDate.dayOfWeek
-                                                        && in_range(selectedDate.format(formatter), jsonItem.datetime, jsonItem.misc1.toString())) {
+                                                        && in_range(
+                                                            selectedDate.format(formatter),
+                                                            jsonItem.datetime,
+                                                            jsonItem.misc1.toString()
+                                                        )
+                                                    ) {
                                                         val duplicate_item =
                                                             todoListFromDb.find { it.pid == jsonItem.id }
                                                         if (duplicate_item == null) {
@@ -728,7 +757,12 @@ fun ToDoList() {
                                 }
                             }
                             result.forEach { jsonItem ->
-                                if (jsonItem.section == selectedSection && jsonItem.recur == "Daily" && in_range(selectedDate.format(formatter), jsonItem.datetime, jsonItem.misc1.toString())) {
+                                if (jsonItem.section == selectedSection && jsonItem.recur == "Daily" && in_range(
+                                        selectedDate.format(formatter),
+                                        jsonItem.datetime,
+                                        jsonItem.misc1.toString()
+                                    )
+                                ) {
                                     val duplicate_item = todoListFromDb.find { it.pid == jsonItem.id }
                                     if (duplicate_item == null) {
                                         todoListFromDb.add(
@@ -753,7 +787,12 @@ fun ToDoList() {
                                 } else if (jsonItem.recur == "Weekly" && jsonItem.section == selectedSection && LocalDate.parse(
                                         jsonItem.datetime, formatter
                                     ).dayOfWeek == selectedDate.dayOfWeek
-                                    && in_range(selectedDate.format(formatter), jsonItem.datetime, jsonItem.misc1.toString())) {
+                                    && in_range(
+                                        selectedDate.format(formatter),
+                                        jsonItem.datetime,
+                                        jsonItem.misc1.toString()
+                                    )
+                                ) {
                                     val duplicate_item = todoListFromDb.find { it.pid == jsonItem.id }
                                     if (duplicate_item == null) {
                                         todoListFromDb.add(
