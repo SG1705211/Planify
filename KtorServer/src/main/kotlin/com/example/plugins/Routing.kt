@@ -14,7 +14,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 fun Application.configureRouting(testing: Boolean = false) {
     // set the url
 //    val potential_url = if (testing) "jdbc:sqlite:test.db" else "jdbc:sqlite:/app/test.db"
-    val potential_url = if (testing) "jdbc:sqlite:test.db" else "jdbc:sqlite:/app/chinook.db"
+    val potential_url = if (testing) "jdbc:sqlite:test.db" else "jdbc:sqlite:chinook.db"
     Database.connect(potential_url, "org.sqlite.JDBC")
 //         Database.connect("jdbc:sqlite:/app/test.db", "org.sqlite.JDBC")
 
