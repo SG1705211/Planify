@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import net.codebot.models.TodoItem
+import summary.HomeSummary
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -192,6 +193,22 @@ fun WeeklyCalendar(month: Int, year: Int, events_list: List<Event>) {
     }
 }
 
+
+@Composable
+fun magicHome() {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.Start
+    ) {
+        items(4) { index ->
+            when (index) {
+                0 -> HomeSummary()
+                1 -> homeCalendar()
+            }
+        }
+    }
+}
 
 @Composable
 fun DailyCalendar(date: Int, month: Int, year: Int, events_list: List<Event>) {

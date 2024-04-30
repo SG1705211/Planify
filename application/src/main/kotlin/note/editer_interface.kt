@@ -30,6 +30,12 @@ import java.io.File
 
 
 @Composable
+fun Notes() {
+    NotesEditor()
+}
+
+
+@Composable
 fun EditorInterface(state: RichTextState, selectedFile: FileItem, currentFolder: String) {
     Database.connect("jdbc:sqlite:chinook.db")
     var isSaveDialogOpen by remember { mutableStateOf(false) }
