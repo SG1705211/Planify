@@ -1,265 +1,143 @@
-
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
+import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichTextEditor
-import note.NotesEditor
-import summary.HomeSummary
-import summary.Summary
-import ui.theme.AppTheme
 import java.awt.Desktop
 import java.awt.Dimension
 import java.awt.Window
 import java.io.File
 import java.net.URI
 import java.util.prefs.Preferences
+import note.Notes
+import summary.Summary
+import ui.theme.AppTheme
 
-
+// To generate different button based on if the button is currently selected.
 @Composable
-fun MagicHome() {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start
-    ) {
-        items(4) { index ->
-            when (index) {
-                0 -> HomeSummary()
-                1 -> homeCalendar()
-            }
-        }
-    }
-}
-
-@Composable
-fun Notes() {
-    NotesEditor()
-}
-@Composable
-fun color_button(boo: Boolean):ButtonColors {
-    val tonalButtonColors = ButtonDefaults.buttonColors(
-        containerColor = if (boo) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondaryContainer,
-        contentColor = if (boo) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
-    )
+fun colorButton(boo: Boolean): ButtonColors {
+    val tonalButtonColors =
+        ButtonDefaults.buttonColors(
+            containerColor =
+                if (boo) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.secondaryContainer,
+            contentColor =
+                if (boo) MaterialTheme.colorScheme.onPrimary
+                else MaterialTheme.colorScheme.onSurface,
+        )
     return tonalButtonColors
 }
+
+enum class Section(val displayName: String) {
+    Home("Home"),
+    Calendar("Calendar"),
+    Summary("Summary"),
+    ToDoList("To-Do List"),
+    Notes("Notes"),
+    Help("Help"),
+}
+
 @Composable
-fun AppLayout(window: Window) {
-    val perf = Preferences.userRoot().node("Root")
-    perf.putInt("X", window.x)
-    perf.putInt("Y", window.y)
-    perf.putInt("Width", window.width)
-    perf.putInt("High", window.height)
-    val (selectedSection, setSelectedSection) = remember { mutableStateOf("Section 1") }
-    val listOfBooleans = remember {
-        listOf(
-            mutableStateOf(true),
-            mutableStateOf(false),
-            mutableStateOf(false),
-            mutableStateOf(false),
-            mutableStateOf(false),
-            mutableStateOf(false)
-        )
-    }
-    Row() {
+fun appLayout(window: Window) {
+    val sections = remember { Section.entries.toTypedArray() }
+    val (selectedSection, setSelectedSection) = remember { mutableStateOf(Section.Home) }
+
+    Row {
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxHeight()
-                .onSizeChanged {
-                    perf.putInt("X", window.x)
-                    perf.putInt("Y", window.y)
-                    perf.putInt("Width", window.width)
-                    perf.putInt("High", window.height)
-                }
-
+            modifier = Modifier.fillMaxHeight(),
         ) {
-            val commonButtonModifier = Modifier
-                .weight(1f)
-                .padding(14.dp)
-                .size(width = 150.dp, height = 1000.dp)
-            Button(
-                onClick = {
-                    setSelectedSection("garbage")
-                    listOfBooleans[0].value = true
-                    listOfBooleans[1].value = false
-                    listOfBooleans[2].value = false
-                    listOfBooleans[3].value = false
-                    listOfBooleans[4].value = false
-                    listOfBooleans[5].value = false
-                }, modifier = commonButtonModifier, colors = color_button(listOfBooleans[0].value)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        painter = painterResource("home.svg"),
-                        contentDescription = null
-                    )
+            val commonButtonModifier =
+                Modifier.weight(1f)
+                    .padding(14.dp)
+                    .size(width = 150.dp, height = 50.dp) // Adjusted height for practicality
 
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Home")
+            sections.forEach { section ->
+                val isSelected = selectedSection == section
+                Button(
+                    onClick = { setSelectedSection(section) },
+                    modifier = commonButtonModifier,
+                    colors = colorButton(isSelected),
+                ) {
+                    Text(section.displayName)
                 }
-            }
-            FilledTonalButton(
-                onClick = {
-                    setSelectedSection("Calendar")
-                    listOfBooleans[0].value = false
-                    listOfBooleans[1].value = true
-                    listOfBooleans[2].value = false
-                    listOfBooleans[3].value = false
-                    listOfBooleans[4].value = false
-                    listOfBooleans[5].value = false
-                }, modifier = commonButtonModifier, colors = color_button(listOfBooleans[1].value)
-            ) {
-                Text(
-                    text = "Calendar"
-                )
-            }
-            FilledTonalButton(
-                onClick = {
-                    setSelectedSection("Summary")
-                    listOfBooleans[0].value = false
-                    listOfBooleans[1].value = false
-                    listOfBooleans[2].value = true
-                    listOfBooleans[3].value = false
-                    listOfBooleans[4].value = false
-                    listOfBooleans[5].value = false
-                }, modifier = commonButtonModifier, colors = color_button(listOfBooleans[2].value)
-            ) {
-                Text("Summary")
-            }
-            FilledTonalButton(
-                onClick = {
-                    setSelectedSection("To-Do-List")
-                    listOfBooleans[0].value = false
-                    listOfBooleans[1].value = false
-                    listOfBooleans[2].value = false
-                    listOfBooleans[3].value = true
-                    listOfBooleans[4].value = false
-                    listOfBooleans[5].value = false
-                }, modifier = commonButtonModifier, colors = color_button(listOfBooleans[3].value)
-            ) {
-                Text("To-Do-List")
-            }
-            FilledTonalButton(
-                onClick = {
-                    setSelectedSection("Notes")
-                    listOfBooleans[0].value = false
-                    listOfBooleans[1].value = false
-                    listOfBooleans[2].value = false
-                    listOfBooleans[3].value = false
-                    listOfBooleans[4].value = true
-                    listOfBooleans[5].value = false
-                }, modifier = commonButtonModifier, colors = color_button(listOfBooleans[4].value)
-            ) {
-                Text("Notes")
             }
         }
-        Box(
-
-            modifier = Modifier.weight(3f).fillMaxWidth(), contentAlignment = Alignment.Center
-        ) {
+        Box(modifier = Modifier.weight(3f).fillMaxWidth(), contentAlignment = Alignment.Center) {
             when (selectedSection) {
-                "Home" -> MagicHome()
-                "Calendar" -> Calendar()
-                "Summary" -> Summary()
-                "To-Do-List" -> ToDoList()
-                "Notes" -> Notes()
-                "Help" -> {}
-                else -> MagicHome()
+                Section.Home -> magicHome()
+                Section.Calendar -> Calendar()
+                Section.Summary -> Summary()
+                Section.ToDoList -> ToDoList()
+                Section.Notes -> Notes()
+                Section.Help -> {}
             }
         }
     }
 }
 
+@OptIn(ExperimentalRichTextApi::class)
 @Composable
-fun Dialog(onClose: () -> Unit) {
+fun dialog(onClose: () -> Unit) {
     val state = rememberRichTextState()
     val path = "index.html"
     val content = File(path).readText(Charsets.UTF_8)
     println(content)
     state.setHtml(content)
-
-    RichTextEditor(
-        state = state,
-        modifier = Modifier.fillMaxSize()
-    )
+    RichTextEditor(state = state, modifier = Modifier.fillMaxSize())
     state.setConfig(
         linkColor = Color.Blue,
         linkTextDecoration = TextDecoration.Underline,
         codeColor = Color.Yellow,
         codeBackgroundColor = Color.Transparent,
-        codeStrokeColor = Color.LightGray)
+        codeStrokeColor = Color.LightGray,
+    )
     Row(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
-        horizontalArrangement = Arrangement.End
-    ) {
-        Button(onClick = onClose) {
-            Text("Close")
+        horizontalArrangement = Arrangement.End) {
+            Button(onClick = onClose) { Text("Close") }
         }
-    }
 }
-
 
 fun main() = application {
-    var openDialogue = remember { mutableStateOf(false) }
-    val window = Window(
-        onCloseRequest = ::exitApplication,
-        title = "My Journal",
-        state = WindowState(
-            width = Preferences.userRoot().node("Root").getInt("Width", 1300).dp,
-            height = Preferences.userRoot().node("Root").getInt("High", 800).dp,
-            position = WindowPosition(
-                Preferences.userRoot().node("Root").getInt("X", 100).dp,
-                Preferences.userRoot().node("Root").getInt("Y", 100).dp
-            )
+    val openDialogue = remember { mutableStateOf(false) }
+    val prefNode = Preferences.userRoot().node("Root")
+    val windowState =
+        WindowState(
+            width = prefNode.getInt("Width", 1300).dp,
+            height = prefNode.getInt("Height", 800).dp,
+            position = WindowPosition(prefNode.getInt("X", 100).dp, prefNode.getInt("Y", 100).dp),
         )
-    ) {
-        MenuBar{
-            Menu("Help", mnemonic = 'F') {
-                Item(
-                    text = "Help Menu",
-                    onClick = {
-                        Desktop.getDesktop().browse(URI("https://sites.google.com/view/myjournalhelp"))
-                    }
-                )
-            }
-        }
+
+    Window(onCloseRequest = ::exitApplication, title = "My Journal", state = windowState) {
+        MenuBar { Menu("File", mnemonic = 'F') { Item("Help Menu", onClick = ::openHelp) } }
         window.minimumSize = Dimension(1300, 800)
-        AppTheme {
-            Box(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.background)
-                    .onSizeChanged {
-                        val perf = Preferences.userRoot().node("Root")
-                        perf.putInt("X", window.x)
-                        perf.putInt("Y", window.y)
-                        perf.putInt("Width", window.width)
-                        perf.putInt("High", window.height)
-                    }
-            ) {
-                AppLayout(window)
-                if (openDialogue.value) {
-                    Dialog(onClose = { openDialogue.value = false })
-                }
-            }
-        }
+        AppTheme { mainContent(window, openDialogue) }
     }
 }
 
+fun openHelp() {
+    Desktop.getDesktop().browse(URI("https://sites.google.com/view/myjournalhelp"))
+}
+
+@Composable
+fun mainContent(window: Window, openDialogue: MutableState<Boolean>) {
+    Box(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
+        appLayout(window)
+        if (openDialogue.value) {
+            dialog(onClose = { openDialogue.value = false })
+        }
+    }
+}
