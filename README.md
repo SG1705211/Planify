@@ -6,13 +6,10 @@
 Develop a single, multi-purpose planner application to track daily activities.
 
 ## Team Members
-Shaojun Chen (s736chen@uwaterloo.ca)
-
-Shutang Gong (s35gong@uwaterloo.ca)
-
-Amy Lai  (s29lai@uwaterloo.ca)
-
-Sherlock Yang (j586yang@uwaterloo.ca)
+Shaojun Chen
+Shutang Gong
+Amy Lai
+Sherlock Yang
 
 
 ## Quick-Start Instructions
