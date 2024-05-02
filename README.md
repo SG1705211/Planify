@@ -99,18 +99,5 @@ Bar Chart in: [Bar Chart](https://github.com/developerchunk/BarGraph-JetpackComp
 Wiki page/Project proposal:https://git.uwaterloo.ca/s29lai/CS346-project/-/wikis/home
 Meeting minutes: https://git.uwaterloo.ca/s29lai/CS346-project/-/tree/main/meeting-minutes?ref_type=heads
 
-## Software Releases
-release v0.1: https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/releases/v0.1-release-notes.md?ref_type=heads
-
-release v0.2: https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/releases/v0.2-release-notes.md?ref_type=heads
-
-release v0.3: https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/releases/v0.3-release-notes.md?ref_type=heads
-
-release v0.4: https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/releases/v0.4-release-notes.md?ref_type=heads
-
-release v0.5: https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/releases/v0.5-release-notes.md?ref_type=heads
-
-installer: https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/releases/v0.5-final-release-installer.dmg?ref_type=heads
-
 ## Discussion
 Can be found at: https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/requirement.md?ref_type=heads
