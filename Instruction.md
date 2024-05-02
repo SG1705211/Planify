@@ -55,4 +55,3 @@ Download the installer in https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/m
 3. Run the App in the Start Menu or in the installation directory (Usually in `C:\Program Files\application\application.exe`)
 4. Use can use the app!
 5. You should always run the Server first, then the App.
-

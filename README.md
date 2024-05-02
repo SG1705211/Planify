@@ -1,69 +1,70 @@
-# Plantify: A personal event organizer
-## Goal
-Develop a single, multi-purpose planner application to track daily activities.
+# Planify: A Personal Event Organizer
 
-## Team Members
-Shaojun Chen
-Shutang Gong
-Amy Lai
-Sherlock Yang
+## Quick Start Guide
 
-# Instruction on Installation and App Running
+Welcome to Planify! This guide will help you get started with installation and familiarize you with the key features of the application. Planify helps you organize your time efficiently by offering detailed visual summaries of your productivity and easy event management.
 
-## On Mac
+### Installation Instructions
 
-### Install Docker to Run Server:
+#### On Mac
+1. **Install Docker**:
+  - Visit the [Docker website](https://hub.docker.com/) to download the installer.
+  - Install and launch Docker. Ensure it's running before proceeding.
+2. **Run the Server**:
+  - Download the server image: `docker pull orasean/ktor-server`
+  - Start the server: `docker run -p 8080:8080 orasean/ktor-server`
+3. **Install the App**:
+  - Open the `.dmg` file and drag the application to the Applications folder.
+  - Launch Planify from the Launchpad.
+  - Ensure the server is running before starting the app.
 
- 1. Go to Docker website: Download Link for [Mac](https://hub.docker.com/)
- 2. Install Docker
- 3. Open Docker (Ensure Docker is on)
- 4. Run the following two commend:
-	 a. Download the server
-    $ `docker pull orasean/ktor-server` 
-    b. Run the server in the docker
-    $ `docker run -p 8080:8080 orasean/ktor-server`
- 5. Now Server is running
+#### On Windows
+1. **Install Docker**:
+  - Download Docker from [here](https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe).
+  - Install and open Docker, ensuring it is active.
+2. **Run the Server**:
+  - Download the server image: `docker pull orasean/ktorserver-image`
+  - Start the server: `docker run -p 8080:8080 orasean/ktorserver-image`
+3. **Install the App**:
+  - Execute the `.msi` installer and follow the prompts.
+  - Launch Planify from the Start Menu or the installation directory.
+  - The server should be active prior to using the app.
 
-### Run Test Server
-In order to run the unit test for client code, a different docker image
-is required. The only difference is the image name.
-From step 4:
-4. Run the following two commend:
-   a. Download the server
-   $ `docker pull orasean/test-server`
-   b. Run the server in the docker
-   $ `docker run -p 8080:8080 orasean/test-server`
-5. Now Server is running
-### Install the Application
+### Navigating Planify
 
+#### Home Section
+- **Welcome Home**: Displays the current date and time.
+- **Time Bars**: Visual indicators of time elapsed today, this week, month, and year.
+- **Daily Calendar**: Shows today's scheduled events.
 
-Download the installer in https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/releases/v0.5-final-release-installer.dmg?ref_type=heads
-1. Double Click the `.dmg` installer
-2. Drag the App Icon to the application folder
-3. Run the App in the Launchpad or in the application folder
-4. Use can use the app!
-5. You should always run the Server first, then the App.
+#### Calendar
+- Default view is the monthly calendar.
+- Switch between daily and monthly views using the top center buttons.
+- Navigate through dates using the arrows in the top right corner.
 
-## On Windows
+#### Summary
+- **Task Progress**: Displays completed tasks as a percentage.
+- **Weekly Focus Stats**: Bar chart summarizing productive hours.
+- **Achievements**: Lists milestones like "Productive Week" and specific achievements based on task type.
 
-### Install Docker to Run Server:
+#### To-Do List
+- **Create and Manage Events**: Add, edit, delete, and mark tasks as completed.
+- Events can be categorized and prioritized, with specific start times and durations.
 
- 1. Go to Docker website: Download Link for [Windows](https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe?_gl=1*1klvsx3*_ga*MTE5MzU4MjAyOC4xNzAxMDQ1MDk4*_ga_XJWPQMJYHQ*MTcwMTc0MzA5My41LjEuMTcwMTc0MzA5Ny41Ni4wLjA.)
- 2. Install Docker
- 3. Open Docker (Ensure Docker is on)
- 4. Run the following two commend:
-	 a. Download the server
-    $ `docker pull orasean/ktorserver-image` 
-    b. Run the server in the docker
-    $ `docker run -p 8080:8080 orasean/ktorserver-image`
- 5. Now Server is running
+#### Notes
+- **Management**: Create, format, and delete notes.
+- **Folders**: Organize notes into folders.
+- **Rich Formatting Options**: Enhance note presentation with formatting tools.
+- **Exports and Imports**: Notes can be exported or imported as HTML files.
 
-### Install the Application
+#### Hotkeys
+- Utilize keyboard shortcuts for various formatting options in notes.
 
-1. Double Click the `.msi` installer.
-2. Run the installer by following the in instruction to install the app in the Windows system.
-3. Run the App in the Start Menu or in the installation directory (Usually in `C:\Program Files\application\application.exe`)
-4. Use can use the app!
-5. You should always run the Server first, then the App.
+### Support
 
+#### FAQ
+- **Adding Events**: Create events in the To-Do List section; the calendar displays them.
+- **Using Folders**: To add notes to a folder, open the folder and create a new note inside it.
+- **Understanding the Bar Chart**: Each bar represents the total duration of completed tasks for that day.
 
+Feel free to reach out with further questions or feedback on your experience with Planify!
