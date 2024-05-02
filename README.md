@@ -11,93 +11,62 @@ Shutang Gong
 Amy Lai
 Sherlock Yang
 
+# Instruction on Installation and App Running
 
-## Quick-Start Instructions
-- View the progress of your day in the Home page
-  - view how much of your day/week/month/year has passed beside the welcome widget
-  - view your upcoming events
-- To view the daily/monthly calendar, click on the Calendar button on the left
-  - select the type of calendar (daily/monthly) to display using the buttons on the top
-  - use the arrow buttons in the upper right corner to navigate between days/months
-- The Summary tab keeps track of your progress and productivity on a weekly/monthly/annual basis
-  - "task progress" near the top displays the proportion of tasks completed
-  - barchart sums the total number of productive hours
-  - circles on the right becomes green if all tasks of that day are completed
-  - earned achievements will be listed near the bottom
-- Set goals for yourself in the To-Do-List tab
-  - set a new goal for yourself and assign it a category
-- Keep memos in the Notes page
-  - save rich text formatted notes
+## On Mac
 
-## Summary Page Achievements
-### Weekly
-- Productive Week: a total of 50 hrs focused time
-- Work Maniac: 40 hrs of Work
-- Knowledge Sponge: 40 hrs of Study tasks
-- Jack of All Trades: 10 hrs of Hobby tasks completed
-- Life Hacker: 10 hrs of Life tasks
-### Monthly
-- Productive Week: a total of 200 hrs focused time
-- Work Maniac: 160 hrs of Work
-- Knowledge Sponge: 160 hrs of Study tasks
-- Jack of All Trades: 40 hrs of Hobby tasks completed
-- Life Hacker: 40 hrs of Life tasks
-### Annual
-- Productive Week: a total of 600 hrs focused time
-- Work Maniac: 480 hrs of Work
-- Knowledge Sponge: 480 hrs of Study tasks
-- Jack of All Trades: 120 hrs of Hobby tasks completed
-- Life Hacker: 120 hrs of Life tasks
+### Install Docker to Run Server:
 
-## Notes Hotkeys
-Left: cmd+L
+ 1. Go to Docker website: Download Link for [Mac](https://hub.docker.com/)
+ 2. Install Docker
+ 3. Open Docker (Ensure Docker is on)
+ 4. Run the following two commend:
+	 a. Download the server
+    $ `docker pull orasean/ktor-server` 
+    b. Run the server in the docker
+    $ `docker run -p 8080:8080 orasean/ktor-server`
+ 5. Now Server is running
 
-Center: cmd+E
-
-Right: cmd+R
-
-Bold: cmd+B
-
-Italic: cmd+I
-
-Underline: cmd+U
-
-Line Through: cmd + -
-
-Title: cmd+T
-
-Highlight Red: cmd+R
-
-Highlight Yellow: cmd+shift+Y
-
-Save file: cmd+S
-
-Load file: cmd+O
-
-Export file: cmp+P
-
-Undo: cmd+Z
-
-Redo: cmd+shift+Z
-
-## Library
-
-### Compose Rich Editor
-
-This project makes use of the [Compose Rich Editor](https://github.com/MohamedRejeb/Compose-Rich-Editor) library to implement rich text formatting in the note editor. The library offers a various set of tools and APls for rich-format textcontent, like Bold, ltalic, Underline, aligning, Highlight, List, Load HTML, and Export HTML
-
-GitHub Repository: [Compose Rich Editor](https://github.com/MohamedRejeb/Compose-Rich-Editor)
-
-### Bar Chart
-
-The bar chart in summary page referenced the code from the following repository
-
-Bar Chart in: [Bar Chart](https://github.com/developerchunk/BarGraph-JetpackCompose/tree/main/app/src/main/java/com/example/customchar)
+### Run Test Server
+In order to run the unit test for client code, a different docker image
+is required. The only difference is the image name.
+From step 4:
+4. Run the following two commend:
+   a. Download the server
+   $ `docker pull orasean/test-server`
+   b. Run the server in the docker
+   $ `docker run -p 8080:8080 orasean/test-server`
+5. Now Server is running
+### Install the Application
 
 
-## Project Documents
-Wiki page/Project proposal:https://git.uwaterloo.ca/s29lai/CS346-project/-/wikis/home
-Meeting minutes: https://git.uwaterloo.ca/s29lai/CS346-project/-/tree/main/meeting-minutes?ref_type=heads
+Download the installer in https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/releases/v0.5-final-release-installer.dmg?ref_type=heads
+1. Double Click the `.dmg` installer
+2. Drag the App Icon to the application folder
+3. Run the App in the Launchpad or in the application folder
+4. Use can use the app!
+5. You should always run the Server first, then the App.
 
-## Discussion
-Can be found at: https://git.uwaterloo.ca/s29lai/CS346-project/-/blob/main/requirement.md?ref_type=heads
+## On Windows
+
+### Install Docker to Run Server:
+
+ 1. Go to Docker website: Download Link for [Windows](https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe?_gl=1*1klvsx3*_ga*MTE5MzU4MjAyOC4xNzAxMDQ1MDk4*_ga_XJWPQMJYHQ*MTcwMTc0MzA5My41LjEuMTcwMTc0MzA5Ny41Ni4wLjA.)
+ 2. Install Docker
+ 3. Open Docker (Ensure Docker is on)
+ 4. Run the following two commend:
+	 a. Download the server
+    $ `docker pull orasean/ktorserver-image` 
+    b. Run the server in the docker
+    $ `docker run -p 8080:8080 orasean/ktorserver-image`
+ 5. Now Server is running
+
+### Install the Application
+
+1. Double Click the `.msi` installer.
+2. Run the installer by following the in instruction to install the app in the Windows system.
+3. Run the App in the Start Menu or in the installation directory (Usually in `C:\Program Files\application\application.exe`)
+4. Use can use the app!
+5. You should always run the Server first, then the App.
+
+
