@@ -6,9 +6,9 @@
 Develop a single, multi-purpose planner application to track daily activities.
 
 ## Team Members
-Shutang Gong\
-Shaojun Chen\
-Amy Lai\
+Shaojun Chen
+Shutang Gong
+Amy Lai
 Sherlock Yang
 
 
