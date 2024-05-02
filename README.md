@@ -1,7 +1,4 @@
-# CS346 Project
-
-# My Journal App
-
+# Plantify: A personal event organizer
 ## Goal
 Develop a single, multi-purpose planner application to track daily activities.
 
