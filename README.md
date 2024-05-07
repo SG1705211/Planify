@@ -1,7 +1,8 @@
 # Planify: A Personal Event Organizer
 
 
-<img width="1412" alt="image" src="https://github.com/ShawnG134/Planify/assets/168505455/68380c4c-166f-4d37-a853-78cc51927aee">
+<img width="1412" alt="image" src="https://github.com/ShawnG134/Planify/assets/168505455/8123911e-940f-42f6-8214-ee068c4c26b0">
+<img width="1412" alt="image" src="https://github.com/ShawnG134/Planify/assets/168505455/f7b42255-ac75-418d-8a4b-0dbbdb872938">
 
 ## Quick Start Guide
 
