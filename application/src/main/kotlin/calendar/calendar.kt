@@ -235,7 +235,6 @@ fun DailyCalendar(date: Int, month: Int, year: Int, events_list: List<Event>) {
         it.recur == "Weekly"
                 && in_range(convert_date(currentDateString), convert_date(it.date), it.misc1.toString())
     }
-//    println(potentialrecur_Weekly)
     for (each in potentialrecur_Weekly) {
         if (LocalDate.parse(each.date, formatter).dayOfWeek == selectedDate.dayOfWeek) {
             if (events_list.find { it.date == currentDateString && it.pid == each.id } != null) {
@@ -282,7 +281,7 @@ fun DailyCalendar(date: Int, month: Int, year: Int, events_list: List<Event>) {
                         // Display the events for this hour
                         eventsThisHour.forEach { event ->
                             Box(
-                                modifier = Modifier.background(MaterialTheme.colorScheme.tertiaryContainer)
+                                modifier = Modifier.background(Color(0xFFC7DDC2))
                                     .padding(4.dp)
                             ) {
                                 Text(text = "${event.title} (${event.startTime}-${event.endTime})")

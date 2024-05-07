@@ -58,15 +58,14 @@ fun homeCalendar() {
                         recur = jsonItem.recur,
                         pid = jsonItem.pid,
                         misc1 = jsonItem.misc1
-
                     )
                 )
             }
         }
     }
     Box(
-        modifier = Modifier.padding(16.dp).size(2500.dp, 400.dp)
-            .background(Color(0xFFede6fa)),
+        modifier = Modifier.padding(16.dp).size(2500.dp, 450.dp)
+            .background(Color(0xFFE6F1E4)),
         contentAlignment = Alignment.TopEnd
     ) {
         DailyCalendar(date, month, year, events)
