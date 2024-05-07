@@ -1,5 +1,8 @@
 # Planify: A Personal Event Organizer
 
+
+<img width="1412" alt="image" src="https://github.com/ShawnG134/Planify/assets/168505455/68380c4c-166f-4d37-a853-78cc51927aee">
+
 ## Quick Start Guide
 
 Welcome to Planify! This guide will help you get started with installation and familiarize you with the key features of the application. Planify helps you organize your time efficiently by offering detailed visual summaries of your productivity and easy event management.
