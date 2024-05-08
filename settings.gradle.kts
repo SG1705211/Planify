@@ -25,4 +25,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "CS346-project"
-include( "KtorServer", "application","models")
+include( "server", "plantifyApp","models")
