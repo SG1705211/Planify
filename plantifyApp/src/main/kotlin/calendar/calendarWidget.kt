@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import habits.fetchTodos
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.codebot.models.TodoItem

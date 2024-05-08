@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import habits.fetchTodos
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
@@ -136,7 +137,7 @@ fun WeeklyCalendar(month: Int, year: Int, events_list: List<Event>) {
                                 var eventsOnThisDate = events_list.filter { it.date == currentDateString
                                         && it.recur != "Daily" && it.recur != "Weekly"}
                                 val potentialrecur = events_list.filter {
-                                    it.recur == "Daily" && in_range(
+                                    it.recur == "Daily" && dateIsInRange(
                                         convert_date(currentDateString), convert_date(it.date), it.misc1.toString()
                                     )
                                 }
@@ -154,7 +155,7 @@ fun WeeklyCalendar(month: Int, year: Int, events_list: List<Event>) {
 
                                 val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                                 val potentialrecur_Weekly = events_list.filter {
-                                    it.recur == "Weekly" && in_range(
+                                    it.recur == "Weekly" && dateIsInRange(
                                         convert_date(currentDateString), convert_date(it.date), it.misc1.toString()
                                     )
                                 }
@@ -219,7 +220,7 @@ fun DailyCalendar(date: Int, month: Int, year: Int, events_list: List<Event>) {
             && it.recur != "Daily" && it.recur != "Weekly"}
 
     val potentialrecur = events_list.filter {
-        it.recur == "Daily" && in_range(convert_date(currentDateString), convert_date(it.date), it.misc1.toString())
+        it.recur == "Daily" && dateIsInRange(convert_date(currentDateString), convert_date(it.date), it.misc1.toString())
     }
     for (each in potentialrecur) {
         if (events_list.find { it.date == currentDateString && it.pid == each.id } != null) {
@@ -233,7 +234,7 @@ fun DailyCalendar(date: Int, month: Int, year: Int, events_list: List<Event>) {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     val potentialrecur_Weekly = events_list.filter {
         it.recur == "Weekly"
-                && in_range(convert_date(currentDateString), convert_date(it.date), it.misc1.toString())
+                && dateIsInRange(convert_date(currentDateString), convert_date(it.date), it.misc1.toString())
     }
     for (each in potentialrecur_Weekly) {
         if (LocalDate.parse(each.date, formatter).dayOfWeek == selectedDate.dayOfWeek) {

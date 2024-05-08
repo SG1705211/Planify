@@ -6,13 +6,6 @@ plugins {
     kotlin("plugin.serialization") version "1.4.21"
 }
 
-//repositories {
-//    mavenCentral()
-//    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-//    maven("https://github.com/MohamedRejeb/Compose-Rich-Editor")
-//    google()
-//}
-
 dependencies {
     implementation(compose.desktop.currentOs);
     implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-beta03")

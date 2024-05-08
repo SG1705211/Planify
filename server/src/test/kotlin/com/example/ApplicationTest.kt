@@ -221,8 +221,8 @@ class ConfigureRoutingTest {
                     it[recur] = "None"
                     it[pid] = 0
                     it[deleted] = 0
-                    it[misc1] = 0
-                    it[misc2] = 0
+                    it[recurUntilDate] = 0
+                    it[sectionCategory] = 0
                 }
             }
         }

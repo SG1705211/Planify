@@ -1,3 +1,6 @@
+package habits
+
+import detectValidInteger
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dateIsInRange
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
@@ -29,38 +33,12 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import net.codebot.models.TodoItem
 import org.jetbrains.exposed.sql.Database
+import detectValidDateTime
 
 enum class RecurOption {
     None,
     Daily,
     Weekly
-}
-
-fun time_format_detect(input: String): Boolean {
-    val formatter = DateTimeFormatter.ofPattern("HH:mm")
-    return try {
-        LocalTime.parse(input, formatter)
-        true
-    } catch (e: DateTimeParseException) {
-        false
-    }
-}
-
-fun Int_detect(value: String): Boolean {
-    return try {
-        value.toInt()
-        true
-    } catch (e: NumberFormatException) {
-        false
-    }
-}
-
-fun in_range(date: String, start: String, end: String): Boolean {
-    val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
-    val date_f = LocalDate.parse(date, formatter)
-    val start_f = LocalDate.parse(start, formatter)
-    val end_f = LocalDate.parse(end, formatter)
-    return !date_f.isBefore(start_f) && !date_f.isAfter(end_f)
 }
 
 @Composable
@@ -202,8 +180,8 @@ fun CreateTodoDialog(onCreate: (TodoItem) -> Unit, onClose: () -> Unit, defaultT
                     }
 
                     isDateValid =
-                        Int_detect(duration_in) &&
-                            time_format_detect(starttime) &&
+                        detectValidInteger(duration_in) &&
+                            detectValidDateTime(starttime) &&
                             validateDate(dueDate) &&
                             (recurOption == RecurOption.None || validateDate(recur_until))
                     if (!isDateValid) {
@@ -374,10 +352,11 @@ fun ToDoList() {
                 result.forEach { jsonItem ->
                     if (jsonItem.section == selectedSection &&
                         jsonItem.recur == "Daily" &&
-                        in_range(
+                        dateIsInRange(
                             selectedDate.format(formatter),
                             jsonItem.datetime,
-                            jsonItem.misc1.toString())) {
+                            jsonItem.misc1.toString())
+                    ) {
                         val duplicate_item = todoListFromDb.find { it.pid == jsonItem.id }
                         if (duplicate_item == null) {
                             todoListFromDb.add(
@@ -401,10 +380,11 @@ fun ToDoList() {
                         jsonItem.section == selectedSection &&
                         LocalDate.parse(jsonItem.datetime, formatter).dayOfWeek ==
                             selectedDate.dayOfWeek &&
-                        in_range(
+                        dateIsInRange(
                             selectedDate.format(formatter),
                             jsonItem.datetime,
-                            jsonItem.misc1.toString())) {
+                            jsonItem.misc1.toString())
+                    ) {
 
                         val duplicate_item = todoListFromDb.find { it.pid == jsonItem.id }
                         if (duplicate_item == null) {
@@ -651,10 +631,11 @@ fun ToDoList() {
                                                     result.forEach { jsonItem ->
                                                         if (jsonItem.section == selectedSection &&
                                                             jsonItem.recur == "Daily" &&
-                                                            in_range(
+                                                            dateIsInRange(
                                                                 selectedDate.format(formatter),
                                                                 jsonItem.datetime,
-                                                                jsonItem.misc1.toString())) {
+                                                                jsonItem.misc1.toString())
+                                                        ) {
                                                             val duplicate_item =
                                                                 todoListFromDb.find {
                                                                     it.pid == jsonItem.id
@@ -690,10 +671,11 @@ fun ToDoList() {
                                                                     jsonItem.datetime, formatter)
                                                                 .dayOfWeek ==
                                                                 selectedDate.dayOfWeek &&
-                                                            in_range(
+                                                            dateIsInRange(
                                                                 selectedDate.format(formatter),
                                                                 jsonItem.datetime,
-                                                                jsonItem.misc1.toString())) {
+                                                                jsonItem.misc1.toString())
+                                                        ) {
                                                             val duplicate_item =
                                                                 todoListFromDb.find {
                                                                     it.pid == jsonItem.id
@@ -806,10 +788,11 @@ fun ToDoList() {
                                 result.forEach { jsonItem ->
                                     if (jsonItem.section == selectedSection &&
                                         jsonItem.recur == "Daily" &&
-                                        in_range(
+                                        dateIsInRange(
                                             selectedDate.format(formatter),
                                             jsonItem.datetime,
-                                            jsonItem.misc1.toString())) {
+                                            jsonItem.misc1.toString())
+                                    ) {
                                         val duplicate_item =
                                             todoListFromDb.find { it.pid == jsonItem.id }
                                         if (duplicate_item == null) {
@@ -834,10 +817,11 @@ fun ToDoList() {
                                         jsonItem.section == selectedSection &&
                                         LocalDate.parse(jsonItem.datetime, formatter).dayOfWeek ==
                                             selectedDate.dayOfWeek &&
-                                        in_range(
+                                        dateIsInRange(
                                             selectedDate.format(formatter),
                                             jsonItem.datetime,
-                                            jsonItem.misc1.toString())) {
+                                            jsonItem.misc1.toString())
+                                    ) {
                                         val duplicate_item =
                                             todoListFromDb.find { it.pid == jsonItem.id }
                                         if (duplicate_item == null) {

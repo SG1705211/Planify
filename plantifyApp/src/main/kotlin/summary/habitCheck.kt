@@ -11,7 +11,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import in_range
+import habits.in_range
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
@@ -100,7 +100,8 @@ fun HabitCheck(habit: String) {
     var current_iterator = currentWeekStartDate
     while (!current_iterator.isAfter(currentWeekStartDate.plusDays(6))) {
         val potentialrecur = todoListFromDb.filter { it.recur == "Daily"
-                && in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())}
+                && in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())
+        }
         for (each in potentialrecur) {
             if (todoListFromDb.find { it.datetime == current_iterator.format(formatter) && it.pid == each.id } != null) {
                 continue

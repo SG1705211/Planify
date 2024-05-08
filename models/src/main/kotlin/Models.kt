@@ -2,13 +2,7 @@ package net.codebot.models
 
 
 import kotlinx.serialization.Serializable
-import io.ktor.http.*
 import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-
 
 @Serializable
 data class TodoItem(
@@ -43,8 +37,8 @@ object TodoTable : Table() {
     val recur = varchar("recur", 255)
     val pid = integer("pid")
     val deleted = integer("deleted")
-    val misc1 = integer("misc1")
-    val misc2 = integer("misc2")
+    val recurUntilDate = integer("misc1")
+    val sectionCategory = integer("misc2")
     override val primaryKey = PrimaryKey(id, name = "PK_User_ID")
 }
 

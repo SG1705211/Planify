@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import in_range
+import habits.in_range
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -99,7 +99,8 @@ fun Summary() {
     while (!current_iterator.isAfter(currentWeekStartDate.plusDays(6))) {
 
         val potentialrecur = todoListFromDb.filter { it.recur == "Daily"
-                && in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())}
+                && in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())
+        }
         for (each in potentialrecur) {
             if (todoListFromDb.find { it.datetime == current_iterator.format(formatter) && it.pid == each.id } != null) {
                 continue
@@ -133,7 +134,8 @@ fun Summary() {
     current_iterator = currentMonthStartDate
     while (!current_iterator.isAfter(currentMonthEndDate)) {
         val potentialrecur = todoListFromDb.filter { it.recur == "Daily" &&
-            in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())}
+            in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())
+        }
         for (each in potentialrecur) {
             if (todoListFromDb.find { it.datetime == current_iterator.format(formatter) && it.pid == each.id } != null) {
                 continue
@@ -170,7 +172,8 @@ fun Summary() {
     current_iterator = currentYearStartDate
     while (!current_iterator.isAfter(currentYearEndDate)) {
         val potentialrecur = todoListFromDb.filter { it.recur == "Daily"
-                && in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())}
+                && in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())
+        }
         for (each in potentialrecur) {
             if (todoListFromDb.find { it.datetime == current_iterator.format(formatter) && it.pid == each.id } != null) {
                 continue

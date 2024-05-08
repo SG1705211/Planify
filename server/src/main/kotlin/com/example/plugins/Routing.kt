@@ -40,8 +40,8 @@ fun Application.configureRouting(testing: Boolean = false) {
                     it[recur] = "None"
                     it[pid] = 13
                     it[deleted] = 0
-                    it[misc1] = 0
-                    it[misc2] = 0
+                    it[recurUntilDate] = 0
+                    it[sectionCategory] = 0
                 }
                 TodoTable.insert {
                     it[id] = 1
@@ -56,8 +56,8 @@ fun Application.configureRouting(testing: Boolean = false) {
                     it[recur] = "None"
                     it[pid] = 0
                     it[deleted] = 0
-                    it[misc1] = 0
-                    it[misc2] = 0
+                    it[recurUntilDate] = 0
+                    it[sectionCategory] = 0
                 }
                 TodoTable.insert {
                     it[id] = 2
@@ -72,8 +72,8 @@ fun Application.configureRouting(testing: Boolean = false) {
                     it[recur] = "None"
                     it[pid] = 0
                     it[deleted] = 0
-                    it[misc1] = 0
-                    it[misc2] = 0
+                    it[recurUntilDate] = 0
+                    it[sectionCategory] = 0
                 }
 
                 // Study section
@@ -90,8 +90,8 @@ fun Application.configureRouting(testing: Boolean = false) {
                     it[recur] = "None"
                     it[pid] = 0
                     it[deleted] = 0
-                    it[misc1] = 0
-                    it[misc2] = 0
+                    it[recurUntilDate] = 0
+                    it[sectionCategory] = 0
                 }
 
                 TodoTable.insert {
@@ -107,8 +107,8 @@ fun Application.configureRouting(testing: Boolean = false) {
                     it[recur] = "None"
                     it[pid] = 0
                     it[deleted] = 0
-                    it[misc1] = 0
-                    it[misc2] = 0
+                    it[recurUntilDate] = 0
+                    it[sectionCategory] = 0
                 }
 
                 Table__File.insert {
@@ -184,8 +184,8 @@ fun Application.configureRouting(testing: Boolean = false) {
                             recur = row[TodoTable.recur],
                             pid = row[TodoTable.pid],
                             deleted = row[TodoTable.deleted],
-                            misc1 = row[TodoTable.misc1],
-                            misc2 = row[TodoTable.misc2]
+                            misc1 = row[TodoTable.recurUntilDate],
+                            misc2 = row[TodoTable.sectionCategory]
                         )
                     }
                 }
@@ -220,8 +220,8 @@ fun Application.configureRouting(testing: Boolean = false) {
                     it[recur] = newTodo.recur
                     it[pid] = newTodo.pid
                     it[deleted] = newTodo.deleted
-                    it[misc1] = newTodo.misc1
-                    it[misc2] = newTodo.misc2
+                    it[recurUntilDate] = newTodo.misc1
+                    it[sectionCategory] = newTodo.misc2
                 }.resultedValues?.singleOrNull()?.toTodoItem()
             }
             call.respond(HttpStatusCode.Created, "Okay")
@@ -290,8 +290,8 @@ fun Application.configureRouting(testing: Boolean = false) {
                         it[recur] = newTodo.recur
                         it[pid] = newTodo.pid
                         it[deleted] = newTodo.deleted
-                        it[misc1] = newTodo.misc1
-                        it[misc2] = newTodo.misc2
+                        it[recurUntilDate] = newTodo.misc1
+                        it[sectionCategory] = newTodo.misc2
                     }
                 }
                 call.respond(HttpStatusCode.OK, "Todo updated successfully")
@@ -387,6 +387,6 @@ fun ResultRow.toTodoItem() = TodoItem(
     recur = this[TodoTable.recur],
     pid = this[TodoTable.pid],
     deleted = this[TodoTable.deleted],
-    misc1 = this[TodoTable.misc1],
-    misc2 = this[TodoTable.misc2]
+    misc1 = this[TodoTable.recurUntilDate],
+    misc2 = this[TodoTable.sectionCategory]
 )
