@@ -11,7 +11,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import habits.in_range
+import dateIsInRange
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.request.*
@@ -100,7 +100,7 @@ fun HabitCheck(habit: String) {
     var current_iterator = currentWeekStartDate
     while (!current_iterator.isAfter(currentWeekStartDate.plusDays(6))) {
         val potentialrecur = todoListFromDb.filter { it.recur == "Daily"
-                && in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())
+                && dateIsInRange( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())
         }
         for (each in potentialrecur) {
             if (todoListFromDb.find { it.datetime == current_iterator.format(formatter) && it.pid == each.id } != null) {
@@ -110,7 +110,7 @@ fun HabitCheck(habit: String) {
             currentWeekTable += newTodoItem
         }
         val potentialrecurweekly = todoListFromDb.filter { it.recur == "Weekly"
-                && in_range( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())
+                && dateIsInRange( current_iterator.format(formatter).toString(), it.datetime, it.misc1.toString())
                 && isSameDayOfWeek(current_iterator.format(formatter).toString(), it.datetime)
         }
         for (each in potentialrecurweekly) {
