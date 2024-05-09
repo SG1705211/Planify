@@ -14,9 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.time.Duration
 import java.time.LocalDate
-import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -30,196 +28,160 @@ enum class RecurOption {
 }
 
 @Composable
-fun createTodoDialogue(onCreate: (TodoItem) -> Unit, onClose: () -> Unit, defaultTodo: TodoItem) {
-    var create_or_edit by remember { mutableStateOf("Create") }
-    val Formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
-    var primaryTask by remember { mutableStateOf("") }
-    var secondaryTask by remember { mutableStateOf("") }
-    var priority by remember { mutableStateOf(1) }
-    var section by remember { mutableStateOf("") }
-    var dueDate by remember { mutableStateOf("") }
-    var starttime by remember { mutableStateOf("") }
-    var isDateValid by remember { mutableStateOf(true) }
-    var duration_invalid by remember { mutableStateOf(false) }
-    var areFieldsValid by remember { mutableStateOf(true) }
-    var duration_in by remember { mutableStateOf("") }
-    var section_valid by remember { mutableStateOf(true) }
-    var recurOption by remember { mutableStateOf(RecurOption.None) }
-    var empty_input by remember { mutableStateOf(false) }
-    var recur_until by remember { mutableStateOf("0") }
+fun createTodoDialog(onCreate: (TodoItem) -> Unit, onClose: () -> Unit, defaultTodo: TodoItem) {
+    var dialogState by remember { mutableStateOf(DialogState()) }
+    val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+
     LaunchedEffect(defaultTodo) {
-        if (defaultTodo.primaryTask != "This is a dummy variable") {
-            create_or_edit = "Edit"
-            primaryTask = defaultTodo.primaryTask
-            secondaryTask = defaultTodo.secondaryTask
-            priority = defaultTodo.priority
-            section = defaultTodo.section
-            dueDate = defaultTodo.datetime
-            starttime = defaultTodo.starttime
-            isDateValid = true
-            areFieldsValid = true
-            duration_in = defaultTodo.duration.toString()
+        dialogState = updateDialogStateBasedOnDefault(dialogState, defaultTodo)
+    }
+
+    AlertDialog(
+        onDismissRequest = { onClose() },
+        title = { Text(text = "${dialogState.createOrEdit} New Todo Item") },
+        text = { todoDialogContent(dialogState, formatter) },
+        confirmButton = { confirmButtons(dialogState, onCreate) },
+        dismissButton = { Button(onClick = onClose) { Text("Close") } })
+}
+
+private fun updateDialogStateBasedOnDefault(
+    state: DialogState,
+    defaultTodo: TodoItem
+): DialogState {
+    return if (defaultTodo.primaryTask != "This is a dummy variable") {
+        state.copy(
+            createOrEdit = "Edit",
+            primaryTask = defaultTodo.primaryTask,
+            secondaryTask = defaultTodo.secondaryTask,
+            priority = defaultTodo.priority,
+            section = defaultTodo.section,
+            dueDate = defaultTodo.datetime,
+            starttime = defaultTodo.starttime,
+            isDateValid = true,
+            areFieldsValid = true,
+            durationIn = defaultTodo.duration.toString(),
             recurOption =
                 when (defaultTodo.recur) {
                     "Weekly" -> RecurOption.Weekly
                     "Daily" -> RecurOption.Daily
                     else -> RecurOption.None
-                }
-            recur_until = defaultTodo.misc1.toString()
+                },
+            recurUntil = defaultTodo.misc1.toString())
+    } else state
+}
+
+@Composable
+private fun todoDialogContent(state: DialogState, formatter: DateTimeFormatter) {
+    Column {
+        TextField(
+            value = state.primaryTask,
+            onValueChange = { state.primaryTask = it },
+            label = { Text("Primary Task") })
+        TextField(
+            value = state.secondaryTask,
+            onValueChange = { state.secondaryTask = it },
+            label = { Text("Secondary Task") })
+        TextField(
+            value = state.priority.toString(),
+            onValueChange = { state.priority = it.toIntOrNull() ?: 1 },
+            label = { Text("Priority") },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number))
+        TextField(
+            value = state.section,
+            onValueChange = { state.section = it },
+            label = { Text("Section") })
+        TextField(
+            value = state.starttime,
+            onValueChange = { state.starttime = it },
+            label = { Text("Start Time (HH:MM)") })
+        TextField(
+            value = state.durationIn,
+            onValueChange = { state.durationIn = it },
+            label = { Text("Duration (in Hours)") })
+        TextField(
+            value = state.dueDate,
+            onValueChange = { state.dueDate = it },
+            label = { Text("Due Date (yyyyMMdd)") })
+        TextButton(onClick = { state.dueDate = LocalDate.now().format(formatter) }) {
+            Text("Today")
+        }
+        Text("Repeat Option")
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            RadioButton(
+                selected = state.recurOption == RecurOption.Daily,
+                onClick = { state.recurOption = RecurOption.Daily })
+            Text("Daily")
+            RadioButton(
+                selected = state.recurOption == RecurOption.Weekly,
+                onClick = { state.recurOption = RecurOption.Weekly })
+            Text("Weekly")
+            RadioButton(
+                selected = state.recurOption == RecurOption.None,
+                onClick = { state.recurOption = RecurOption.None })
+            Text("None")
+        }
+        if (state.recurOption == RecurOption.Daily || state.recurOption == RecurOption.Weekly) {
+            TextField(
+                value = state.recurUntil,
+                onValueChange = { state.recurUntil = it },
+                label = { Text("Repeat Until: (yyyyMMdd)") })
+        }
+
+        // Display validation and error messages
+        if (state.emptyInput) {
+            Text("All fields are required", color = Color.Red)
+        } else if (!state.isDateValid) {
+            Text("Invalid date/time format", color = Color.Red)
+        } else if (state.durationInvalid) {
+            Text("Duration is invalid, exceeds current day", color = Color.Red)
+        } else if (!state.sectionValid) {
+            Text("Section must be Work, Study, Hobby or Life", color = Color.Red)
         }
     }
-    AlertDialog(
-        onDismissRequest = {},
-        title = { Text(text = "$create_or_edit New Todo Item") },
-        text = {
-            Column {
-                TextField(
-                    value = primaryTask,
-                    onValueChange = { primaryTask = it },
-                    label = { Text("Primary Task") })
-                TextField(
-                    value = secondaryTask,
-                    onValueChange = { secondaryTask = it },
-                    label = { Text("Secondary Task") })
-                TextField(
-                    value = priority.toString(),
-                    onValueChange = { priority = it.toIntOrNull() ?: 1 },
-                    label = { Text("Priority") },
-                    keyboardOptions =
-                        KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number))
-                TextField(
-                    value = section, onValueChange = { section = it }, label = { Text("Section") })
-                TextField(
-                    value = starttime,
-                    onValueChange = { starttime = it },
-                    label = { Text("Start Time (HH:MM)") })
-                TextField(
-                    value = duration_in,
-                    onValueChange = { duration_in = it },
-                    label = { Text("Duration (in Hours)") })
-                TextField(
-                    value = dueDate,
-                    onValueChange = { dueDate = it },
-                    label = { Text("Start Date (yyyyMMdd)") })
-                TextButton(onClick = { dueDate = LocalDate.now().format(Formatter) }) {
-                    Text("Today")
-                }
-
-                Text("Repeat Option")
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        RadioButton(
-                            selected = recurOption == RecurOption.Daily,
-                            onClick = { recurOption = RecurOption.Daily })
-                        Text("Daily")
-                    }
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        RadioButton(
-                            selected = recurOption == RecurOption.Weekly,
-                            onClick = { recurOption = RecurOption.Weekly })
-                        Text("Weekly")
-                    }
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        RadioButton(
-                            selected = recurOption == RecurOption.None,
-                            onClick = { recurOption = RecurOption.None })
-                        Text("None")
-                    }
-                }
-                if (recurOption == RecurOption.Daily || recurOption == RecurOption.Weekly) {
-                    TextField(
-                        value = recur_until,
-                        onValueChange = { recur_until = it },
-                        label = { Text("Repeat Until: (yyyyMMDD)") })
-                }
-                if (empty_input) {
-                    Text("All fields are required", color = Color.Red)
-                } else if (!isDateValid) {
-                    Text("Invalid date/time format", color = Color.Red)
-                } else if (duration_in == "") {} else if (duration_invalid) {
-                    Text("Event exceeds current date", color = Color.Red)
-                } else if (!section_valid) {
-                    Text("Section must be Work, Study, Hobby or Life", color = Color.Red)
-                }
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    // empty field
-                    empty_input =
-                        (primaryTask.isEmpty() ||
-                            secondaryTask.isEmpty() ||
-                            section.isEmpty() ||
-                            dueDate.isEmpty() ||
-                            duration_in.isEmpty() ||
-                            starttime.isEmpty())
-                    if (empty_input) {
-                        return@Button
-                    }
-                    // section name
-                    section_valid =
-                        (section == "Work" ||
-                            section == "Study" ||
-                            section == "Life" ||
-                            section == "Hobby")
-                    if (!section_valid) {
-                        return@Button
-                    }
-
-                    isDateValid =
-                        detectValidInteger(duration_in) &&
-                            detectValidDateTime(starttime) &&
-                            validateDate(dueDate) &&
-                            (recurOption == RecurOption.None || validateDate(recur_until))
-                    if (!isDateValid) {
-                        return@Button
-                    }
-                    var remaining = Duration.ofDays(1)
-                    if (duration_in != "") {
-                        val duration_formatter = DateTimeFormatter.ofPattern("HH:mm")
-                        val start_parse = LocalTime.parse(starttime, duration_formatter)
-                        println(start_parse)
-                        remaining = Duration.between(start_parse, LocalTime.MAX)
-                        println(remaining.toHours().toInt())
-                        duration_invalid = remaining.toHours().toInt() < duration_in.toInt()
-                    }
-                    if (duration_invalid) {
-                        return@Button
-                    }
-
-                    areFieldsValid =
-                        section_valid && !duration_invalid && isDateValid && !empty_input
-                    if (areFieldsValid) {
-                        var tem_str = "None"
-                        if (recurOption == RecurOption.Daily) {
-                            tem_str = "Daily"
-                        } else if (recurOption == RecurOption.Weekly) {
-                            tem_str = "Weekly"
-                        }
-                        onCreate(
-                            TodoItem(
-                                id = 0,
-                                primaryTask = primaryTask,
-                                secondaryTask = secondaryTask,
-                                priority = priority,
-                                completed = defaultTodo.completed,
-                                section = section,
-                                datetime = dueDate,
-                                duration = duration_in.toInt(),
-                                starttime = starttime,
-                                recur = tem_str,
-                                deleted = 0,
-                                pid = 0,
-                                misc1 = recur_until.toInt(),
-                                misc2 = 0))
-                    }
-                }) {
-                    Text(create_or_edit)
-                }
-        },
-        dismissButton = { Button(onClick = { onClose() }) { Text("Close") } })
 }
+
+@Composable
+private fun confirmButtons(state: DialogState, onCreate: (TodoItem) -> Unit) {
+    Button(
+        onClick = {
+            onCreate(
+                TodoItem(
+                    id = 0,
+                    primaryTask = state.primaryTask,
+                    secondaryTask = state.secondaryTask,
+                    priority = state.priority,
+                    completed = false,
+                    section = state.section,
+                    datetime = state.dueDate,
+                    duration = state.durationIn.toInt(),
+                    starttime = state.starttime,
+                    recur = state.recurOption.name,
+                    deleted = 0,
+                    pid = 0,
+                    misc1 = state.recurUntil.toInt(),
+                    misc2 = 0))
+        }) {
+            Text(state.createOrEdit)
+        }
+}
+
+data class DialogState(
+    var createOrEdit: String = "Create",
+    var primaryTask: String = "",
+    var secondaryTask: String = "",
+    var priority: Int = 1,
+    var section: String = "",
+    var dueDate: String = "",
+    var starttime: String = "",
+    var isDateValid: Boolean = true,
+    var durationInvalid: Boolean = false,
+    var areFieldsValid: Boolean = true,
+    var durationIn: String = "",
+    var sectionValid: Boolean = true,
+    var recurOption: RecurOption = RecurOption.None,
+    var emptyInput: Boolean = false,
+    var recurUntil: String = "0"
+)
 
 @Composable
 fun showTodoList() {
@@ -671,7 +633,7 @@ fun showTodoList() {
                     tem_todo = currentid.copy()
                     println("2")
                 }
-                createTodoDialogue(
+                createTodoDialog(
                     onClose = {
                         isDialogOpen = false
                         if (if_create) {
