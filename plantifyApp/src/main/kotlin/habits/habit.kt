@@ -212,6 +212,63 @@ fun isItemRelevant(item: TodoItem, selectedSection: String, selectedDate: LocalD
             item.recur !in listOf("Daily", "Weekly")
 }
 
+
+fun deleteTodoItem(todoItem: TodoItem, todoListFromDb: SnapshotStateList<TodoItem>) {
+    runBlocking {
+        val wholeData = fetchTodos()
+        val toBeDeleted = mutableListOf<TodoItem>()
+
+        if (todoItem.pid != 0) {
+            toBeDeleted.addAll(wholeData.filter { it.pid == todoItem.pid || it.id == todoItem.pid })
+        } else {
+            toBeDeleted.add(todoItem)
+        }
+
+        toBeDeleted.forEach { deleteTodoItem ->
+            deleteTodo(deleteTodoItem.id)
+        }
+        todoListFromDb.remove(todoItem)
+    }
+}
+
+fun toggleTodoCompletion(index: Int, isChecked: Boolean, todoItem: TodoItem, todoListFromDb: SnapshotStateList<TodoItem>, selectedDate: LocalDate, formatter: DateTimeFormatter) {
+    runBlocking {
+        if (todoItem.recur != "Daily" && todoItem.recur != "Weekly") {
+            val updatedTodo = todoItem.copy(completed = isChecked)
+            updateTodoItem(todoItem.id, updatedTodo)
+            todoListFromDb[index] = updatedTodo
+        } else {
+            val updatedCopy = todoItem.copy(completed = isChecked, datetime = selectedDate.format(formatter), recur = "None", pid = todoItem.id)
+            create(updatedCopy)
+            // Refresh the list from database to reflect the changes
+            todoListFromDb.clear()
+            fetchTodos().forEach { jsonItem ->
+                if (jsonItem.datetime == selectedDate.format(formatter) &&
+                    jsonItem.recur != "Daily" && jsonItem.recur != "Weekly") {
+                    todoListFromDb.add(jsonItem)
+                }
+            }
+        }
+    }
+}
+
+
+suspend fun refreshTodoList(
+    todoListFromDb: SnapshotStateList<TodoItem>,
+    selectedSection: String,
+    selectedDate: LocalDate,
+    formatter: DateTimeFormatter
+) {
+    todoListFromDb.clear()
+    val result = fetchTodos()
+    result.forEach { jsonItem ->
+        if (jsonItem.section == selectedSection && jsonItem.datetime == selectedDate.format(formatter) &&
+            jsonItem.recur != "Daily" && jsonItem.recur != "Weekly") {
+            todoListFromDb.add(jsonItem)
+        }
+    }
+}
+
 @Composable
 fun showTodoList() {
     val currentDate = LocalDate.now()
@@ -348,184 +405,22 @@ fun showTodoList() {
                             trailingContent = {
                                 Column() {
                                     TextButton(
-                                        onClick = {
-                                            runBlocking {
-                                                var whole_data = fetchTodos()
-                                                launch {
-                                                    if (todoItem.pid != 0) {
-                                                        var to_be_deleted =
-                                                            whole_data.filter {
-                                                                it.pid == todoItem.pid
-                                                            }
-                                                        var parent =
-                                                            whole_data.filter {
-                                                                it.id == todoItem.pid
-                                                            }
-                                                        to_be_deleted.forEach { each ->
-                                                            deleteTodo(each.id)
-                                                        }
-                                                        deleteTodo(parent[0].id)
-                                                        todoListFromDb.remove(todoItem)
-                                                    } else if (todoItem.recur == "Daily" ||
-                                                        todoItem.recur == "Weekly") {
-                                                        var to_be_deleted =
-                                                            whole_data.filter {
-                                                                it.pid == todoItem.id
-                                                            }
-                                                        to_be_deleted.forEach { each ->
-                                                            deleteTodo(each.id)
-                                                        }
-                                                        deleteTodo(todoItem.id)
-                                                        todoListFromDb.remove(todoItem)
-                                                    } else {
-                                                        deleteTodo(todoItem.id)
-                                                        todoListFromDb.remove(todoItem)
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        modifier = Modifier.size(width = 100.dp, height = 35.dp)) {
-                                            Text("Delete", style = TextStyle(fontSize = 13.sp))
-                                        }
+                                        onClick = { deleteTodoItem(todoItem, todoListFromDb) },
+                                        modifier = Modifier.size(width = 100.dp, height = 35.dp)
+                                    ) {
+                                        Text("Delete", style = TextStyle(fontSize = 13.sp))
+                                    }
                                 }
                             },
                             leadingContent = {
                                 Checkbox(
                                     checked = todoItem.completed,
                                     onCheckedChange = { isChecked ->
-                                        if (todoItem.recur != "Daily" &&
-                                            todoItem.recur != "Weekly") {
-                                            todoListFromDb[index] =
-                                                todoListFromDb[index].copy(completed = isChecked)
-                                            var copy_todo = todoItem.copy()
-                                            copy_todo.completed = isChecked
-                                            runBlocking {
-                                                launch {
-                                                    println(updateTodoItem(todoItem.id, copy_todo))
-                                                }
-                                            }
-                                        } else {
-                                            var copy_of_copy = todoListFromDb[index].copy()
-                                            copy_of_copy.datetime = selectedDate.format(formatter)
-                                            copy_of_copy.recur = "None"
-                                            copy_of_copy.completed = true
-                                            copy_of_copy.pid = todoItem.id
-                                            runBlocking {
-                                                launch { create(copy_of_copy) }
-                                            } // update fetched data
-                                            runBlocking {
-                                                var result: List<TodoItem> = fetchTodos()
-                                                launch {
-                                                    result = fetchTodos()
-                                                    todoListFromDb.clear()
-                                                    result.forEach { jsonItem ->
-                                                        if (jsonItem.section == selectedSection &&
-                                                            jsonItem.datetime ==
-                                                                selectedDate.format(formatter) &&
-                                                            jsonItem.recur != "Daily" &&
-                                                            jsonItem.recur != "Weekly") {
-                                                            todoListFromDb.add(
-                                                                TodoItem(
-                                                                    id = jsonItem.id,
-                                                                    primaryTask =
-                                                                        jsonItem.primaryTask,
-                                                                    secondaryTask =
-                                                                        jsonItem.secondaryTask,
-                                                                    priority = jsonItem.priority,
-                                                                    completed = jsonItem.completed,
-                                                                    section = jsonItem.section,
-                                                                    datetime = jsonItem.datetime,
-                                                                    starttime = jsonItem.starttime,
-                                                                    duration = jsonItem.duration,
-                                                                    recur = jsonItem.recur,
-                                                                    pid = jsonItem.pid,
-                                                                    deleted = jsonItem.deleted,
-                                                                    misc1 = 0,
-                                                                    misc2 = 0))
-                                                        }
-                                                    }
-                                                    result.forEach { jsonItem ->
-                                                        if (jsonItem.section == selectedSection &&
-                                                            jsonItem.recur == "Daily" &&
-                                                            dateIsInRange(
-                                                                selectedDate.format(formatter),
-                                                                jsonItem.datetime,
-                                                                jsonItem.misc1.toString())) {
-                                                            val duplicate_item =
-                                                                todoListFromDb.find {
-                                                                    it.pid == jsonItem.id
-                                                                }
-                                                            if (duplicate_item == null) {
-                                                                todoListFromDb.add(
-                                                                    TodoItem(
-                                                                        id = jsonItem.id,
-                                                                        primaryTask =
-                                                                            jsonItem.primaryTask,
-                                                                        secondaryTask =
-                                                                            jsonItem.secondaryTask,
-                                                                        priority =
-                                                                            jsonItem.priority,
-                                                                        completed =
-                                                                            jsonItem.completed,
-                                                                        section = jsonItem.section,
-                                                                        datetime =
-                                                                            jsonItem.datetime,
-                                                                        starttime =
-                                                                            jsonItem.starttime,
-                                                                        duration =
-                                                                            jsonItem.duration,
-                                                                        recur = jsonItem.recur,
-                                                                        pid = jsonItem.pid,
-                                                                        deleted = jsonItem.deleted,
-                                                                        misc1 = 0,
-                                                                        misc2 = 0))
-                                                            }
-                                                        } else if (jsonItem.recur == "Weekly" &&
-                                                            jsonItem.section == selectedSection &&
-                                                            LocalDate.parse(
-                                                                    jsonItem.datetime, formatter)
-                                                                .dayOfWeek ==
-                                                                selectedDate.dayOfWeek &&
-                                                            dateIsInRange(
-                                                                selectedDate.format(formatter),
-                                                                jsonItem.datetime,
-                                                                jsonItem.misc1.toString())) {
-                                                            val duplicate_item =
-                                                                todoListFromDb.find {
-                                                                    it.pid == jsonItem.id
-                                                                }
-                                                            if (duplicate_item == null) {
-                                                                todoListFromDb.add(
-                                                                    TodoItem(
-                                                                        id = jsonItem.id,
-                                                                        primaryTask =
-                                                                            jsonItem.primaryTask,
-                                                                        secondaryTask =
-                                                                            jsonItem.secondaryTask,
-                                                                        priority =
-                                                                            jsonItem.priority,
-                                                                        completed =
-                                                                            jsonItem.completed,
-                                                                        section = jsonItem.section,
-                                                                        datetime =
-                                                                            jsonItem.datetime,
-                                                                        starttime =
-                                                                            jsonItem.starttime,
-                                                                        duration =
-                                                                            jsonItem.duration,
-                                                                        recur = jsonItem.recur,
-                                                                        pid = jsonItem.pid,
-                                                                        deleted = jsonItem.deleted,
-                                                                        misc1 = 0,
-                                                                        misc2 = 0))
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    })
-                            })
+                                        toggleTodoCompletion(index, isChecked, todoItem, todoListFromDb, selectedDate, formatter)
+                                    }
+                                )
+                            }
+                        )
                         Divider()
                     }
                 }
@@ -541,16 +436,12 @@ fun showTodoList() {
                     }
             }
             if (isDialogOpen) {
-                var tem_todo =
-                    TodoItem(
-                        0, "This is a dummy variable", "", 0, false, "", "", 0, "", "", 0, 0, 0, 0)
-                var tem_todo_reset =
-                    TodoItem(
-                        0, "This is a dummy variable", "", 0, false, "", "", 0, "", "", 0, 0, 0, 0)
-                if (ifUpdate) {
-                    tem_todo = currentId.copy()
-                    println("2")
-                }
+                var tempTodo = if (ifUpdate) currentId.copy() else TodoItem(
+                    id = 0, primaryTask = "This is a dummy variable", secondaryTask = "", priority = 0,
+                    completed = false, section = "", datetime = "", starttime = "", duration = 0,
+                    recur = "", pid = 0, deleted = 0, misc1 = 0, misc2 = 0
+                )
+
                 createTodoDialog(
                     onClose = {
                         isDialogOpen = false
@@ -558,7 +449,6 @@ fun showTodoList() {
                             ifCreate = false
                         } else if (ifUpdate) {
                             ifUpdate = false
-                            tem_todo = tem_todo_reset.copy()
                         }
                     },
                     onCreate = { newItem ->
@@ -569,97 +459,15 @@ fun showTodoList() {
                                     create(newItem)
                                     ifCreate = false
                                 } else if (ifUpdate) {
-                                    updateTodoItem(currentId.id, newItem.copy())
-                                    println(currentId.id)
+                                    updateTodoItem(currentId.id, newItem)
                                     ifUpdate = false
-                                    tem_todo = tem_todo_reset.copy()
                                 }
-                                todoListFromDb.clear()
-                                var result: List<TodoItem> = fetchTodos()
-                                result.forEach { jsonItem ->
-                                    if (jsonItem.section == selectedSection &&
-                                        jsonItem.datetime == selectedDate.format(formatter) &&
-                                        jsonItem.recur != "Daily" &&
-                                        jsonItem.recur != "Weekly") {
-                                        todoListFromDb.add(
-                                            TodoItem(
-                                                id = jsonItem.id,
-                                                primaryTask = jsonItem.primaryTask,
-                                                secondaryTask = jsonItem.secondaryTask,
-                                                priority = jsonItem.priority,
-                                                completed = jsonItem.completed,
-                                                section = jsonItem.section,
-                                                datetime = jsonItem.datetime,
-                                                starttime = jsonItem.starttime,
-                                                duration = jsonItem.duration,
-                                                recur = jsonItem.recur,
-                                                pid = jsonItem.pid,
-                                                deleted = jsonItem.deleted,
-                                                misc1 = jsonItem.misc1,
-                                                misc2 = jsonItem.misc2))
-                                    }
-                                }
-                                result.forEach { jsonItem ->
-                                    if (jsonItem.section == selectedSection &&
-                                        jsonItem.recur == "Daily" &&
-                                        dateIsInRange(
-                                            selectedDate.format(formatter),
-                                            jsonItem.datetime,
-                                            jsonItem.misc1.toString())) {
-                                        val duplicate_item =
-                                            todoListFromDb.find { it.pid == jsonItem.id }
-                                        if (duplicate_item == null) {
-                                            todoListFromDb.add(
-                                                TodoItem(
-                                                    id = jsonItem.id,
-                                                    primaryTask = jsonItem.primaryTask,
-                                                    secondaryTask = jsonItem.secondaryTask,
-                                                    priority = jsonItem.priority,
-                                                    completed = jsonItem.completed,
-                                                    section = jsonItem.section,
-                                                    datetime = jsonItem.datetime,
-                                                    starttime = jsonItem.starttime,
-                                                    duration = jsonItem.duration,
-                                                    recur = jsonItem.recur,
-                                                    pid = jsonItem.pid,
-                                                    deleted = jsonItem.deleted,
-                                                    misc1 = jsonItem.misc1,
-                                                    misc2 = jsonItem.misc2))
-                                        }
-                                    } else if (jsonItem.recur == "Weekly" &&
-                                        jsonItem.section == selectedSection &&
-                                        LocalDate.parse(jsonItem.datetime, formatter).dayOfWeek ==
-                                            selectedDate.dayOfWeek &&
-                                        dateIsInRange(
-                                            selectedDate.format(formatter),
-                                            jsonItem.datetime,
-                                            jsonItem.misc1.toString())) {
-                                        val duplicate_item =
-                                            todoListFromDb.find { it.pid == jsonItem.id }
-                                        if (duplicate_item == null) {
-                                            todoListFromDb.add(
-                                                TodoItem(
-                                                    id = jsonItem.id,
-                                                    primaryTask = jsonItem.primaryTask,
-                                                    secondaryTask = jsonItem.secondaryTask,
-                                                    priority = jsonItem.priority,
-                                                    completed = jsonItem.completed,
-                                                    section = jsonItem.section,
-                                                    datetime = jsonItem.datetime,
-                                                    starttime = jsonItem.starttime,
-                                                    duration = jsonItem.duration,
-                                                    recur = jsonItem.recur,
-                                                    pid = jsonItem.pid,
-                                                    deleted = jsonItem.deleted,
-                                                    misc1 = jsonItem.misc1,
-                                                    misc2 = jsonItem.misc2))
-                                        }
-                                    }
-                                }
+                                refreshTodoList(todoListFromDb, selectedSection, selectedDate, formatter)
                             }
                         }
                     },
-                    defaultTodo = tem_todo)
+                    defaultTodo = tempTodo
+                )
             }
         }
     }
