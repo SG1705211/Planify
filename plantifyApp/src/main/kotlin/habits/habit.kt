@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -183,195 +184,126 @@ data class DialogState(
     var recurUntil: String = "0"
 )
 
+fun checkDateInMonth(year: Int, month: Int, date: Int): Int {
+    val maxDateInMonth = LocalDate.of(year, month, 1).lengthOfMonth()
+    return if (date > maxDateInMonth) maxDateInMonth else date
+}
+
+val monthNames = listOf(
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+)
+
+suspend fun updateTodoListFromDb(todoList: SnapshotStateList<TodoItem>, selectedSection: String, selectedDate: LocalDate) {
+    val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+    todoList.clear()
+    val result = fetchTodos() // This function should ideally be defined to fetch todos from your data source
+    result.forEach { jsonItem ->
+        if (isItemRelevant(jsonItem, selectedSection, selectedDate, formatter)) {
+            todoList.add(jsonItem)
+        }
+    }
+}
+
+fun isItemRelevant(item: TodoItem, selectedSection: String, selectedDate: LocalDate, formatter: DateTimeFormatter): Boolean {
+    val itemDate = LocalDate.parse(item.datetime, formatter)
+    return item.section == selectedSection &&
+            itemDate == selectedDate &&
+            item.recur !in listOf("Daily", "Weekly")
+}
+
 @Composable
 fun showTodoList() {
-    Database.connect("jdbc:sqlite:chinook.db")
     val currentDate = LocalDate.now()
     var month by remember { mutableStateOf(currentDate.monthValue) }
     var year by remember { mutableStateOf(currentDate.year) }
-    val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
     var date by remember { mutableStateOf(currentDate.dayOfMonth) }
-    val maxDateInMonth = LocalDate.of(year, month, 1).lengthOfMonth()
-    if (date > maxDateInMonth) {
-        date = maxDateInMonth
-    }
-    var selectedDate by mutableStateOf(LocalDate.of(year, month, date))
-    val monthNames =
-        listOf(
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December")
-    val current_month = monthNames[month - 1]
+    date = checkDateInMonth(year, month, date)
+    var selectedDate = LocalDate.of(year, month, date)
+    val currentMonth = monthNames[month - 1]
+    val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
     val (selectedSection, setSelectedSection) = remember { mutableStateOf("Work") }
     var todoListFromDb = remember { mutableStateListOf<TodoItem>() }
-    var if_update by remember { mutableStateOf(false) }
-    var if_create by remember { mutableStateOf(false) }
-    var currentid by remember {
+    var ifUpdate by remember { mutableStateOf(false) }
+    var ifCreate by remember { mutableStateOf(false) }
+    var currentId by remember {
         mutableStateOf(
             TodoItem(
-                0, "Initial", "initial", 0, false, "test", "test", 3, "test", "test", 0, 0, 0, 0))
+                id = 0, primaryTask = "Initial", secondaryTask = "initial", priority = 0,
+                completed = false, section = "test", datetime = "test", starttime = "test",
+                duration = 3, recur = "test", pid = 0, deleted = 0, misc1 = 0, misc2 = 0
+            )
+        )
     }
     LaunchedEffect(selectedSection, selectedDate) {
-        var result: List<TodoItem>
-        todoListFromDb.clear()
-        runBlocking {
-            launch {
-                result = fetchTodos()
-                result.forEach { jsonItem ->
-                    if (jsonItem.section == selectedSection &&
-                        jsonItem.datetime == selectedDate.format(formatter) &&
-                        jsonItem.recur != "Daily" &&
-                        jsonItem.recur != "Weekly") {
-                        todoListFromDb.add(
-                            TodoItem(
-                                id = jsonItem.id,
-                                primaryTask = jsonItem.primaryTask,
-                                secondaryTask = jsonItem.secondaryTask,
-                                priority = jsonItem.priority,
-                                completed = jsonItem.completed,
-                                section = jsonItem.section,
-                                datetime = jsonItem.datetime,
-                                starttime = jsonItem.starttime,
-                                duration = jsonItem.duration,
-                                recur = jsonItem.recur,
-                                pid = jsonItem.pid,
-                                deleted = jsonItem.deleted,
-                                misc1 = jsonItem.misc1,
-                                misc2 = jsonItem.misc2))
-                    }
-                }
-                result.forEach { jsonItem ->
-                    if (jsonItem.section == selectedSection &&
-                        jsonItem.recur == "Daily" &&
-                        dateIsInRange(
-                            selectedDate.format(formatter),
-                            jsonItem.datetime,
-                            jsonItem.misc1.toString())) {
-                        val duplicate_item = todoListFromDb.find { it.pid == jsonItem.id }
-                        if (duplicate_item == null) {
-                            todoListFromDb.add(
-                                TodoItem(
-                                    id = jsonItem.id,
-                                    primaryTask = jsonItem.primaryTask,
-                                    secondaryTask = jsonItem.secondaryTask,
-                                    priority = jsonItem.priority,
-                                    completed = jsonItem.completed,
-                                    section = jsonItem.section,
-                                    datetime = jsonItem.datetime,
-                                    starttime = jsonItem.starttime,
-                                    duration = jsonItem.duration,
-                                    recur = jsonItem.recur,
-                                    pid = jsonItem.pid,
-                                    deleted = jsonItem.deleted,
-                                    misc1 = jsonItem.misc1,
-                                    misc2 = jsonItem.misc2))
-                        }
-                    } else if (jsonItem.recur == "Weekly" &&
-                        jsonItem.section == selectedSection &&
-                        LocalDate.parse(jsonItem.datetime, formatter).dayOfWeek ==
-                            selectedDate.dayOfWeek &&
-                        dateIsInRange(
-                            selectedDate.format(formatter),
-                            jsonItem.datetime,
-                            jsonItem.misc1.toString())) {
-
-                        val duplicate_item = todoListFromDb.find { it.pid == jsonItem.id }
-                        if (duplicate_item == null) {
-                            todoListFromDb.add(
-                                TodoItem(
-                                    id = jsonItem.id,
-                                    primaryTask = jsonItem.primaryTask,
-                                    secondaryTask = jsonItem.secondaryTask,
-                                    priority = jsonItem.priority,
-                                    completed = jsonItem.completed,
-                                    section = jsonItem.section,
-                                    datetime = jsonItem.datetime,
-                                    starttime = jsonItem.starttime,
-                                    duration = jsonItem.duration,
-                                    recur = jsonItem.recur,
-                                    pid = jsonItem.pid,
-                                    deleted = jsonItem.deleted,
-                                    misc1 = jsonItem.misc1,
-                                    misc2 = jsonItem.misc2))
-                        }
-                    }
-                }
-            }
-        }
+        updateTodoListFromDb(todoListFromDb, selectedSection, selectedDate)
     }
     var isDialogOpen by remember { mutableStateOf(false) }
     Column(modifier = Modifier.fillMaxHeight().padding(top = 24.dp)) {
-        Box(modifier = Modifier.fillMaxWidth().weight(0.05f)) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.fillMaxHeight().padding(top = 24.dp)) {
+            Box(modifier = Modifier.fillMaxWidth().weight(0.05f)) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Text(
-                        text = "$date $current_month $year",
+                        text = "$date $currentMonth $year",
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.weight(1f, fill = false))
+                        modifier = Modifier.weight(1f, fill = false)
+                    )
 
                     Row(modifier = Modifier.weight(1f, fill = false)) {
                         Spacer(Modifier.weight(0.9f))
                         Text(
                             "Today",
-                            modifier =
-                                Modifier.clickable {
-                                    val today = LocalDate.now()
-                                    date = today.dayOfMonth
-                                    month = today.monthValue
-                                    year = today.year
-                                    selectedDate = today
-                                })
+                            modifier = Modifier.clickable {
+                                val today = LocalDate.now()
+                                date = today.dayOfMonth
+                                month = today.monthValue
+                                year = today.year
+                                selectedDate = today
+                            }
+                        )
                         Spacer(Modifier.weight(0.1f))
                         FilledTonalButton(
                             onClick = {
-                                if (date > 1) {
-                                    date--
+                                val newDate = if (date > 1) {
+                                    LocalDate.of(year, month, date - 1)
+                                } else if (month > 1) {
+                                    LocalDate.of(year, month - 1, LocalDate.of(year, month - 1, 1).lengthOfMonth())
                                 } else {
-                                    if (month > 1) {
-                                        month--
-                                        date = LocalDate.of(year, month, 1).lengthOfMonth()
-                                    } else {
-                                        month = 12
-                                        year--
-                                        date = 31
-                                    }
-                                    selectedDate = LocalDate.of(year, month, date)
+                                    LocalDate.of(year - 1, 12, 31)
                                 }
+                                date = newDate.dayOfMonth
+                                month = newDate.monthValue
+                                year = newDate.year
+                                selectedDate = newDate
                             },
-                            modifier = Modifier.size(70.dp, 30.dp)) {
-                                androidx.compose.material.Text("<")
-                            }
+                            modifier = Modifier.size(70.dp, 30.dp)
+                        ) {
+                            androidx.compose.material.Text("<")
+                        }
                         FilledTonalButton(
                             onClick = {
-                                if (date < selectedDate.lengthOfMonth()) {
-                                    date++
+                                val newDate = if (date < selectedDate.lengthOfMonth()) {
+                                    LocalDate.of(year, month, date + 1)
+                                } else if (month < 12) {
+                                    LocalDate.of(year, month + 1, 1)
                                 } else {
-                                    if (month < 12) {
-                                        month++
-                                        date = 1
-                                    } else {
-                                        month = 1
-                                        date = 1
-                                        year++
-                                    }
+                                    LocalDate.of(year + 1, 1, 1)
                                 }
-                                selectedDate = LocalDate.of(year, month, date)
+                                date = newDate.dayOfMonth
+                                month = newDate.monthValue
+                                year = newDate.year
+                                selectedDate = newDate
                             },
-                            modifier = Modifier.size(70.dp, 30.dp)) {
-                                androidx.compose.material.Text(">")
-                            }
+                            modifier = Modifier.size(70.dp, 30.dp)
+                        ) {
+                            androidx.compose.material.Text(">")
+                        }
                     }
                 }
+            }
         }
 
         Box(modifier = Modifier.fillMaxWidth().weight(0.08f)) {
@@ -414,21 +346,7 @@ fun showTodoList() {
                             headlineContent = { Text(todoItem.primaryTask) },
                             supportingContent = { Text(todoItem.secondaryTask) },
                             trailingContent = {
-                                Column() { //                                    Text("Priority
-                                    // ${todoItem.priority}")
-                                    //                                    TextButton(
-                                    //                                        onClick = {
-                                    //                                            currentid =
-                                    // todoItem.copy()
-                                    //                                            if_update = true
-                                    //                                            isDialogOpen =
-                                    // true
-                                    //                                        }, modifier =
-                                    // Modifier.size(width = 100.dp, height = 35.dp)
-                                    //                                    ) {
-                                    //                                        Text("Edit", style =
-                                    // TextStyle(fontSize = 13.sp))
-                                    //                                    }
+                                Column() {
                                     TextButton(
                                         onClick = {
                                             runBlocking {
@@ -617,7 +535,7 @@ fun showTodoList() {
                     modifier = Modifier.padding(bottom = 16.dp, end = 16.dp),
                     onClick = {
                         isDialogOpen = true
-                        if_create = true
+                        ifCreate = true
                     }) {
                         Text(text = "Create New")
                     }
@@ -629,17 +547,17 @@ fun showTodoList() {
                 var tem_todo_reset =
                     TodoItem(
                         0, "This is a dummy variable", "", 0, false, "", "", 0, "", "", 0, 0, 0, 0)
-                if (if_update) {
-                    tem_todo = currentid.copy()
+                if (ifUpdate) {
+                    tem_todo = currentId.copy()
                     println("2")
                 }
                 createTodoDialog(
                     onClose = {
                         isDialogOpen = false
-                        if (if_create) {
-                            if_create = false
-                        } else if (if_update) {
-                            if_update = false
+                        if (ifCreate) {
+                            ifCreate = false
+                        } else if (ifUpdate) {
+                            ifUpdate = false
                             tem_todo = tem_todo_reset.copy()
                         }
                     },
@@ -647,13 +565,13 @@ fun showTodoList() {
                         isDialogOpen = false
                         runBlocking {
                             launch {
-                                if (if_create) {
+                                if (ifCreate) {
                                     create(newItem)
-                                    if_create = false
-                                } else if (if_update) {
-                                    updateTodoItem(currentid.id, newItem.copy())
-                                    println(currentid.id)
-                                    if_update = false
+                                    ifCreate = false
+                                } else if (ifUpdate) {
+                                    updateTodoItem(currentId.id, newItem.copy())
+                                    println(currentId.id)
+                                    ifUpdate = false
                                     tem_todo = tem_todo_reset.copy()
                                 }
                                 todoListFromDb.clear()
