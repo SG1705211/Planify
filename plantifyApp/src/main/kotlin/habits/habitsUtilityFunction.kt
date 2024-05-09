@@ -6,13 +6,13 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.util.*
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import net.codebot.models.TodoItem
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import net.codebot.models.TodoItem
 
 fun detectValidDateTime(input: String): Boolean {
     val formatter = DateTimeFormatter.ofPattern("HH:mm")
@@ -43,18 +43,21 @@ fun dateIsInRange(date: String, start: String, end: String): Boolean {
 
 suspend fun deleteTodo(todoId: Int) {
     val client = HttpClient(CIO)
-    val response: HttpResponse = client.delete("http://localhost:8080/todos/$todoId") {
-        contentType(ContentType.Application.Json)
-    }
+    val response: HttpResponse =
+        client.delete("http://localhost:8080/todos/$todoId") {
+            contentType(ContentType.Application.Json)
+        }
     client.close()
 }
+
 @OptIn(InternalAPI::class)
 suspend fun updateTodoItem(todoId: Int, updatedTodo: TodoItem) {
     val client = HttpClient(CIO)
-    val response: HttpResponse = client.post("http://localhost:8080/update/$todoId") {
-        contentType(ContentType.Application.Json)
-        body = Json.encodeToString(updatedTodo)
-    }
+    val response: HttpResponse =
+        client.post("http://localhost:8080/update/$todoId") {
+            contentType(ContentType.Application.Json)
+            body = Json.encodeToString(updatedTodo)
+        }
     client.close()
 }
 
@@ -65,13 +68,15 @@ suspend fun fetchTodos(): List<TodoItem> {
     client.close()
     return Json.decodeFromString(jsonString)
 }
+
 @OptIn(InternalAPI::class)
 suspend fun create(todoItem: TodoItem) {
     val client = HttpClient(CIO)
-    val response: HttpResponse = client.post("http://localhost:8080/todos") {
-        contentType(ContentType.Application.Json)
-        body = Json.encodeToString(todoItem)
-    }
+    val response: HttpResponse =
+        client.post("http://localhost:8080/todos") {
+            contentType(ContentType.Application.Json)
+            body = Json.encodeToString(todoItem)
+        }
 }
 
 fun validateDate(dateStr: String): Boolean {

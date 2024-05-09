@@ -30,7 +30,7 @@ enum class RecurOption {
 }
 
 @Composable
-fun CreateTodoDialog(onCreate: (TodoItem) -> Unit, onClose: () -> Unit, defaultTodo: TodoItem) {
+fun createTodoDialogue(onCreate: (TodoItem) -> Unit, onClose: () -> Unit, defaultTodo: TodoItem) {
     var create_or_edit by remember { mutableStateOf("Create") }
     val Formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
     var primaryTask by remember { mutableStateOf("") }
@@ -169,7 +169,8 @@ fun CreateTodoDialog(onCreate: (TodoItem) -> Unit, onClose: () -> Unit, defaultT
 
                     isDateValid =
                         detectValidInteger(duration_in) &&
-                            detectValidDateTime(starttime) && validateDate(dueDate) &&
+                            detectValidDateTime(starttime) &&
+                            validateDate(dueDate) &&
                             (recurOption == RecurOption.None || validateDate(recur_until))
                     if (!isDateValid) {
                         return@Button
@@ -292,8 +293,7 @@ fun showTodoList() {
                         dateIsInRange(
                             selectedDate.format(formatter),
                             jsonItem.datetime,
-                            jsonItem.misc1.toString())
-                    ) {
+                            jsonItem.misc1.toString())) {
                         val duplicate_item = todoListFromDb.find { it.pid == jsonItem.id }
                         if (duplicate_item == null) {
                             todoListFromDb.add(
@@ -320,8 +320,7 @@ fun showTodoList() {
                         dateIsInRange(
                             selectedDate.format(formatter),
                             jsonItem.datetime,
-                            jsonItem.misc1.toString())
-                    ) {
+                            jsonItem.misc1.toString())) {
 
                         val duplicate_item = todoListFromDb.find { it.pid == jsonItem.id }
                         if (duplicate_item == null) {
@@ -454,7 +453,7 @@ fun showTodoList() {
                             supportingContent = { Text(todoItem.secondaryTask) },
                             trailingContent = {
                                 Column() { //                                    Text("Priority
-                                           // ${todoItem.priority}")
+                                    // ${todoItem.priority}")
                                     //                                    TextButton(
                                     //                                        onClick = {
                                     //                                            currentid =
@@ -571,8 +570,7 @@ fun showTodoList() {
                                                             dateIsInRange(
                                                                 selectedDate.format(formatter),
                                                                 jsonItem.datetime,
-                                                                jsonItem.misc1.toString())
-                                                        ) {
+                                                                jsonItem.misc1.toString())) {
                                                             val duplicate_item =
                                                                 todoListFromDb.find {
                                                                     it.pid == jsonItem.id
@@ -611,8 +609,7 @@ fun showTodoList() {
                                                             dateIsInRange(
                                                                 selectedDate.format(formatter),
                                                                 jsonItem.datetime,
-                                                                jsonItem.misc1.toString())
-                                                        ) {
+                                                                jsonItem.misc1.toString())) {
                                                             val duplicate_item =
                                                                 todoListFromDb.find {
                                                                     it.pid == jsonItem.id
@@ -674,7 +671,7 @@ fun showTodoList() {
                     tem_todo = currentid.copy()
                     println("2")
                 }
-                CreateTodoDialog(
+                createTodoDialogue(
                     onClose = {
                         isDialogOpen = false
                         if (if_create) {
@@ -728,8 +725,7 @@ fun showTodoList() {
                                         dateIsInRange(
                                             selectedDate.format(formatter),
                                             jsonItem.datetime,
-                                            jsonItem.misc1.toString())
-                                    ) {
+                                            jsonItem.misc1.toString())) {
                                         val duplicate_item =
                                             todoListFromDb.find { it.pid == jsonItem.id }
                                         if (duplicate_item == null) {
@@ -757,8 +753,7 @@ fun showTodoList() {
                                         dateIsInRange(
                                             selectedDate.format(formatter),
                                             jsonItem.datetime,
-                                            jsonItem.misc1.toString())
-                                    ) {
+                                            jsonItem.misc1.toString())) {
                                         val duplicate_item =
                                             todoListFromDb.find { it.pid == jsonItem.id }
                                         if (duplicate_item == null) {
