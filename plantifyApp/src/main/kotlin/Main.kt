@@ -14,7 +14,7 @@ import androidx.compose.ui.window.*
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichTextEditor
-import habits.ToDoList
+import habits.showTodoList
 import java.awt.Desktop
 import java.awt.Dimension
 import java.awt.Window
@@ -45,8 +45,7 @@ enum class Section(val displayName: String) {
     Calendar("Calendar"),
     Summary("Summary"),
     ToDoList("To-Do List"),
-    Notes("Notes"),
-    Help("Help"),
+    Notes("Notes")
 }
 
 @Composable
@@ -81,9 +80,8 @@ fun appLayout(window: Window) {
                 Section.Home -> magicHome()
                 Section.Calendar -> Calendar()
                 Section.Summary -> Summary()
-                Section.ToDoList -> ToDoList()
+                Section.ToDoList -> showTodoList()
                 Section.Notes -> Notes()
-                Section.Help -> {}
             }
         }
     }

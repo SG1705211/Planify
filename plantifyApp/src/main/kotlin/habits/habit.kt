@@ -1,6 +1,5 @@
 package habits
 
-import detectValidInteger
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,25 +14,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dateIsInRange
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import io.ktor.util.*
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import net.codebot.models.TodoItem
 import org.jetbrains.exposed.sql.Database
-import detectValidDateTime
 
 enum class RecurOption {
     None,
@@ -181,8 +169,7 @@ fun CreateTodoDialog(onCreate: (TodoItem) -> Unit, onClose: () -> Unit, defaultT
 
                     isDateValid =
                         detectValidInteger(duration_in) &&
-                            detectValidDateTime(starttime) &&
-                            validateDate(dueDate) &&
+                            detectValidDateTime(starttime) && validateDate(dueDate) &&
                             (recurOption == RecurOption.None || validateDate(recur_until))
                     if (!isDateValid) {
                         return@Button
@@ -233,58 +220,8 @@ fun CreateTodoDialog(onCreate: (TodoItem) -> Unit, onClose: () -> Unit, defaultT
         dismissButton = { Button(onClick = { onClose() }) { Text("Close") } })
 }
 
-private fun validateDate(dateStr: String): Boolean {
-    return try {
-        val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
-        LocalDate.parse(dateStr, formatter)
-        true
-    } catch (e: DateTimeParseException) {
-        false
-    }
-}
-
-@OptIn(InternalAPI::class)
-suspend fun create(todoItem: TodoItem) {
-    val client = HttpClient(CIO)
-    val response: HttpResponse =
-        client.post("http://localhost:8080/todos") {
-            contentType(ContentType.Application.Json)
-            body = Json.encodeToString(todoItem)
-        }
-}
-
-suspend fun fetchTodos(): List<TodoItem> {
-    val client = HttpClient(CIO)
-    val response: HttpResponse = client.get("http://localhost:8080/todos")
-    val jsonString = response.bodyAsText()
-    client.close()
-    return Json.decodeFromString(jsonString)
-}
-
-@OptIn(InternalAPI::class)
-suspend fun updateTodoItem(todoId: Int, updatedTodo: TodoItem) {
-    val client = HttpClient(CIO)
-    val response: HttpResponse =
-        client.post("http://localhost:8080/update/$todoId") {
-            contentType(ContentType.Application.Json)
-            body = Json.encodeToString(updatedTodo)
-        }
-    client.close()
-}
-
-@OptIn(InternalAPI::class)
-suspend fun deleteTodo(todoId: Int) {
-    val client = HttpClient(CIO)
-    val response: HttpResponse =
-        client.delete("http://localhost:8080/todos/$todoId") {
-            contentType(ContentType.Application.Json)
-        }
-    client.close()
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ToDoList() {
+fun showTodoList() {
     Database.connect("jdbc:sqlite:chinook.db")
     val currentDate = LocalDate.now()
     var month by remember { mutableStateOf(currentDate.monthValue) }
