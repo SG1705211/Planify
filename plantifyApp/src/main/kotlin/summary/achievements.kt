@@ -15,16 +15,33 @@ import androidx.compose.ui.unit.sp
 import net.codebot.models.TodoItem
 
 @Composable
-fun Achievement(
-    eventsInRange: List<TodoItem>,
-    factor: Int
-) {
+fun Achievement(eventsInRange: List<TodoItem>, factor: Int) {
 
-    var focusDuration = eventsInRange.filter{ it.completed == true}.map { it.duration }.sum().toFloat()
-    var workWeekDuration = eventsInRange.filter{ it.section == "Work" && it.completed == true}.map { it.duration }.sum().toFloat()
-    var studyWeekDuration = eventsInRange.filter{ it.section == "Study" && it.completed == true}.map { it.duration }.sum().toFloat()
-    var hobbyWeekDuration = eventsInRange.filter{ it.section == "Hobby" && it.completed == true}.map { it.duration }.sum().toFloat()
-    var lifeWeekDuration = eventsInRange.filter{ it.section == "Life" && it.completed == true}.map { it.duration }.sum().toFloat()
+    var focusDuration = eventsInRange.filter { it.completed }.sumOf { it.duration }.toFloat()
+    var workWeekDuration =
+        eventsInRange
+            .filter { it.section == "Work" && it.completed }
+            .map { it.duration }
+            .sum()
+            .toFloat()
+    var studyWeekDuration =
+        eventsInRange
+            .filter { it.section == "Study" && it.completed }
+            .map { it.duration }
+            .sum()
+            .toFloat()
+    var hobbyWeekDuration =
+        eventsInRange
+            .filter { it.section == "Hobby" && it.completed }
+            .map { it.duration }
+            .sum()
+            .toFloat()
+    var lifeWeekDuration =
+        eventsInRange
+            .filter { it.section == "Life" && it.completed }
+            .map { it.duration }
+            .sum()
+            .toFloat()
 
     var habitsCompletedWeekly: MutableList<String> = mutableListOf()
 
@@ -50,26 +67,23 @@ fun Achievement(
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(16.dp)
-        )
+            modifier = Modifier.padding(16.dp))
         habitsCompletedWeekly.forEach { habit ->
             Box(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .height(40.dp)
-                    .width(200.dp)
-                    .background(MaterialTheme.colorScheme.primary),
+                modifier =
+                    Modifier.padding(8.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .height(40.dp)
+                        .width(200.dp)
+                        .background(MaterialTheme.colorScheme.primary),
                 contentAlignment = Alignment.Center,
                 content = {
                     Text(
                         text = habit,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-            )
+                        color = MaterialTheme.colorScheme.onPrimary)
+                })
         }
     }
 }

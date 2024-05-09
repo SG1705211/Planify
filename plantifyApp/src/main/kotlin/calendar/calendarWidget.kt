@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -11,10 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import habits.fetchTodos
+import java.time.LocalDate
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.codebot.models.TodoItem
-import java.time.LocalDate
 
 fun addHoursToTimeString(time: String, hoursToAdd: Int): String {
     val parts = time.split(":")
@@ -31,6 +30,7 @@ fun formatDate(input: String): String {
     val day = input.substring(6, 8)
     return "$year-$month-$day"
 }
+
 @Composable
 fun homeCalendar() {
     val currentDate = LocalDate.now()
@@ -58,17 +58,13 @@ fun homeCalendar() {
                         title = jsonItem.primaryTask,
                         recur = jsonItem.recur,
                         pid = jsonItem.pid,
-                        misc1 = jsonItem.misc1
-                    )
-                )
+                        misc1 = jsonItem.misc1))
             }
         }
     }
     Box(
-        modifier = Modifier.padding(16.dp).size(2500.dp, 450.dp)
-            .background(Color(0xFFE6F1E4)),
-        contentAlignment = Alignment.TopEnd
-    ) {
-        DailyCalendar(date, month, year, events)
-    }
+        modifier = Modifier.padding(16.dp).size(2500.dp, 450.dp).background(Color(0xFFE6F1E4)),
+        contentAlignment = Alignment.TopEnd) {
+            DailyCalendar(date, month, year, events)
+        }
 }

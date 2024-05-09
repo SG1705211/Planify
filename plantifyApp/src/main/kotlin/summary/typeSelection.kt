@@ -30,24 +30,27 @@ fun ReportTypeSelection(selectedSection: String, onSelectedSectionChanged: (Stri
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
                 ) {
-                    DropdownMenuItem(onClick = {
-                        onSelectedSectionChanged("Weekly")
-                        expanded = false
-                    }) {
-                        Text("Weekly")
-                    }
-                    DropdownMenuItem(onClick = {
-                        onSelectedSectionChanged("Monthly")
-                        expanded = false
-                    }) {
-                        Text("Monthly")
-                    }
-                    DropdownMenuItem(onClick = {
-                        onSelectedSectionChanged("Annual")
-                        expanded = false
-                    }) {
-                        Text("Annual")
-                    }
+                    DropdownMenuItem(
+                        onClick = {
+                            onSelectedSectionChanged("Weekly")
+                            expanded = false
+                        }) {
+                            Text("Weekly")
+                        }
+                    DropdownMenuItem(
+                        onClick = {
+                            onSelectedSectionChanged("Monthly")
+                            expanded = false
+                        }) {
+                            Text("Monthly")
+                        }
+                    DropdownMenuItem(
+                        onClick = {
+                            onSelectedSectionChanged("Annual")
+                            expanded = false
+                        }) {
+                            Text("Annual")
+                        }
                 }
             }
         }

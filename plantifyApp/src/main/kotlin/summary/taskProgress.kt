@@ -1,7 +1,5 @@
 package summary
 
-
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
@@ -15,48 +13,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.round
 
-
-
 @Composable
-fun TaskProgress(
-    progress: Float,
-    modifier: Modifier = Modifier
-        .padding(20.dp)
-        .fillMaxSize()
-) {
-    Box(
-        modifier = modifier.size(200.dp),
-        contentAlignment = Alignment.Center
-    ) {
+fun TaskProgress(progress: Float, modifier: Modifier = Modifier.padding(20.dp).fillMaxSize()) {
+    Box(modifier = modifier.size(200.dp), contentAlignment = Alignment.Center) {
         CircularProgressIndicator(
             backgroundColor = MaterialTheme.colorScheme.onSecondary,
             color = MaterialTheme.colorScheme.primary,
             progress = progress,
             modifier = Modifier.size(200.dp),
-            strokeWidth = 12.dp
-        )
-        Column (
+            strokeWidth = 12.dp)
+        Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-        ){
+        ) {
             Text(
                 text = "Task Progress",
                 color = MaterialTheme.colorScheme.primary,
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            )
+                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold))
             Spacer(modifier = Modifier.height(8.dp))
             var tem_str = round((progress * 100).toDouble()).toString() + "%"
             Text(
                 text = "${tem_str}",
                 color = MaterialTheme.colorScheme.primary,
-                style = TextStyle(
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold
-                ),
+                style = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold),
             )
         }
     }

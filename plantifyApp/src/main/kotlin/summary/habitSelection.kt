@@ -1,6 +1,5 @@
 package summary
 
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -38,10 +37,9 @@ fun HabitSelection(selectedSection: String, onSelectedSectionChanged: (String) -
                             onClick = {
                                 onSelectedSectionChanged(item)
                                 expanded = false
+                            }) {
+                                Text(item)
                             }
-                        ) {
-                            Text(item)
-                        }
                     }
                 }
             }
